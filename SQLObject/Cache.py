@@ -152,7 +152,14 @@ class CacheFactory(object):
             self.lock.release()
 
     def allIDs(self):
-        return self.cache.keys()
+        if self.doCache:
+            all = self.cache.keys()
+        else:
+            all = []
+        for id, value in self.expiredCache:
+            if value():
+                all.append(id)
+        return all
 
 class CacheSet(object):
 
