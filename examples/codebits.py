@@ -70,6 +70,8 @@ trans = conn.transaction()
 p = Person(1, trans)
 p.firstName = 'Bob'
 trans.commit()
+# We must call .begin() before reusing the transaction:
+trans.begin()
 p.firstName = 'Billy'
 trans.rollback()
 ## end snippet
