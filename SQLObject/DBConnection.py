@@ -89,8 +89,8 @@ class DBAPI(DBConnection):
         finally:
             self._poolLock.release()
 
-    def releaseConnection(self, conn):
-        if self.supportTransactions:
+    def releaseConnection(self, conn, explicit=False):
+        if self.supportTransactions and not explicit:
             if self.autoCommit == 'exception':
                 if self.debug:
                     self.printDebug(conn, 'auto/exception', 'ROLLBACK')
@@ -445,6 +445,7 @@ class Transaction(object):
         Except with this transaction as 'self'.  Poor man's
         acquisition?  Bad programming?  Okay, maybe.
         """
+        self.assertActive()
         attr = getattr(self._dbConnection, attr)
         try:
             func = attr.im_func
@@ -456,10 +457,16 @@ class Transaction(object):
 
     def _makeObsolete(self):
         self._obsolete = True
-        self._dbConnection.releaseConnection(self._connection)
-        self._dbConnection = None
+        self._dbConnection.releaseConnection(self._connection,
+                                             explicit=True)
         self._connection = None
-        self.cache = None
+
+    def begin(self):
+        # @@: Should we do this, or should begin() be a no-op when we're
+        # not already obsolete?
+        assert self._obsolete, "You cannot begin a new transaction session without committing or rolling back the transaction"
+        self._obsolete = False
+        self._connection = self._dbConnection.getConnection()
 
     def __del__(self):
         if self._obsolete:
