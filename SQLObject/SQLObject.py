@@ -1085,10 +1085,7 @@ class SQLObject(object):
         items = []
         for col in self._SO_columns:
             value = getattr(self, col.name)
-            r = repr(value)
-            if len(r) > 20:
-                value = r[:17] + "..." + r[-1]
-            items.append((col.name, getattr(self, col.name)))
+            items.append((col.name, value))
         return items
 
 
