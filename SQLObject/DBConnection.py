@@ -408,9 +408,6 @@ class Transaction(object):
 
     def iterSelect(self, select):
         self.assertActive()
-        # @@: Bad stuff here, because the connection will be used
-        # until the iteration is over, or at least a cursor from
-        # the connection, which not all database drivers support.
         return Iteration(self, self._connection,
                          select, keepConnection=True)
 
@@ -425,7 +422,7 @@ class Transaction(object):
 
     def rollback(self):
         if self._obsolete:
-            # @@: is it okay to get extraneous commits?
+            # @@: is it okay to get extraneous rollbacks?
             return
         if self._dbConnection.debug:
             self._dbConnection.printDebug(self._connection, '', 'ROLLBACK')
