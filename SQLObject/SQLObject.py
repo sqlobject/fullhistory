@@ -841,6 +841,7 @@ class SQLObject(object):
         if kw.has_key('connection'):
 	    connection = kw['connection']
             inst = cls(CreateNewSQLObject, connection=connection)
+            inst._SO_perConnection = True
             del kw['connection']
         else:
             inst = cls(CreateNewSQLObject)
