@@ -197,3 +197,14 @@ and this will mess up your base64-encoded values.  As a workaround:
 .. raw:: html
    :file: ../examples/snippets/image-binary-sqlite.html
 
+Why can't you do ``len(MyClass.select(...))``?
+----------------------------------------------
+
+Right now you can instead to ``MyClass.select(...).count()``.  We
+can't use ``len()`` because ``list()`` calls ``__len__`` implicitly
+(so it can preallocate space for the list).  So the idiom
+``list(MyClass.select(...))`` would result in a ``COUNT`` SQL query
+being run before the actual SQL query, which is very expensive.  By
+making the method explicit, we make sure people are aware of the
+expense of their query (even if it is cheaper than actually getting
+the entire result set).
