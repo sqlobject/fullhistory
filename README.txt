@@ -1,5 +1,5 @@
 ===============
-SQLObject 0.5.1
+SQLObject 0.5.2
 ===============
 
 :Author: Ian Bicking
