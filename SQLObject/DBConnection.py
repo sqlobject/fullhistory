@@ -384,21 +384,30 @@ class Transaction(object):
         self._connection = dbConnection.getConnection()
         self._dbConnection._setAutoCommit(self._connection, 0)
         self.cache = CacheSet(cache=dbConnection.doCache)
+        self._obsolete = False
+
+    def assertActive(self):
+        assert not self._obsolete, "This transaction has already gone through COMMIT/ROLLBACK; create another transaction"
 
     def query(self, s):
+        self.assertActive()
         return self._dbConnection._query(self._connection, s)
 
     def queryAll(self, s):
+        self.assertActive()
         return self._dbConnection._queryAll(self._connection, s)
 
     def queryOne(self, s):
+        self.assertActive()
         return self._dbConnection._queryOne(self._connection, s)
 
     def queryInsertID(self, table, idName, id, names, values):
+        self.assertActive()
         return self._dbConnection._queryInsertID(
             self._connection, table, idName, id, names, values)
 
     def iterSelect(self, select):
+        self.assertActive()
         # @@: Bad stuff here, because the connection will be used
         # until the iteration is over, or at least a cursor from
         # the connection, which not all database drivers support.
@@ -406,11 +415,18 @@ class Transaction(object):
                          select, keepConnection=True)
 
     def commit(self):
+        if self._obsolete:
+            # @@: is it okay to get extraneous commits?
+            return
         if self._dbConnection.debug:
             self._dbConnection.printDebug(self._connection, '', 'COMMIT')
         self._connection.commit()
+        self._makeObsolete()
 
     def rollback(self):
+        if self._obsolete:
+            # @@: is it okay to get extraneous commits?
+            return
         if self._dbConnection.debug:
             self._dbConnection.printDebug(self._connection, '', 'ROLLBACK')
         subCaches = [(sub, sub.allIDs()) for sub in self.cache.allSubCaches()]
@@ -421,6 +437,7 @@ class Transaction(object):
                 inst = subCache.tryGet(id)
                 if inst is not None:
                     inst.expire()
+        self._makeObsolete()
 
     def __getattr__(self, attr):
         """
@@ -437,9 +454,17 @@ class Transaction(object):
             meth = new.instancemethod(func, self, self.__class__)
             return meth
 
-    def __del__(self):
-        self.rollback()
+    def _makeObsolete(self):
+        self._obsolete = True
         self._dbConnection.releaseConnection(self._connection)
+        self._dbConnection = None
+        self._connection = None
+        self.cache = None
+
+    def __del__(self):
+        if self._obsolete:
+            return
+        self.rollback()
 
 ########################################
 ## MySQL connection
