@@ -8,7 +8,7 @@ all require a connection, you can configure that just in this file.
 """
 conn = MySQLConnection(user='test', db='testdb')
 conn = PostgresConnection('user=test dbname=testdb')
-conn = SQLiteConnect('database.db')
+conn = SQLiteConnection('database.db')
 conn = DBMConnection('database/')
 """
 conn = DBMConnection('database/')

@@ -5,7 +5,7 @@ from SQLObject import *
 ## Snippet "connections"
 conn = MySQLConnection(user='test', db='testdb')
 conn = PostgresConnection('user=test dbname=testdb')
-conn = SQLiteConnect('database.db')
+conn = SQLiteConnection('database.db')
 conn = DBMConnection('database/')
 ## End snippet
 """

@@ -4,7 +4,7 @@ from SQLObject import *
 """
 conn = MySQLConnection(user='test', db='testdb')
 conn = PostgresConnection('user=test dbname=testdb')
-conn = SQLiteConnect('database.db')
+conn = SQLiteConnection('database.db')
 conn = DBMConnection('database/')
 """
 __connection__ = MySQLConnection(user='test', db='test')
