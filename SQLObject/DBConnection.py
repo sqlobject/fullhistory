@@ -105,7 +105,11 @@ class DBAPI(DBConnection):
                     self.printDebug(conn, 'auto', 'ROLLBACK')
                 conn.rollback()
         if self._pool is not None:
-            self._pool.append(conn)
+            if conn not in self._pool:
+                # @@: We can get duplicate releasing of connections with
+                # the __del__ in Iteration (unfortunately, not sure why
+                # it happens)
+                self._pool.append(conn)
 
     def printDebug(self, conn, s, name, type='query'):
         if type == 'query':
@@ -363,8 +367,7 @@ class Iteration(object):
     def next(self):
         result = self.cursor.fetchone()
         if result is None:
-            if not self.keepConnection:
-                self.dbconn.releaseConnection(self.rawconn)
+            self._cleanup()
             raise StopIteration
         if self.select.ops.get('lazyColumns', 0):
             obj = self.select.sourceClass(result[0], connection=self.dbconn)
@@ -373,9 +376,17 @@ class Iteration(object):
             obj = self.select.sourceClass(result[0], selectResults=result[1:], connection=self.dbconn)
             return obj
 
-    def __del__(self):
+    def _cleanup(self):
+        if self.query is None:
+            # already cleaned up
+            return
+        self.query = None
         if not self.keepConnection:
             self.dbconn.releaseConnection(self.rawconn)
+        self.dbconn = self.rawconn = self.select = self.cursor = None
+
+    def __del__(self):
+        self._cleanup()
 
 class Transaction(object):
 
