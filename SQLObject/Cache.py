@@ -143,6 +143,8 @@ class CacheFactory(object):
             self.lock.release()
 
     def expireAll(self):
+        if not self.doCache:
+            return
         self.lock.acquire()
         try:
             for key, value in self.cache.items():
