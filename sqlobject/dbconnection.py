@@ -294,6 +294,7 @@ class DBAPI(DBConnection):
             self.printDebug(conn, query, 'QueryR')
         return cursor.execute(query)
 
+
     def _query(self, conn, s):
         if self.debug:
             self.printDebug(conn, s, 'Query')

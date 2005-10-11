@@ -42,9 +42,18 @@ class SQLiteConnection(DBAPI):
                 opts['mode'] = int(popKey(kw, 'mode'), 0)
         if 'timeout' in kw:
             opts['timeout'] = float(popKey(kw, 'timeout'))
+
         # use only one connection for sqlite - supports multiple)
         # cursors per connection
-        self._conn = sqlite.connect(self.filename, **opts)
+
+        # multiple cursors or connections is not handled properly by SQLite as
+        # multiple readers/writers can cause deadlock
+        # --Victorng
+
+        #self._conn = sqlite.connect(self.filename, **opts)
+
+        self._conn = sqlite.connect(":memory:")
+
         DBAPI.__init__(self, **kw)
 
     def connectionFromURI(cls, uri):
@@ -127,8 +136,9 @@ class SQLiteConnection(DBAPI):
 
     def tableExists(self, tableName):
         result = self.queryOne("SELECT tbl_name FROM sqlite_master WHERE type='table' AND tbl_name = '%s'" % tableName)
+        print "Table [%s] exists: %s" % (tableName, bool(result))
         # turn it into a boolean:
-        return not not result
+        return bool(result)
 
     def createIndexSQL(self, soClass, index):
         return index.sqliteCreateIndexSQL(soClass)

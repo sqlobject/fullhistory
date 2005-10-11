@@ -78,7 +78,9 @@ def setupClass(soClasses, force=False):
     installOrClear(soClasses, force=force)
     return soClasses
 
-installedDBFilename = os.path.join(getcwd(), 'dbs_data.tmp')
+# Forget the filesystem.  Let SQLite run in-memory.
+installedDBFilename = ":memory:"
+#installedDBFilename = os.path.join(getcwd(), 'dbs_data.tmp')
 
 installedDBTracker = sqlobject.connectionForURI(
     'sqlite:///' + installedDBFilename)
