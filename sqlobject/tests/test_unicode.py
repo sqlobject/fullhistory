@@ -19,11 +19,7 @@ except NameError: # Python 2.2
 def test_create():
     setupClass(Unicode1)
 
-    # This data is fucked.  Default encoding of UnicodeCol is UTF8 and 0xf0 is
-    # not a valid character.  --VictorNg
-    #data = [u'\u00f0', u'test', 'ascii test']
-
-    data = [u'\x1e', u'test', 'ascii test']
+    data = [u'\u00f0', u'test', 'ascii test']
 
     items = []
     for i, n in enumerate(data):
