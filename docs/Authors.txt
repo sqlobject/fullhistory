@@ -16,4 +16,5 @@ Contributions have been made by:
 * Daniel Savard, Xsoli Inc <sqlobject at xsoli.com>
 * alexander smishlajev <alex at ank-sia.com>
 * Yaroslav Samchuk <yarcat at ank-sia.com>
+* Shahms King <shahms at shahms.com>
 * Oleg Broytmann <phd at phd.pp.ru>

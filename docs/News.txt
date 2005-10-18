@@ -7,6 +7,11 @@ News
 
 .. _start:
 
+SQLObject 0.7.1
+===============
+
+* Added ``TimeCol``.
+
 SQLObject 0.7.0
 ===============
 
