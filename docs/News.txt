@@ -12,6 +12,10 @@ SQLObject 0.7.1
 
 * Added ``TimeCol``.
 
+* Added support for psycopg2_
+
+.. _psycopg2: http://initd.org/projects/psycopg2
+
 SQLObject 0.7.0
 ===============
 
