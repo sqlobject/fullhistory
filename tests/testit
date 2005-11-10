@@ -1,0 +1,3 @@
+#!/bin/csh
+echo 'Did you remember to drop all the tables and sequences...'
+python test_sqlobject.py -d oracle > & oracle-test-results

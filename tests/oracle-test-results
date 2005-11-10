@@ -1,0 +1,167 @@
+.F..F..............F....F.......E...FF.....................FEEE
+======================================================================
+ERROR: testPickleCol (__main__.PickleColTest)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "test_sqlobject.py", line 1413, in testPickleCol
+    ctnr = PickleContainer(pickledata=mypickledata)
+  File "/home/cahnm/python/SQLObject-0.6.1/sqlobject/main.py", line 890, in __init__
+    self._create(id, **kw)
+  File "/home/cahnm/python/SQLObject-0.6.1/sqlobject/main.py", line 923, in _create
+    self._SO_finishCreate(id)
+  File "/home/cahnm/python/SQLObject-0.6.1/sqlobject/main.py", line 947, in _SO_finishCreate
+    id, names, values)
+  File "/home/cahnm/python/SQLObject-0.6.1/sqlobject/dbconnection.py", line 247, in queryInsertID
+    return self._runWithConnection(self._queryInsertID, soInstance, id, names, values)
+  File "/home/cahnm/python/SQLObject-0.6.1/sqlobject/dbconnection.py", line 125, in _runWithConnection
+    val = meth(conn, *args)
+  File "/home/cahnm/python/SQLObject-0.6.1/sqlobject/oracle/oracleconnection.py", line 58, in _queryInsertID
+    self.query(q)
+  File "/home/cahnm/python/SQLObject-0.6.1/sqlobject/dbconnection.py", line 210, in query
+    return self._runWithConnection(self._query, s)
+  File "/home/cahnm/python/SQLObject-0.6.1/sqlobject/dbconnection.py", line 125, in _runWithConnection
+    val = meth(conn, *args)
+  File "/home/cahnm/python/SQLObject-0.6.1/sqlobject/dbconnection.py", line 207, in _query
+    self._executeRetry(conn, conn.cursor(), s)
+  File "/home/cahnm/python/SQLObject-0.6.1/sqlobject/dbconnection.py", line 196, in _executeRetry
+    return cursor.execute(query)
+DatabaseError: ORA-01465: invalid hex number
+
+
+======================================================================
+ERROR: testConfirmType (__main__.ValidationTest)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "test_sqlobject.py", line 920, in testConfirmType
+    t = SOValidation(name2='hey')
+  File "/home/cahnm/python/SQLObject-0.6.1/sqlobject/main.py", line 890, in __init__
+    self._create(id, **kw)
+  File "/home/cahnm/python/SQLObject-0.6.1/sqlobject/main.py", line 923, in _create
+    self._SO_finishCreate(id)
+  File "/home/cahnm/python/SQLObject-0.6.1/sqlobject/main.py", line 950, in _SO_finishCreate
+    self._init(id)
+  File "/home/cahnm/python/SQLObject-0.6.1/sqlobject/main.py", line 654, in _init
+    self._SO_selectInit(selectResults)
+  File "/home/cahnm/python/SQLObject-0.6.1/sqlobject/main.py", line 841, in _SO_selectInit
+    colValue = col.toPython(colValue, self._SO_validatorState)
+  File "/usr/local/src/SQLObject-0.6.1/sqlobject/include/validators.py", line 196, in toPython
+    self.validatePython)
+  File "/usr/local/src/SQLObject-0.6.1/sqlobject/include/validators.py", line 184, in attemptConvert
+    post(value, state)
+  File "/usr/local/src/SQLObject-0.6.1/sqlobject/include/validators.py", line 458, in validatePython
+    raise InvalidField(self.message('invalid', "The input is not valid"), value, state)
+InvalidField: Enter only letters, numbers, or _ (underscore).  Value: 'x                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               '
+
+======================================================================
+ERROR: testValidate (__main__.ValidationTest)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "test_sqlobject.py", line 914, in testValidate
+    t = SOValidation(name='hey')
+  File "/home/cahnm/python/SQLObject-0.6.1/sqlobject/main.py", line 890, in __init__
+    self._create(id, **kw)
+  File "/home/cahnm/python/SQLObject-0.6.1/sqlobject/main.py", line 923, in _create
+    self._SO_finishCreate(id)
+  File "/home/cahnm/python/SQLObject-0.6.1/sqlobject/main.py", line 950, in _SO_finishCreate
+    self._init(id)
+  File "/home/cahnm/python/SQLObject-0.6.1/sqlobject/main.py", line 654, in _init
+    self._SO_selectInit(selectResults)
+  File "/home/cahnm/python/SQLObject-0.6.1/sqlobject/main.py", line 841, in _SO_selectInit
+    colValue = col.toPython(colValue, self._SO_validatorState)
+  File "/usr/local/src/SQLObject-0.6.1/sqlobject/include/validators.py", line 196, in toPython
+    self.validatePython)
+  File "/usr/local/src/SQLObject-0.6.1/sqlobject/include/validators.py", line 184, in attemptConvert
+    post(value, state)
+  File "/usr/local/src/SQLObject-0.6.1/sqlobject/include/validators.py", line 458, in validatePython
+    raise InvalidField(self.message('invalid', "The input is not valid"), value, state)
+InvalidField: Enter only letters, numbers, or _ (underscore).  Value: 'hey                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             '
+
+======================================================================
+ERROR: testWrapType (__main__.ValidationTest)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "test_sqlobject.py", line 930, in testWrapType
+    t = SOValidation(name3=1)
+  File "/home/cahnm/python/SQLObject-0.6.1/sqlobject/main.py", line 890, in __init__
+    self._create(id, **kw)
+  File "/home/cahnm/python/SQLObject-0.6.1/sqlobject/main.py", line 923, in _create
+    self._SO_finishCreate(id)
+  File "/home/cahnm/python/SQLObject-0.6.1/sqlobject/main.py", line 950, in _SO_finishCreate
+    self._init(id)
+  File "/home/cahnm/python/SQLObject-0.6.1/sqlobject/main.py", line 654, in _init
+    self._SO_selectInit(selectResults)
+  File "/home/cahnm/python/SQLObject-0.6.1/sqlobject/main.py", line 841, in _SO_selectInit
+    colValue = col.toPython(colValue, self._SO_validatorState)
+  File "/usr/local/src/SQLObject-0.6.1/sqlobject/include/validators.py", line 196, in toPython
+    self.validatePython)
+  File "/usr/local/src/SQLObject-0.6.1/sqlobject/include/validators.py", line 184, in attemptConvert
+    post(value, state)
+  File "/usr/local/src/SQLObject-0.6.1/sqlobject/include/validators.py", line 458, in validatePython
+    raise InvalidField(self.message('invalid', "The input is not valid"), value, state)
+InvalidField: Enter only letters, numbers, or _ (underscore).  Value: 'x                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               '
+
+======================================================================
+FAIL: testBLOBCol (__main__.BLOBColTest)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "test_sqlobject.py", line 1392, in testBLOBCol
+    self.assertEqual(prof2.image, data)
+AssertionError: <cx_Oracle.LOB object at 0x4041b050> != '\x00\x01\x02\x03\x04\x05\x06\x07\x08\t\n\x0b\x0c\r\x0e\x0f\x10\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1a\x1b\x1c\x1d\x1e\x1f !"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~\x7f\x80\x81\x82\x83\x84\x85\x86\x87\x88\x89\x8a\x8b\x8c\x8d\x8e\x8f\x90\x91\x92\x93\x94\x95\x96\x97\x98\x99\x9a\x9b\x9c\x9d\x9e\x9f\xa0\xa1\xa2\xa3\xa4\xa5\xa6\xa7\xa8\xa9\xaa\xab\xac\xad\xae\xaf\xb0\xb1\xb2\xb3\xb4\xb5\xb6\xb7\xb8\xb9\xba\xbb\xbc\xbd\xbe\xbf\xc0\xc1\xc2\xc3\xc4\xc5\xc6\xc7\xc8\xc9\xca\xcb\xcc\xcd\xce\xcf\xd0\xd1\xd2\xd3\xd4\xd5\xd6\xd7\xd8\xd9\xda\xdb\xdc\xdd\xde\xdf\xe0\xe1\xe2\xe3\xe4\xe5\xe6\xe7\xe8\xe9\xea\xeb\xec\xed\xee\xef\xf0\xf1\xf2\xf3\xf4\xf5\xf6\xf7\xf8\xf9\xfa\xfb\xfc\xfd\xfe\xff'
+
+======================================================================
+FAIL: testDateTime (__main__.DateTimeTest1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "test_sqlobject.py", line 1347, in testDateTime
+    self.assertEqual(str(dt1.col1), today_str)
+AssertionError: '2005-10-09 16:00:37' != '2005-10-09'
+
+======================================================================
+FAIL: test_04_indexed_ended_by_exception (__main__.IterationTestCase)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "test_sqlobject.py", line 409, in test_04_indexed_ended_by_exception
+    self.assertEqual(count, len(self.names))
+AssertionError: 4 != 3
+
+======================================================================
+FAIL: test (__main__.LazyTest)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "test_sqlobject.py", line 1109, in test
+    self.assertEqual(obj.name, 'loaded')
+AssertionError: 'loaded                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          ' != 'loaded'
+
+======================================================================
+FAIL: test2 (__main__.SliceTest)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "test_sqlobject.py", line 544, in test2
+    range(10, 20))
+  File "test_sqlobject.py", line 537, in counterEqual
+    self.assertEquals([c.some_number for c in counters], value)
+AssertionError: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99] != [10, 11, 12, 13, 14, 15, 16, 17, 18, 19]
+
+======================================================================
+FAIL: test3 (__main__.SliceTest)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "test_sqlobject.py", line 548, in test3
+    range(20, 25))
+  File "test_sqlobject.py", line 537, in counterEqual
+    self.assertEquals([c.some_number for c in counters], value)
+AssertionError: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99] != [20, 21, 22, 23, 24]
+
+======================================================================
+FAIL: testCreate (__main__.UnicodeTest)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "test_sqlobject.py", line 1320, in testCreate
+    self.assertEqual(self.data[count].encode('utf-8'), col1)
+AssertionError: '\xc3\xb0' != '??                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              '
+
+----------------------------------------------------------------------
+Ran 63 tests in 59.279s
+
+FAILED (failures=7, errors=4)
+Testing oracle

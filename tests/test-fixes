@@ -1,0 +1,24 @@
+Changes to fix unit tests for 0.6.1 with Oracle support.
+Matthew Cahn
+10/9/2005
+
+test_sqlobject.py:
+	Can't have a column called "number", change to "some_number".
+
+	Define create and drop if Oracle in SOStringID
+
+	IndexTest1: don't try to create a second index on the
+		same column (gives ORA-01408).
+	(*** Just commented out, so not tested for other db's.)
+
+ERROR: testForeignKeyDropTableCascade (__main__.TestCase567)
+DatabaseError: ORA-02449: unique/primary keys in table referenced by foreign keys
+Add CASCASDE CONTRAINTS to dropTable in oracleconnection.py.
+
+Not fixed:
+	ERROR: testPickleCol (__main__.PickleColTest)
+	DatabaseError: ORA-01465: invalid hex number
+	Need to call createBinary and returnBinary somehow (issue
+	of which validator to use.)
+
+
