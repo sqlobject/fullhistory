@@ -311,6 +311,9 @@ class SOCol(object):
     def _sybaseType(self):
         return self._sqlType()
 
+    def _mssqlType(self):
+        return self._sqlType()
+
     def _firebirdType(self):
         return self._sqlType()
 
@@ -329,6 +332,9 @@ class SOCol(object):
     def sybaseCreateSQL(self):
         return ' '.join([self.dbName, self._sybaseType()] + self._extraSQL())
 
+    def mssqlCreateSQL(self):
+        return ' '.join([self.dbName, self._mssqlType()] + self._extraSQL())
+        
     def firebirdCreateSQL(self):
         # Ian Sparks pointed out that fb is picky about the order
         # of the NOT NULL clause in a create statement.  So, we handle
@@ -462,6 +468,17 @@ class SOStringLikeCol(SOCol):
     def _sybaseType(self):
         self._check_case_sensitive("SYBASE")
         type = self._sqlType()
+        if not self.notNone and not self.alternateID:
+            type += ' NULL'
+        return type
+
+    def _mssqlType(self):
+        if not self.length:
+            type = 'varchar(4000)'
+        elif self.varchar:
+            type = 'VARCHAR(%i)' % self.length
+        else:
+            type = 'CHAR(%i)' % self.length
         if not self.notNone and not self.alternateID:
             type += ' NULL'
         return type
@@ -612,6 +629,9 @@ class SOBoolCol(SOCol):
     def _sybaseType(self):
         return "BIT"
 
+    def _mssqlType(self):
+        return "BIT"
+
     def _firebirdType(self):
         return 'INT'
 
@@ -682,6 +702,9 @@ class SOKeyCol(SOCol):
 
     def _sybaseType(self):
         return 'NUMERIC(18,0) NULL'
+    
+    def _mssqlType(self):
+        return 'INT NULL'
 
     def _firebirdType(self):
         return 'INT'
@@ -742,6 +765,17 @@ class SOForeignKey(SOKeyCol):
         sql = ' '.join([sql, reference])
         return sql
 
+    def mssqlCreateSQL(self):
+        sql = SOKeyCol.mssqlCreateSQL(self)
+        other = findClass(self.foreignKey)
+        tName = other.sqlmeta.table
+        idName = other.sqlmeta.idName
+        reference = ('REFERENCES %(tName)s(%(idName)s) ' %
+                     {'tName':tName,
+                      'idName':idName})
+        sql = ' '.join([sql, reference])
+        return sql
+
     def maxdbCreateSQL(self):
         other = findClass(self.foreignKey)
         fidName = self.dbName
@@ -788,6 +822,9 @@ class SOEnumCol(SOCol):
         return self._postgresType()
 
     def _sybaseType(self):
+        return self._postgresType()
+
+    def _mssqlType(self):
         return self._postgresType()
 
     def _firebirdType(self):
@@ -923,6 +960,9 @@ class SODateTimeCol(SOCol):
     def _sybaseType(self):
         return 'DATETIME'
 
+    def _mssqlType(self):
+        return 'DATETIME'
+
     def _sqliteType(self):
         return 'TIMESTAMP'
 
@@ -985,6 +1025,12 @@ class SODateCol(SOCol):
 
     def _sybaseType(self):
         return self._postgresType()
+    
+    def _mssqlType(self):
+        """
+        SQL Server doesn't have  a DATE data type, to emulate we use a vc(10)
+        """
+        return 'VARCHAR(10)'
 
     def _firebirdType(self):
         return 'DATE'
@@ -1093,7 +1139,7 @@ class BinaryValidator(validators.Validator):
             return None
         if isinstance(value, str):
             module = state.soObject._connection.module
-            if module.__name__ == "sqlite":
+            if module.__name__ in ("sqlite", "pysqlite2.dbapi2"):
                 value = module.decode(value)
             return value
         if isinstance(value, (buffer_type, state.soObject._connection._binaryType)):
@@ -1131,6 +1177,9 @@ class SOBLOBCol(SOStringCol):
 
     def _postgresType(self):
         return 'BYTEA'
+
+    def _mssqlType(self):
+        return "IMAGE"
 
 class BLOBCol(StringCol):
     baseClass = SOBLOBCol
