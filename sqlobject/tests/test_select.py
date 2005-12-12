@@ -71,7 +71,11 @@ def test_04_indexed_ended_by_exception():
         pass
     assert count == len(names)
 
-
+def test_selectBy():
+    setupClass(IterTest)
+    a = IterTest(name='a')
+    b = IterTest(name='b')
+    assert IterTest.selectBy().count() == 2
 
 
 class Counter2(SQLObject):
