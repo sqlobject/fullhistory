@@ -128,6 +128,8 @@ class SOCol(object):
                  origName=None,
                  extra_vars=None):
 
+        super(SOCol, self).__init__()
+
         # This isn't strictly true, since we *could* use backquotes or
         # " or something (database-specific) around column names, but
         # why would anyone *want* to use a name like that?
@@ -380,6 +382,7 @@ class Col(object):
     baseClass = SOCol
 
     def __init__(self, name=None, **kw):
+        super(Col, self).__init__()
         self.__dict__['_name'] = name
         self.__dict__['_kw'] = kw
         self.__dict__['creationOrder'] = creationOrder.next()
@@ -429,7 +432,7 @@ class SOStringLikeCol(SOCol):
         elif self.varchar == 'auto':
             self.varchar = True
 
-        SOCol.__init__(self, **kw)
+        super(SOStringLikeCol, self).__init__(**kw)
 
     def autoConstraints(self):
         constraints = [consts.isString]
@@ -727,7 +730,7 @@ class SOForeignKey(SOKeyCol):
             kw['origName'] = kw['name']
             if not kw['name'].upper().endswith('ID'):
                 kw['name'] = style.instanceAttrToIDAttr(kw['name'])
-        SOKeyCol.__init__(self, **kw)
+        super(SOForeignKey, self).__init__(**kw)
 
     def postgresCreateSQL(self):
         sql = SOKeyCol.postgresCreateSQL(self)
@@ -792,7 +795,7 @@ class ForeignKey(KeyCol):
     baseClass = SOForeignKey
 
     def __init__(self, foreignKey=None, **kw):
-        KeyCol.__init__(self, foreignKey=foreignKey, **kw)
+        super(ForeignKey, self).__init__(foreignKey=foreignKey, **kw)
 
 class SOEnumCol(SOCol):
 
@@ -800,7 +803,7 @@ class SOEnumCol(SOCol):
         self.enumValues = popKey(kw, 'enumValues', None)
         assert self.enumValues is not None, \
                'You must provide an enumValues keyword argument'
-        SOCol.__init__(self, **kw)
+        super(SOEnumCol, self).__init__(**kw)
 
     def autoConstraints(self):
         return [consts.isString, consts.InList(self.enumValues)]
@@ -939,7 +942,7 @@ class SODateTimeCol(SOCol):
         datetimeFormat = popKey(kw, 'datetimeFormat')
         if datetimeFormat:
             self.datetimeFormat = datetimeFormat
-        SOCol.__init__(self, **kw)
+        super(SODateTimeCol, self).__init__(**kw)
 
     def createValidators(self):
         _validators = super(SODateTimeCol, self).createValidators()
@@ -1004,7 +1007,7 @@ class SODateCol(SOCol):
     def __init__(self, **kw):
         dateFormat = popKey(kw, 'dateFormat')
         if dateFormat: self.dateFormat = dateFormat
-        SOCol.__init__(self, **kw)
+        super(SODateCol, self).__init__(**kw)
 
     def createValidators(self):
         """Create a validator for the column. Can be overriden in descendants."""
@@ -1062,7 +1065,7 @@ class SOTimeCol(SOCol):
         timeFormat = popKey(kw, 'timeFormat')
         if timeFormat:
             self.timeFormat = timeFormat
-        SOCol.__init__(self, **kw)
+        super(SOTimeCol, self).__init__(**kw)
 
     def createValidators(self):
         _validators = super(SOTimeCol, self).createValidators()
@@ -1105,7 +1108,7 @@ class SODecimalCol(SOCol):
         self.precision = popKey(kw, 'precision', NoDefault)
         assert self.precision is not NoDefault, \
                "You must give a precision argument"
-        SOCol.__init__(self, **kw)
+        super(SODecimalCol, self).__init__(**kw)
 
     def _sqlType(self):
         return 'DECIMAL(%i, %i)' % (self.size, self.precision)
@@ -1118,7 +1121,7 @@ class SOCurrencyCol(SODecimalCol):
     def __init__(self, **kw):
         pushKey(kw, 'size', 10)
         pushKey(kw, 'precision', 2)
-        SODecimalCol.__init__(self, **kw)
+        super(SOCurrencyCol, self).__init__(**kw)
 
 class CurrencyCol(DecimalCol):
     baseClass = SOCurrencyCol
@@ -1214,7 +1217,7 @@ class SOPickleCol(SOBLOBCol):
 
     def __init__(self, **kw):
         self.pickleProtocol = popKey(kw, 'pickleProtocol', 1)
-        SOBLOBCol.__init__(self, **kw)
+        super(SOPickleCol, self).__init__(**kw)
 
     def createValidators(self):
         return [PickleValidator(
