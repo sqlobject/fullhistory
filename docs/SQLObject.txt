@@ -407,6 +407,11 @@ returns a list.  An example::
     <Address 1 ...>
     >>> p.addresses
     [<Address 1 ...>]
+    
+.. note::
+  MultipleJoin, as well as RelatedJoin, returns a list of results.
+  Would you prefer to get a SelectResults objects, you should use
+  SQLMultipleJoin and SQLRelated Join. Usage stays immutated.
 
 Many-to-Many Relationships
 --------------------------
@@ -467,6 +472,19 @@ In the process an intermediate table is created, ``role_user``, which
 references both of the other classes.  This table is never exposed as
 a class, and its rows do not have equivalent Python objects -- this
 hides some of the nuisance of a many-to-many relationship.
+
+By the way, if you want to create an intermediate table of your own,
+maybe with additional columns, be aware that the standard SQLObject
+methods add/removesomething may not work as expected. Assuming that
+you are providing the join with the correct joinColumn and otherColumn
+arguments, be aware it's not possibile to insert extra data via such
+methodos, nor will they set any default value.  
+
+Let's have an example: in the previous User/Role system,
+you're creating a UserRole intermediate table, with the two columns
+containing the foreign keys for the MTM relationship, and an additional
+DateTimeCol defaulting to datetime.datetime.now : that column will
+stay empty when adding roles with the addRole method.
 
 You may notice that the columns have the extra keyword argument
 `alternateID`.  If you use ``alternateID=True``, this means that the
@@ -727,6 +745,10 @@ when SQLObject 0.8 is out and you'll receive lots of warning messages
 saying that if you're not using the ``sqlmeta`` class you're doing things
 in a deprecated way.
 
+Please note: when using InheritedSQLObject, sqlmeta attributes don't
+get inherited, e.g. you can't access via the sqlmeta.columns dictionary
+the parent's class column objects.
+
 Using sqlmeta
 ~~~~~~~~~~~~~
 
@@ -948,6 +970,22 @@ digits, and of proper length, and make the formatting nice::
    representation (as those commands generate SQL that is run on the
    database).
 
+Undefined attributes
+~~~~~~~~~~~~~~~~~~~~
+
+There's one more thing  worth telling, because you may something get 
+strange results when making a typo. SQLObject won't ever complain or
+raise any error when setting a previously undefined attribute; it will
+simply set it, without making any change to the database, i.e: it will
+work as any other attribute you set on any Python class, it will
+'forget' it is a SQLObject class.
+
+This may sometimes be a problem: if you have got a 'name' attribute and
+you you write 'a.namme="Victor"' once, when setting it, you'll get no
+error, no warning, nothing at all, and you may get crazy at understanding
+why you don't get that value set in your DB.
+
+
 Reference
 =========
 
@@ -1021,6 +1059,8 @@ different types of columns, when SQLObject creates your tables.
 
 `CurrencyCol`:
     Equivalent to ``DecimalCol(size=10, precision=2)``.
+    WARNING: as DecimalCol MAY NOT return precise numbers, this column
+    may share the same behaviour. Please read the DecimalCol warning.
 
 `DateTimeCol`:
     A date and time (usually returned as an datetime or mxDateTime object).
@@ -1035,7 +1075,12 @@ different types of columns, when SQLObject creates your tables.
     Base-10, precise number.  Uses the keyword arguments `size` for
     number of digits stored, and `precision` for the number of digits
     after the decimal point.
-
+	  WARNING: it may happen that DecimalCol values, although correctly
+	  stored in the DB, are returned as floats instead of decimals. 
+	  You should test with your database adapter, and you should try
+	  importing the Decimal type and your DB adapter before importing
+	  SQLObject.
+	  
 `EnumCol`:
     One of several string values -- give the possible strings as a
     list, with the `enumValues` keyword argument.  MySQL has a native
@@ -1085,11 +1130,14 @@ You can use the `ForeignKey` to handle foreign references in a table,
 but for back references and many-to-many relationships you'll use
 joins.
 
-MultipleJoin: One-to-Many
-~~~~~~~~~~~~~~~~~~~~~~~~~
+MultipleJoin and SQLMultipleJoin: One-to-Many
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 See `One-to-Many Relationships`_ for an example of one-to-many
 relationships.
+
+MultipleJoin returns a list of results, while SQLMultipleJoin returns a
+SelectResults object.
 
 Several keyword arguments are allowed to the `MultipleJoin` constructor:
 
@@ -1099,6 +1147,14 @@ Several keyword arguments are allowed to the `MultipleJoin` constructor:
     The column name of the key that points to this table.  So, if you have
     a table ``Product``, and another table has a column ``ProductNo`` that
     points to this table, then you'd use ``joinColumn="ProductNo"``.
+    WARNING: the argument you pass must conform to the column name in the
+    database, not to the column in the class. So, if you have a SQLObject
+    containing the 'ProductNo' column, this will probably be translated
+    into 'product_no_id' in the DB ( product_no is the normal uppercase-
+    to-lowercase + underscores SQLO Translation, the added _id is just
+    because the column referring to the table is probably a ForeignKey,
+    and SQLO translates foreign keys that way). 
+    You should pass that parameter.
 `orderBy`:
     Like the `orderBy`_ argument to `select()`, you can specify
     the order that the joined objects should be returned in.  `_defaultOrder`
@@ -1109,24 +1165,45 @@ Several keyword arguments are allowed to the `MultipleJoin` constructor:
     created automatically, and is normally implied (i.e., ``addresses =
     MultipleJoin(...)`` implies ``joinMethodName="addresses"``).
 
-RelatedJoin: Many-to-Many
-~~~~~~~~~~~~~~~~~~~~~~~~~
+RelatedJoin and SQLRelatedJoin: Many-to-Many
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 See `Many-to-Many Relationships`_ for examples of using many-to-many joins.
+
+RelatedJoin returns a list of results, while SQLRelatedJoin returns a
+SelectResults object.
+
 
 `RelatedJoin` has all the keyword arguments of `MultipleJoin`__, plus:
 
 __ `Multiple Join Keywords`_
 
 `otherColumn`:
-    Similar to `joinColumn`, but referring to the joined class.
+    Similar to `joinColumn`, but referring to the joined class. Same
+    warning about column name.
 `intermediateTable`:
     The name of the intermediate table which references both classes.
+    WARNING: you should pass the database table name, not the SQLO
+    class representine.
 `addRemoveName`:
     In the `user/role example`__, the methods `addRole(role)` and
     `removeRole(role)` are created.  The ``Role`` portion of these
     method names can be changed by giving a string value here.
+`createRelatedTable`:
+		default: ``True``. If ``False``, then the related table won't be
+		automatically created; instead you must manually create it (e.g.,
+		with explicit SQLObject classes for the joins). New in 0.7.1.
 
+.. note::
+   Let's suppose you have SQLObject-inherited classes Alpha and Beta, 
+   and an AlphasAndBetas used for the many-to-many relationship. 
+   AlphasAndBetas contains the alphaIndex Foreign Key column referring
+   to Alpha, and the betaIndex FK column referring to Beta.
+   if you want a 'betas' RelatedJoin in Alpha, you should add it to
+   Alpha passing 'Beta' (class name!) as the first parameter, then
+   passing 'alpha_index_id' as joinColumn, 'beta_index_id' as 
+   otherColumn, and 'alphas_and_betas' as intermediateTable.
+   
 __ `Many-to-Many Relationships`_
 
 An example schema that requires the use of `joinColumn`, `otherColumn`,
@@ -1347,7 +1424,6 @@ convention.  For instance::
 
     class Person(SQLObject):
         _style = MixedCaseStyle(longID=True)
-
         firstName = StringCol()
         lastName = StringCol()
 
