@@ -740,7 +740,7 @@ class SQLObject(object):
         if hasattr(cls, '_inheritable') and cls._inheritable and \
             cls.__name__ <> "InheritableSQLObject":
             cls.sqlmeta.columnDefinitions['childName'] = col.StringCol(
-                name='childName', default=None)
+                name='childName', length=255, default=None)
 
         ######################################################
         # Set some attributes to their defaults, if necessary.
