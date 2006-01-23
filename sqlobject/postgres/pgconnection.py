@@ -162,9 +162,13 @@ class PostgresConnection(DBAPI):
         return result[0]
 
     def addColumn(self, tableName, column):
+        if hasattr(column, "postgresCreateColumnSQL"):
+            postgresCreateSQL = column.postgresCreateColumnSQL
+        else:
+            postgresCreateSQL = column.postgresCreateSQL
         self.query('ALTER TABLE %s ADD COLUMN %s' %
                    (tableName,
-                    column.postgresCreateSQL()))
+                    postgresCreateSQL()))
 
     def delColumn(self, tableName, column):
         self.query('ALTER TABLE %s DROP COLUMN %s' %
