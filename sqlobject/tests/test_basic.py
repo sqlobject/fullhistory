@@ -275,3 +275,12 @@ def testForeignKeySetNull():
     assert dep1.other is None
     assert dep2.other is None
     assert dep3.other is obj2
+
+def test_nonexisting_attr():
+    setupClass(Student)
+    try:
+        Student.select(Student.q.nonexisting)
+    except AttributeError:
+        pass
+    else:
+        assert 0, "Expected an AttributeError"
