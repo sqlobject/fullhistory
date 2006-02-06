@@ -407,7 +407,7 @@ returns a list.  An example::
     <Address 1 ...>
     >>> p.addresses
     [<Address 1 ...>]
-    
+
 .. note::
   MultipleJoin, as well as RelatedJoin, returns a list of results.
   Would you prefer to get a SelectResults objects, you should use
@@ -478,7 +478,7 @@ maybe with additional columns, be aware that the standard SQLObject
 methods add/removesomething may not work as expected. Assuming that
 you are providing the join with the correct joinColumn and otherColumn
 arguments, be aware it's not possibile to insert extra data via such
-methodos, nor will they set any default value.  
+methodos, nor will they set any default value.
 
 Let's have an example: in the previous User/Role system,
 you're creating a UserRole intermediate table, with the two columns
@@ -656,8 +656,8 @@ values are:
 
 `table`:
    The name of the table in the database.  This is derived from
-   ``style`` and the class name if no explicit name is given.  If you 
-   don't give a name and haven't defined an alternative ``style``, then 
+   ``style`` and the class name if no explicit name is given.  If you
+   don't give a name and haven't defined an alternative ``style``, then
    the standard `MixedCase` to `mixed_case` translation is performed.
 
 `idName`:
@@ -670,10 +670,10 @@ values are:
    is ``int`` by default (all IDs are normalized to integers).
 
 `style`:
-   A style object -- this object allows you to use other algorithms 
+   A style object -- this object allows you to use other algorithms
    for translating between Python attribute and class names, and the
    database's column and table names.  See `Changing the Naming
-   Style`_ for more.  It is an instance of the `IStyle` interface.  
+   Style`_ for more.  It is an instance of the `IStyle` interface.
 
 `lazyUpdate`:
    A boolean (default false).  If true, then setting attributes on
@@ -695,9 +695,9 @@ values are:
    If set to `False` then values for attributes from the database
    won't be cached.  So every time you access an attribute in the
    object the database will be queried for a value, i.e., a ``SELECT``
-   will be issued.  If you want to handle concurrent access to the 
-   database from multiple processes then this is probably the way to 
-   do so.  You should also use it with transactions_ (it is not 
+   will be issued.  If you want to handle concurrent access to the
+   database from multiple processes then this is probably the way to
+   do so.  You should also use it with transactions_ (it is not
    implied).
 
 `registry`:
@@ -737,10 +737,10 @@ There is also one instance attribute:
    attributes are accessed a query will be run.
 
 
-While in previous versions of SQLObject those attributes were defined 
+While in previous versions of SQLObject those attributes were defined
 directly at the class that will map your database data to Python and
 all of them were prefixed with an underscore, now it is suggested that
-you change your code to this new style.  The old way will be removed 
+you change your code to this new style.  The old way will be removed
 when SQLObject 0.8 is out and you'll receive lots of warning messages
 saying that if you're not using the ``sqlmeta`` class you're doing things
 in a deprecated way.
@@ -783,11 +783,11 @@ you ask for some information it will be retrieved from the database.
 SQLObject Class
 ---------------
 
-Besides sqlmeta and columns specifications, there are a number of other 
+Besides sqlmeta and columns specifications, there are a number of other
 special attributes you can set in your class.  Those are listed below but,
 except for the ``_connection`` attribute, all other are superseded by the
 implementation shown before with sqlmeta.  If you use them with SQLObject
-0.7 you'll get warnings about their deprecation and you'll probably have 
+0.7 you'll get warnings about their deprecation and you'll probably have
 to convert your code in future releases, when these are dropped.
 
 `_connection`:
@@ -811,7 +811,7 @@ to convert your code in future releases, when these are dropped.
     from sqlmeta class.
 
 `_cacheValues`:
-    This is old style and works the same way as the `cacheValues` 
+    This is old style and works the same way as the `cacheValues`
     attribute from sqlmeta class.
 
 .. _idName:
@@ -973,7 +973,7 @@ digits, and of proper length, and make the formatting nice::
 Undefined attributes
 ~~~~~~~~~~~~~~~~~~~~
 
-There's one more thing  worth telling, because you may something get 
+There's one more thing  worth telling, because you may something get
 strange results when making a typo. SQLObject won't ever complain or
 raise any error when setting a previously undefined attribute; it will
 simply set it, without making any change to the database, i.e: it will
@@ -1075,12 +1075,12 @@ different types of columns, when SQLObject creates your tables.
     Base-10, precise number.  Uses the keyword arguments `size` for
     number of digits stored, and `precision` for the number of digits
     after the decimal point.
-	  WARNING: it may happen that DecimalCol values, although correctly
-	  stored in the DB, are returned as floats instead of decimals. 
-	  You should test with your database adapter, and you should try
-	  importing the Decimal type and your DB adapter before importing
-	  SQLObject.
-	  
+    WARNING: it may happen that DecimalCol values, although correctly
+    stored in the DB, are returned as floats instead of decimals.
+    You should test with your database adapter, and you should try
+    importing the Decimal type and your DB adapter before importing
+    SQLObject.
+
 `EnumCol`:
     One of several string values -- give the possible strings as a
     list, with the `enumValues` keyword argument.  MySQL has a native
@@ -1153,7 +1153,7 @@ Several keyword arguments are allowed to the `MultipleJoin` constructor:
     into 'product_no_id' in the DB ( product_no is the normal uppercase-
     to-lowercase + underscores SQLO Translation, the added _id is just
     because the column referring to the table is probably a ForeignKey,
-    and SQLO translates foreign keys that way). 
+    and SQLO translates foreign keys that way).
     You should pass that parameter.
 `orderBy`:
     Like the `orderBy`_ argument to `select()`, you can specify
@@ -1190,20 +1190,20 @@ __ `Multiple Join Keywords`_
     `removeRole(role)` are created.  The ``Role`` portion of these
     method names can be changed by giving a string value here.
 `createRelatedTable`:
-		default: ``True``. If ``False``, then the related table won't be
-		automatically created; instead you must manually create it (e.g.,
-		with explicit SQLObject classes for the joins). New in 0.7.1.
+    default: ``True``. If ``False``, then the related table won't be
+    automatically created; instead you must manually create it (e.g.,
+    with explicit SQLObject classes for the joins). New in 0.7.1.
 
 .. note::
-   Let's suppose you have SQLObject-inherited classes Alpha and Beta, 
-   and an AlphasAndBetas used for the many-to-many relationship. 
+   Let's suppose you have SQLObject-inherited classes Alpha and Beta,
+   and an AlphasAndBetas used for the many-to-many relationship.
    AlphasAndBetas contains the alphaIndex Foreign Key column referring
    to Alpha, and the betaIndex FK column referring to Beta.
    if you want a 'betas' RelatedJoin in Alpha, you should add it to
    Alpha passing 'Beta' (class name!) as the first parameter, then
-   passing 'alpha_index_id' as joinColumn, 'beta_index_id' as 
+   passing 'alpha_index_id' as joinColumn, 'beta_index_id' as
    otherColumn, and 'alphas_and_betas' as intermediateTable.
-   
+
 __ `Many-to-Many Relationships`_
 
 An example schema that requires the use of `joinColumn`, `otherColumn`,

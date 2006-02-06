@@ -79,10 +79,10 @@ Use LEFTJOIN() from SQLBuilder_.
 How can I join a table with itself?
 -----------------------------------
 
-Use Alias from SQLBuilder_.
+Use Alias from SQLBuilder_. See example_.
 
 .. _SQLBuilder: SQLBuilder.html
-
+.. _example: SQLObject.html#how-can-i-join-a-table-with-itself
 
 How Does Inheritance Work?
 --------------------------
