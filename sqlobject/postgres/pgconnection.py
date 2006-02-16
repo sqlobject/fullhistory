@@ -157,8 +157,19 @@ class PostgresConnection(DBAPI):
         return 'INT NOT NULL'
 
     def tableExists(self, tableName):
-        result = self.queryOne("SELECT COUNT(relname) FROM pg_class WHERE relname = %s"
-                               % self.sqlrepr(tableName))
+        if '.' in tableName and self.server_version[:3] >= "7.4":
+            (table_schema, table_name) = tableName.split('.')
+            query = """
+            SELECT COUNT(*) FROM information_schema.tables
+            WHERE table_schema = %s
+            AND table_name = %s
+            """ % (self.sqlrepr(table_schema), self.sqlrepr(table_name))
+        else:
+            query = """
+            SELECT COUNT(relname) FROM pg_class
+            WHERE relname = %s
+            """ % self.sqlrepr(tableName)
+        result = self.queryOne(query)
         return result[0]
 
     def addColumn(self, tableName, column):
