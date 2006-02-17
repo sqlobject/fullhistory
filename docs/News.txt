@@ -10,17 +10,23 @@ News
 SQLObject 0.7.1
 ===============
 
-* Added ``TimeCol``.
-
 * Added support for psycopg2_
 
 .. _psycopg2: http://initd.org/projects/psycopg2
+
+* Added support for MSSQL_.
+
+.. _MSSQL: SQLObject.html#ms-sql-server
+
+* Added ``TimeCol``.
 
 * ``RelatedJoin`` and ``SQLRelatedJoin`` objects have a
   ``createRelatedTable`` keyword argument (default ``True``).  If
   ``False``, then the related table won't be automatically created;
   instead you must manually create it (e.g., with explicit SQLObject
   classes for the joins).
+
+* Implemented ``RLIKE`` (reguluar expression LIKE).
 
 SQLObject 0.7.0
 ===============
