@@ -729,6 +729,13 @@ values are:
 `indexes`:
    A list of all the indexes for this class.
 
+`createSQL`:
+   SQL queries run after table creation. createSQL can be a string with a
+   single SQL command, a list of SQL commands, or a dictionary with keys that
+   are dbNames and values that are either single SQL command string or a list
+   of SQL commands. This is usually for ALTER TABLE commands.
+   ``%s``, if present, is substituted with the name of the table.
+
 
 There is also one instance attribute:
 
