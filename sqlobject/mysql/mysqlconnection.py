@@ -19,7 +19,7 @@ class MySQLConnection(DBAPI):
         self.user = user
         self.password = passwd
         self.kw = {}
-        for key in ("unix_socket", "named_pipe", "init_command",
+        for key in ("unix_socket", "init_command",
                 "read_default_file", "read_default_group"):
             if key in kw:
                 self.kw[key] = col.popKey(kw, key)
