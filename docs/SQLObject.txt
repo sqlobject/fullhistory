@@ -137,7 +137,7 @@ The connection URI must follow the standard URI syntax::
     scheme://[user[:password]@]host[:port]/database[?parameters]
 
 Scheme is one of ``sqlite``, ``mysql``, ``postgres``, ``firebird``,
-``interbase``, ``maxdb``, ``sapdb``, ``sybase``.
+``interbase``, ``maxdb``, ``sapdb``, ``mssql``, ``sybase``.
 
 Examples::
 
