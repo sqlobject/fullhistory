@@ -836,7 +836,15 @@ class CommandRecord(Command):
                               + '_' + dbName + '.sql')
             if sim:
                 continue
-            create, constraints = cls.createTableSQL()
+            # @@: This is a little hacky, but sometimes I'm getting string
+            # results here, and sometimes tuples (apparently, if the code is 
+            # meant to work?), so we'll allow for both
+            result = cls.createTableSQL()
+            if isinstance(result, basestring):
+                create = result
+                constraints = []
+            else:
+                create, constraints = result
             if constraints:
                 constraints = '\n-- Constraints:\n%s\n' % (
                     '\n'.join(constraints))
