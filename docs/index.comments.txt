@@ -1,0 +1,32 @@
+==== $(documentation)  c + c
+----------------------------------------
+date: 2006-01-31T06:41:48
+id: 1
+ip: 84.190.227.75
+username: MB
+
+Hier kann man Kommentare eingeben 
+==== $(example)  c
+----------------------------------------
+date: 2006-01-31T06:42:16
+id: 2
+ip: 84.190.227.75
+username: MB
+
+Sie werden jeweils nach Doppelklick gespeichert.
+==== $(example)  c +
+----------------------------------------
+date: 2006-01-31T06:42:36
+id: 3
+ip: 84.190.227.75
+username: MB
+
+Auch an unterschiedlichen Stellen geht das
+==== $(start) +++ c
+----------------------------------------
+date: 2006-02-18T21:13:55
+id: 4
+ip: 216.80.121.210
+username: Adrian H.
+
+Just spamming this page with another test! :)
