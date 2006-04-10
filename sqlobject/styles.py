@@ -76,10 +76,12 @@ class MixedCaseUnderscoreStyle(Style):
         return underToMixed(col)
 
     def pythonClassToDBTable(self, className):
-        return className[0].lower() + mixedToUnder(className[1:])
+        return className[0].lower() \
+               + mixedToUnder(className[1:])
 
     def dbTableToPythonClass(self, table):
-        return table[0].upper() + underToMixed(table[1:])
+        return table[0].upper() \
+               + underToMixed(table[1:])
 
     def pythonClassToDBTableReference(self, className):
         return self.tableReference(self.pythonClassToDBTable(className))

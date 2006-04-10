@@ -19,10 +19,10 @@ def setup():
 def insert():
     setup()
     TestIn1(col1=None)
-    TestIn1(col1="A")
+    TestIn1(col1='')
     TestIn1(col1="test")
     TestIn2(col2=None)
-    TestIn2(col2="A")
+    TestIn2(col2='')
     TestIn2(col2="test")
 
 def test_1syntax_in():

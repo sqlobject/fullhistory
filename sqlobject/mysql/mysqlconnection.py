@@ -144,7 +144,6 @@ class MySQLConnection(DBAPI):
         for field, t, nullAllowed, key, default, extra in colData:
             if field == 'id':
                 continue
-                print 'skipping ID field'
             colClass, kw = self.guessClass(t)
             kw['name'] = soClass.sqlmeta.style.dbColumnToPythonAttr(field)
             kw['notNone'] = not nullAllowed

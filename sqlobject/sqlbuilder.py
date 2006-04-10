@@ -384,7 +384,7 @@ class AliasField(Field):
         return self.alias + "." + self.fieldName
 
     def tablesUsedImmediate(self):
-        return ["%s %s" % (self.tableName, self.alias)]
+        return ["%s AS %s" % (self.tableName, self.alias)]
 
 class AliasTable(Table):
     FieldClass = AliasField
@@ -660,12 +660,12 @@ class SQLJoin(SQLExpression):
     def __init__(self, table1, table2, op=','):
         if table1 and type(table1) <> str:
             if isinstance(table1, Alias):
-                table1 = "%s %s" % (table1.q.tableName, table1.q.alias)
+                table1 = "%s AS %s" % (table1.q.tableName, table1.q.alias)
             else:
                 table1 = table1.sqlmeta.table
         if type(table2) <> str:
             if isinstance(table2, Alias):
-                table2 = "%s %s" % (table2.q.tableName, table2.q.alias)
+                table2 = "%s AS %s" % (table2.q.tableName, table2.q.alias)
             else:
                 table2 = table2.sqlmeta.table
         self.table1 = table1
@@ -909,19 +909,12 @@ class RLIKE(LIKE):
             return "REGEXP"
         elif db == 'postgres':
             return "~"
-        elif db == 'oracle':
-            return 'REGEXP_LIKE'
         else:
             return "LIKE"
     def __sqlrepr__(self, db):
-        if db == 'oracle':
-            return "%s(%s, %s)" % (
-                self._get_op(db), sqlrepr(self.expr, db), sqlrepr(self.string, db)
-            )
-        else:
-            return "(%s %s %s)" % (
-                sqlrepr(self.expr, db), self._get_op(db), sqlrepr(self.string, db)
-            )
+        return "(%s %s %s)" % (
+            sqlrepr(self.expr, db), self._get_op(db), sqlrepr(self.string, db)
+        )
     def execute(self, executor):
         self.op = self._get_op(self.db)
         return LIKE.execute(self, executor)

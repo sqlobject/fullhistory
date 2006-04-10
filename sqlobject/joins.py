@@ -4,7 +4,6 @@ import styles
 import classregistry
 from col import popKey
 import events
-from md5 import md5
 
 __all__ = ['MultipleJoin', 'SQLMultipleJoin', 'RelatedJoin', 'SQLRelatedJoin',
            'SingleJoin', 'ManyToMany', 'OneToMany']
@@ -185,13 +184,10 @@ class SORelatedJoin(SOMultipleJoin):
 
     def _setOtherRelatedClass(self, otherClass):
         if not self.intermediateTable:
-            #make a name that is unique and short enough that all databases
-            #can handle the length of the table name (*cough* *Oracle* *cough*)
-            #and ensure that the name starts with a letter
-            names = [self.soClass.sqlmeta.table, otherClass.sqlmeta.table]
+            names = [self.soClass.sqlmeta.table,
+                     otherClass.sqlmeta.table]
             names.sort()
-            textName = '%s_%s' % (names[0], names[1])
-            self.intermediateTable = 'j' + str(md5(textName).hexdigest())[:20]
+            self.intermediateTable = '%s_%s' % (names[0], names[1])
         if not self.otherColumn:
             self.otherColumn = self.soClass.sqlmeta.style.tableReference(
                 otherClass.sqlmeta.table)
@@ -332,13 +328,10 @@ class SOManyToMany(object):
 
     def _finishSet(self):
         if self.intermediateTable is None:
-            #make a name that is unique and short enough that all databases
-            #can handle the length of the table name (*cough* *Oracle* *cough*)
-            #and ensure that the name starts with a letter
-            names = [self.soClass.sqlmeta.table, self.otherClass.sqlmeta.table]
+            names = [self.soClass.sqlmeta.table,
+                     self.otherClass.sqlmeta.table]
             names.sort()
-            textName = '%s_%s' % (names[0], names[1])
-            self.intermediateTable = 'j' + str(md5(textName).hexdigest())[:20]
+            self.intermediateTable = '%s_%s' % (names[0], names[1])
         if not self.otherColumn:
             self.otherColumn = self.soClass.sqlmeta.style.tableReference(
                 self.otherClass.sqlmeta.table)

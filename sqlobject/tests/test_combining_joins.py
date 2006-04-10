@@ -35,8 +35,8 @@ def test_join_sqlrepr():
     assert list(Complex.selectBy(name='c1')) == [c1]
     
     assert list(cg1.unit_models) == [u1]
-    assert list(cg2.unit_models).sort() == [u1, u2, u2].sort()
-    assert list(cg2.unit_models.distinct()).sort() == [u1, u2].sort()
+    assert list(cg2.unit_models) == [u1, u2, u2]
+    assert list(cg2.unit_models.distinct()) == [u1, u2]
     
     assert list(
         cg2.unit_models.filter(UnitModel.q.name=='u1')) == [u1]

@@ -40,7 +40,7 @@ supportsMatrix = {
     '-blobData': 'mssql',
     '-decimalColumn': 'mssql',
     '-emptyTable': 'mssql',
-    '-limitSelect' : 'mssql, oracle'
+    '-limitSelect' : 'mssql'
     }
 
 
@@ -74,7 +74,6 @@ def setupClass(soClasses, force=False):
         #hub.threadConnection = connection
         #hub.processConnection = connection
         soClass._connection = connection
-
     installOrClear(soClasses, force=force)
     return soClasses
 

@@ -27,7 +27,6 @@ connectionShortcuts = {
     'sqlite': 'sqlite:/:memory:',
     'sybase': 'sybase://test:test123@sybase/test?autoCommit=0',
     'firebird': 'firebird://sysdba:masterkey@localhost/var/lib/firebird/data/test.gdb',
-    'oracle': 'oracle://phoenix:phoenix@10.10.16.164/orcl',
     'mssql': 'mssql://sa:@127.0.0.1/test'
     }
 

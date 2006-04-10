@@ -7,14 +7,12 @@ from sqlobject.tests.dbtest import *
 
 class SOIndex1(SQLObject):
     name = StringCol(length=100)
-    anumber = IntCol()
+    number = IntCol()
 
-    #nameIndex = DatabaseIndex('name', unique=True)
-    nameIndex2 = DatabaseIndex(name, anumber)
-    #nameIndex3 = DatabaseIndex({'column': name,
-    #                            'length': 3})
+    nameIndex = DatabaseIndex('name', unique=True)
+    nameIndex2 = DatabaseIndex(name, number)
     nameIndex3 = DatabaseIndex({'column': name,
-                                'length': 3},  unique=True)
+                                'length': 3})
 
 class SOIndex2(SQLObject):
 
@@ -27,10 +25,10 @@ def test_1():
     n = 0
     for name in 'blah blech boring yep yort snort'.split():
         n += 1
-        SOIndex1(name=name, anumber=n)
+        SOIndex1(name=name, number=n)
     mod = SOIndex1._connection.module
     try:
-        SOIndex1(name='blah', anumber=0)
+        SOIndex1(name='blah', number=0)
     except (mod.ProgrammingError, mod.IntegrityError, mod.OperationalError, mod.DatabaseError):
         # expected
         pass

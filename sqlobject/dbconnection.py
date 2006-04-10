@@ -220,11 +220,7 @@ class DBAPI(DBConnection):
         self._pool = []
         self._poolLock = threading.Lock()
         DBConnection.__init__(self, **kw)
-	try:
-            self._binaryType = type(self.module.Binary(''))
-	except:
-            #dirty hack because cx_Oracle doesn't implement Binary()
-            self._binaryType = type(self.module.BINARY)
+        self._binaryType = type(self.module.Binary(''))
 
     def _runWithConnection(self, meth, *args):
         conn = self.getConnection()
@@ -305,15 +301,8 @@ class DBAPI(DBConnection):
         print '%(n)2i%(threadName)s/%(name)s%(spaces)s%(sep)s %(s)s' % locals()
 
     def _executeRetry(self, conn, cursor, query):
-
-        print '****************************************'
-        print query
-        print '****************************************'
-        print ''
-
         if self.debug:
             self.printDebug(conn, query, 'QueryR')
-
         return cursor.execute(query)
 
     def _query(self, conn, s):
@@ -570,7 +559,6 @@ class DBAPI(DBConnection):
             assert isinstance(tableCreateSQLs,list), (
                 'Unable to create a list from %s.sqlmeta.createSQL' % 
                 (soClass.__name__))
-        print tableCreateSQLs
         return tableCreateSQLs or []
 
     def createTableSQL(self, soClass):

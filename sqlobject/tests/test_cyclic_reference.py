@@ -4,9 +4,9 @@ from sqlobject.tests.dbtest import *
 class TestCyclicReferenceA(SQLObject):
     class sqlmeta(sqlmeta):
         idName = 'test_id_here'
-        table = 'test_cyclic_reference_a'
+        table = 'test_cyclic_reference_a_table'
     name = StringCol()
-    anumber = IntCol()
+    number = IntCol()
     time = DateTimeCol()
     short = StringCol(length=10)
     blobcol = BLOBCol()
@@ -15,9 +15,9 @@ class TestCyclicReferenceA(SQLObject):
 class TestCyclicReferenceB(SQLObject):
     class sqlmeta(sqlmeta):
         idName = 'test_id_here'
-        table = 'test_cyclic_reference_b'
+        table = 'test_cyclic_reference_b_table'
     name = StringCol()
-    anumber = IntCol()
+    number = IntCol()
     time = DateTimeCol()
     short = StringCol(length=10)
     blobcol = BLOBCol()

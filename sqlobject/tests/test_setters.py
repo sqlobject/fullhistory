@@ -1,7 +1,7 @@
 from sqlobject import *
 from sqlobject.tests.dbtest import *
 
-class TestSetters(SQLObject):
+class TestPlainAndNonPlainSetter(SQLObject):
     firstName = StringCol(length=50, dbName='fname_col', default=None)
     lastName = StringCol(length=50, dbName='lname_col', default=None)
     
@@ -14,8 +14,8 @@ class TestSetters(SQLObject):
         return "%s %s" % (self.firstName, self.lastName)
 
 def test_create():
-    setupClass(TestSetters)
-    t = TestSetters(name='John Doe')
+    setupClass(TestPlainAndNonPlainSetter)
+    t = TestPlainAndNonPlainSetter(name='John Doe')
     assert t.firstName == 'John'
     assert t.lastName == 'Doe'
     assert t.name == 'John Doe'

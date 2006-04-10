@@ -698,7 +698,7 @@ class SQLObject(object):
     _parent = None # A reference to the parent instance
     childName = None # Children name (to be able to get a subclass)
     # moved to sqlmeta in 0.8:
-    parentClass = _sqlmeta_attr('parentClass', 2)
+    _parentClass = _sqlmeta_attr('parentClass', 2)
     _childClasses = _sqlmeta_attr('childClasses', 2)
 
     # The law of Demeter: the class should not call another classes by name
@@ -1228,7 +1228,6 @@ class SQLObject(object):
             # Then we check if the column wasn't passed in, and
             # if not we try to get the default.
             if not kw.has_key(column.name) and not kw.has_key(column.foreignName):
-#            if not foundColName and not foundFkName:
                 default = column.default
 
                 # If we don't get it, it's an error:
@@ -1363,15 +1362,11 @@ class SQLObject(object):
         cls.sqlmeta.send(events.CreateTableSignal, cls, connection,
                          extra_sql, post_funcs)
         constraints = conn.createTable(cls)
-
-        #edm 3/29/06
-        if constraints:
-            if applyConstraints:
-                for constraint in constraints:
-                    conn.query(constraint)
-            else:
-                extra_sql.extend(constraints)
-
+        if applyConstraints:
+            for constraint in constraints:
+                conn.query(constraint)
+        else:
+            extra_sql.extend(constraints)
         if createJoinTables:
             cls.createJoinTables(ifNotExists=ifNotExists,
                                  connection=conn)

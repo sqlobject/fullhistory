@@ -100,8 +100,7 @@ class SODatabaseIndex(object):
                ', '.join(spec))
         return ret
 
-    postgresCreateIndexSQL = maxdbCreateIndexSQL = mssqlCreateIndexSQL = sybaseCreateIndexSQL = firebirdCreateIndexSQL = oracleCreateIndexSQL = sqliteCreateIndexSQL
- 
+    postgresCreateIndexSQL = maxdbCreateIndexSQL = mssqlCreateIndexSQL = sybaseCreateIndexSQL = firebirdCreateIndexSQL = sqliteCreateIndexSQL 
     def mysqlCreateIndexSQL(self, soClass):
         if self.unique:
             uniqueOrIndex = 'UNIQUE'

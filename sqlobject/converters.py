@@ -112,7 +112,7 @@ def StringLikeConverter(value, db):
     if db in ('mysql', 'postgres'):
         for orig, repl in sqlStringReplace:
             value = value.replace(orig, repl)
-    elif db in ('sqlite', 'firebird', 'sybase', 'maxdb', 'mssql', 'oracle'):
+    elif db in ('sqlite', 'firebird', 'sybase', 'maxdb', 'mssql'):
         value = value.replace("'", "''")
     else:
         assert 0, "Database %s unknown" % db
@@ -161,29 +161,14 @@ registerConverter(type(1.0), FloatConverter)
 
 if DateTimeType:
     def DateTimeConverter(value, db):
-        if db in ('oracle',):
-            #return "TO_DATE('%s', 'YYYY-MM-DD HH24:MI:SS')" % "%s" % isoStr(value)
-            return "TO_TIMESTAMP('%s', 'YYYY-MM-DD HH24:MI:SS')" % "%s" % isoStr(value).rstrip('.')
-        else:
-            return "'%s'" % isoStr(value)
+        return "'%s'" % isoStr(value)
 
     registerConverter(DateTimeType, DateTimeConverter)
 
     def TimeConverter(value, db):
-        if db in ('oracle',):
-            return "TO_TIMESTAMP('%s', 'HH24:MI:SS')" % value.strftime('%H:%M:%S')
-        else:
-            return "'%s'" % value.strftime("%T")
+        return "'%s'" % value.strftime("%T")
 
     registerConverter(DateTimeDeltaType, TimeConverter)
-
-    #def DateConverter(value, db):
-    #    if db in ('oracle',):
-    #        return "TO_DATE('%s', 'YYYY-MM-DD')" % value.strftime('%Y-%m-%d')
-    #    else:
-    #        return "'%4d-%02d-%02d'" % (value.year, value.month, value.day)
-#
-    #registerConverter(DateTimeType, DateConverter)
 
 def NoneConverter(value, db):
     return "NULL"
@@ -198,39 +183,25 @@ registerConverter(type([]), SequenceConverter)
 
 if hasattr(time, 'struct_time'):
     def StructTimeConverter(value, db):
-        if db in ('oracle',):
-            #return "TO_DATE('%s', 'YYYY-MM-DD HH24:MI:SS')" % time.strftime('%Y-%m-%d %H:%M:%S', value)
-            return "TO_TIMESTAMP('%s', 'HH24:MI:SS')" % time.strftime('%H:%M:%S', value)
-        else:
-            return time.strftime("'%Y-%m-%d %H:%M:%S'", value)
+        return time.strftime("'%Y-%m-%d %H:%M:%S'", value)
 
     registerConverter(time.struct_time, StructTimeConverter)
 
 if datetime:
     def DateTimeConverter(value, db):
-        if db in ('oracle',):
-            #return "TO_DATE('%s', 'YYYY-MM-DD HH24:MI:SS')" % value.strftime('%Y-%m-%d %H:%M:%S')
-            return "TO_TIMESTAMP('%s', 'YYYY-MM-DD HH24:MI:SS')" % value.strftime('%Y-%m-%d %H:%M:%S')
-        else:
-            return "'%4d-%02d-%02d %02d:%02d:%02d'" % (
-                value.year, value.month, value.day,
-                value.hour, value.minute, value.second)
+        return "'%4d-%02d-%02d %02d:%02d:%02d'" % (
+            value.year, value.month, value.day,
+            value.hour, value.minute, value.second)
 
     registerConverter(datetime.datetime, DateTimeConverter)
 
     def DateConverter(value, db):
-        if db in ('oracle',):
-            return "TO_DATE('%s', 'YYYY-MM-DD')" % value.strftime('%Y-%m-%d')
-        else:
-            return "'%4d-%02d-%02d'" % (value.year, value.month, value.day)
+        return "'%4d-%02d-%02d'" % (value.year, value.month, value.day)
 
     registerConverter(datetime.date, DateConverter)
 
     def TimeConverter(value, db):
-        if db in ('oracle',):
-            return "TO_TIMESTAMP('%s', 'HH24:MI:SS')" % value.strftime('%H:%M:%S')
-        else:
-            return "'%02d:%02d:%02d'" % (value.hour, value.minute, value.second)
+        return "'%02d:%02d:%02d'" % (value.hour, value.minute, value.second)
 
     registerConverter(datetime.time, TimeConverter)
 
