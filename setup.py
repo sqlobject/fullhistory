@@ -11,7 +11,7 @@ except ImportError:
 
 subpackages = ['firebird', 'include', 'include.pydispatch', 'inheritance',
                'manager', 'maxdb', 'mysql', 'mssql', 'postgres', 'sqlite',
-               'sybase', 'util']
+               'sybase', 'util', 'oracle']
 
 import sys
 # patch distutils if it can't cope with the "classifiers" keyword
@@ -65,6 +65,7 @@ For development see the `subversion repository
         'postgresql': ['psycopg'],
         'mysql': ['MySQLdb'],
         'sqlite': ['pysqlite'],
+		'oracle': ['cx_Oracle'],
         # Others?
         },
       **kw

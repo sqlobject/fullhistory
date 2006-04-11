@@ -40,6 +40,13 @@ class SOStringID(SQLObject):
     )
     """
 
+    oracleCreate = """
+    CREATE TABLE so_string_id (
+        id VARCHAR2(50) NOT NULL PRIMARY KEY,
+        val VARCHAR2(50) NULL
+    )
+    """
+
     mssqlCreate = """
     CREATE TABLE so_string_id (
       id VARCHAR(50) PRIMARY KEY,

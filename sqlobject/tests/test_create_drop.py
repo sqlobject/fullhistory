@@ -6,7 +6,7 @@ class TestCreateDrop(SQLObject):
         idName = 'test_id_here'
         table = 'test_create_drop_table'
     name = StringCol()
-    number = IntCol()
+    anumber = IntCol()
     time = DateTimeCol()
     short = StringCol(length=10)
     blobcol = BLOBCol()

@@ -52,12 +52,14 @@ if mxdatetime_available:
     class DateTime2(SQLObject):
         col1 = DateTimeCol()
         col2 = DateCol(dateFormat=dateFormat)
+        #col2 = DateCol()
         col3 = TimeCol()
 
     def test_mxDateTime():
         setupClass(DateTime2)
         _now = now()
         dt2 = DateTime2(col1=_now, col2=_now, col3=Time(_now.hour, _now.minute, int(_now.second)))
+        #dt2 = DateTime2(col1=_now, col2=Date(_now.year, _now.month, _now.day), col3=Time(_now.hour, _now.minute, int(_now.second)))
 
         assert isinstance(dt2.col1, col.DateTimeType)
         assert dt2.col1.year == _now.year

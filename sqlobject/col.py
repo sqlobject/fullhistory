@@ -325,6 +325,9 @@ class SOCol(object):
     def _maxdbType(self):
         return self._sqlType()
 
+    def _oracleType(self):
+        return self._sqlType()
+
     def mysqlCreateSQL(self):
         return ' '.join([self.dbName, self._mysqlType()] + self._extraSQL())
 
@@ -351,6 +354,9 @@ class SOCol(object):
 
     def maxdbCreateSQL(self):
        return ' '.join([self.dbName, self._maxdbType()] + self._extraSQL())
+
+    def oracleCreateSQL(self):
+        return ' '.join([self.dbName, self._oracleType()] + self._extraSQL())
 
     def __get__(self, obj, type=None):
         if obj is None:
@@ -503,6 +509,14 @@ class SOStringLikeCol(SOCol):
         else:
             return self._sqlType()
 
+    def _oracleType(self):
+        if not self.length:
+            return 'VARCHAR(1000)'
+        elif not self.varchar:
+            return 'CHAR(%i)' % self.length
+        else:
+            return 'VARCHAR(%i)' % self.length
+
 
 class StringValidator(validators.Validator):
 
@@ -643,6 +657,9 @@ class SOBoolCol(SOCol):
     def _firebirdType(self):
         return 'INT'
 
+    def _oracleType(self):
+        return 'NUMBER(1,0)'
+
     def _maxdbType(self):
         return "BOOLEAN"
 
@@ -690,6 +707,9 @@ class SOFloatCol(SOCol):
     def _mysqlType(self):
         return "DOUBLE PRECISION"
 
+    def _oracleType(self):
+        return 'NUMBER'
+
 class FloatCol(Col):
     baseClass = SOFloatCol
 
@@ -709,6 +729,10 @@ class SOKeyCol(SOCol):
 
     def _mssqlType(self):
         key_type = {int: "INT NULL", str: "TEXT"}
+        return key_type[self.soClass.sqlmeta.idType]
+
+    def _oracleType(self):
+        key_type = {int: "INT", str: "VARCHAR(1000)"}
         return key_type[self.soClass.sqlmeta.idType]
 
 class KeyCol(Col):
@@ -824,6 +848,41 @@ class SOForeignKey(SOKeyCol):
         # @@: Code from above should be moved here
         return None
 
+    def oracleCreateSQL(self):
+        sql = SOKeyCol.oracleCreateSQL(self)
+        return sql
+
+    def oracleCreateReferenceConstraint(self):
+        sTName = self.soClass.sqlmeta.table
+        other = findClass(self.foreignKey)
+        tName = other.sqlmeta.table
+        idName = other.sqlmeta.idName
+        #prevent constraint name > 30 characters
+        constName = str(sTName + '_' + self.dbName)
+        if len(constName) > 30:
+            from md5 import md5
+            constName = 'c' + md5(constName).hexdigest()[:29]
+        if self.cascade is not None:
+            if self.cascade == 'null':
+                action = 'ON DELETE SET NULL'
+            elif self.cascade:
+                action = 'ON DELETE CASCADE'
+            else:
+                action = ''
+        else:
+            action = ''
+        constraint = ('ALTER TABLE %(sTName)s ADD CONSTRAINT %(constName)s '
+                      'FOREIGN KEY (%(colName)s) '
+                      'REFERENCES %(tName)s (%(idName)s) '
+                      '%(action)s' %
+                      {'tName': tName,
+                       'constName': constName,
+                       'colName': self.dbName,
+                       'idName': idName,
+                       'action': action,
+                       'sTName': sTName})
+        return constraint
+
     def mssqlCreateSQL(self):
         sql = SOKeyCol.mssqlCreateSQL(self)
         other = findClass(self.foreignKey)
@@ -900,6 +959,12 @@ class SOEnumCol(SOCol):
         checkConstraint = "CHECK (%s in (%s))" % (self.dbName, enumValues)
         #NB. Return a tuple, not a string here
         return "VARCHAR(%i)" % (length), checkConstraint
+
+    def _oracleType(self):
+        length = max(map(self._getlength, self.enumValues))
+        enumValues = ', '.join([sqlbuilder.sqlrepr(v, 'oracle') for v in self.enumValues])
+        checkConstraint = "CHECK (%s in (%s))" % (self.dbName, enumValues)
+        return "VARCHAR(%i) %s" % (length, checkConstraint)
 
     def _maxdbType(self):
         raise "Enum type is not supported"
@@ -1036,6 +1101,10 @@ class SODateTimeCol(SOCol):
     def _firebirdType(self):
         return 'TIMESTAMP'
 
+    def _oracleType(self):
+        #return 'DATE'
+        return 'TIMESTAMP'
+
     def _maxdbType(self):
         return 'TIMESTAMP'
 
@@ -1102,6 +1171,9 @@ class SODateCol(SOCol):
     def _firebirdType(self):
         return 'DATE'
 
+    def _oracleType(self):
+        return 'DATE'
+
     def _maxdbType(self):
         return  'DATE'
 
@@ -1155,6 +1227,9 @@ class SOTimeCol(SOCol):
 
     def _firebirdType(self):
         return 'TIME'
+
+    def _oracleType(self):
+        return 'TIMESTAMP'
 
     def _maxdbType(self):
         return 'TIME'
@@ -1293,6 +1368,9 @@ class SOBLOBCol(SOStringCol):
     def _mssqlType(self):
         return "IMAGE"
 
+    def _oracleType(self):
+        return 'BLOB'
+
 class BLOBCol(StringCol):
     baseClass = SOBLOBCol
 
@@ -1332,6 +1410,9 @@ class SOPickleCol(SOBLOBCol):
         return [PickleValidator(
             name=self.name, pickleProtocol=self.pickleProtocol)] + \
             super(SOPickleCol, self).createValidators()
+
+    def _oracleType(self):
+        return 'BLOB'
 
 class PickleCol(BLOBCol):
     baseClass = SOPickleCol

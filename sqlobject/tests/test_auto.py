@@ -120,6 +120,23 @@ class TestAuto:
     )
     """
 
+    oracleCreate = """
+    CREATE TABLE auto_test (
+      auto_id INT PRIMARY KEY,
+      first_name VARCHAR(100),
+      last_name VARCHAR(200) NOT NULL,
+      age INT DEFAULT 0,
+      created VARCHAR(40) NOT NULL,
+      happy char(1) DEFAULT 'Y' NOT NULL,
+      long_field VARCHAR(2000),
+      wannahavefun SMALLINT DEFAULT 0 NOT NULL
+    )
+    """
+
+    oracleCreateSequence = """
+    CREATE SEQUENCE auto_test_id_seq
+    """
+
     mysqlDrop = """
     DROP TABLE IF EXISTS auto_test
     """
@@ -134,12 +151,23 @@ class TestAuto:
 
     mssqlDrop = sybaseDrop
 
+    oracleDrop = """
+    DROP TABLE auto_test
+    """
+
+    oracleDropSequence = """
+    DROP SEQUENCE auto_test_id_seq
+    """
+
     def setup_method(self, meth):
         conn = getConnection()
         dbName = conn.dbName
         creator = getattr(self, dbName + 'Create', None)
         if creator:
             conn.query(creator)
+        sequence = getattr(self, dbName + 'CreateSequence', None)
+        if sequence:
+            conn.query(sequence)
 
     def teardown_method(self, meth):
         conn = getConnection()
@@ -147,6 +175,9 @@ class TestAuto:
         dropper = getattr(self, dbName + 'Drop', None)
         if dropper:
             conn.query(dropper)
+        sequenceDropper = getattr(self, dbName + 'DropSequence', None)
+        if sequenceDropper:
+            conn.query(sequenceDropper)
 
     def test_classCreate(self):
         if not supports('fromDatabase'):

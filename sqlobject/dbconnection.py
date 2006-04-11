@@ -220,7 +220,11 @@ class DBAPI(DBConnection):
         self._pool = []
         self._poolLock = threading.Lock()
         DBConnection.__init__(self, **kw)
-        self._binaryType = type(self.module.Binary(''))
+	try:
+            self._binaryType = type(self.module.Binary(''))
+	except:
+            #dirty hack because cx_Oracle doesn't implement Binary()
+            self._binaryType = type(self.module.BINARY)
 
     def _runWithConnection(self, meth, *args):
         conn = self.getConnection()

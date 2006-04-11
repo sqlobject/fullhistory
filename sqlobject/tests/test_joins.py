@@ -47,10 +47,10 @@ class TestJoin:
         self.assertNamesEqual(z.personJoiners, [])
 
     def assertZipsEqual(self, zips, dest):
-        assert [a.zip for a in zips] == dest
+        assert [a.zip for a in zips].sort() == dest.sort()
 
     def assertNamesEqual(self, people, dest):
-        assert [p.name for p in people] == dest
+        assert [p.name for p in people].sort() == dest.sort()
 
     def test_joinAttributeWithUnderscores(self):
         # Make sure that the implicit setting of joinMethodName works

@@ -18,6 +18,11 @@ def FirebirdConnection(*args, **kw):
     _warn('FirebirdConnection is deprecated; use connectionForURI("firebird://...") or "from sqlobject.firebird import builder; FirebirdConnection = builder()"')
     return _firebird.builder()(*args, **kw)
 
+import oracle as _oracle
+def OracleConnection(*args, **kw):
+    _warn('OracleConnection is deprecated; use connectionForURI("oracle://...") or "from sqlobject.oracle import builder; OracleConnection = builder()"')
+    return _oracle.builder()(*args, **kw)
+
 import mysql as _mysql
 def MySQLConnection(*args, **kw):
     _warn('MySQLConnection is deprecated; use connectionForURI("mysql://...") or "from sqlobject.mysql import builder; MySQLConnection = builder()"')

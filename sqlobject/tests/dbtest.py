@@ -40,7 +40,7 @@ supportsMatrix = {
     '-blobData': 'mssql',
     '-decimalColumn': 'mssql',
     '-emptyTable': 'mssql',
-    '-limitSelect' : 'mssql'
+    '-limitSelect' : 'mssql, oracle'
     }
 
 

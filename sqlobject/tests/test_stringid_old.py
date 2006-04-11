@@ -50,6 +50,17 @@ class OldSOStringID(SQLObject):
 
     sqliteCreate = postgresCreate
 
+    oracleCreate = """
+    CREATE TABLE so_string_id (
+        id VARCHAR(50) PRIMARY KEY,
+        val VARCHAR(50) NULL
+    )
+    """
+
+    oracleCreateSequence = """
+    CREATE SEQUENCE so_string_id_ID_SEQ
+    """
+
     mysqlDrop = """
     DROP TABLE IF EXISTS so_string_id
     """
@@ -61,6 +72,14 @@ class OldSOStringID(SQLObject):
     sqliteDrop = postgresDrop
     firebirdDrop = postgresDrop
     mssqlDrop = postgresDrop
+
+    oracleDrop = """
+    DROP TABLE so_string_id
+    """
+
+    oracleDropSequence = """
+    DROP SEQUENCE so_string_id_ID_SEQ
+    """
 
 
 def test_stringID():
