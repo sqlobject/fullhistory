@@ -210,6 +210,14 @@ class InheritableSQLObject(SQLObject):
                 else:
                     new_kw[name] = value
             kw = new_kw
+
+            # Need to check that we have enough data to sucesfully
+            # create the current subclass otherwise we will leave
+            # the database in an inconsistent state.
+            for col in self.sqlmeta.columnList:
+                if col._default == sqlbuilder.NoDefault and col.name not in kw:
+                    raise TypeError, "%s() did not get expected keyword argument %s" % (self.__class__.__name__, col.name)
+
             self._parent = parentClass(kw=parent_kw, connection=self._connection)
             self._parent.childName = self.__class__.__name__
 
