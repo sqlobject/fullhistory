@@ -97,7 +97,8 @@ class CacheFactory(object):
                 # method has a lock, so it's threadsafe.
                 self.cullCount = 0
                 self.cull()
-
+            else:
+                self.cullCount += 1
             try:
                 return self.cache[id]
             except KeyError:
