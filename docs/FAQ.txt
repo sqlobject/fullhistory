@@ -4,6 +4,25 @@ SQLObject FAQ
 
 .. contents::
 
+Why there is no __len__?
+------------------------
+
+There are reasons why there is no __len__ method, though many people think
+having those make them feel more integrated into Python.
+
+One is that len(foo) is expected to be fast, but issuing a COUNT query can
+be slow.  Worse, often this causes the database to do essentially redundant
+work when the actual query is performed (generally taking the len of a
+sequence is followed by accessing items from that sequence).
+
+Another is that list(foo) implicitly tries to do a len first, as an
+optimization (because len is expected to be cheap -- see previous point).
+Worse, it swallows *all* exceptions that occur during that call to __len__,
+so if it fails (e.g. there's a typo somewhere in the query), the original
+cause is silently discarded, and instead you're left with mysterious errors
+like "current transaction is aborted, commands ignored until end of
+transaction block" for no apparent reason.
+
 How can I do a LEFT JOIN?
 -------------------------
 
