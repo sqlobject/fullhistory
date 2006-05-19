@@ -47,7 +47,7 @@ try:
     from mx import DateTime
 except ImportError:
     try:
-        import DateTime # old version of mxDateTime
+        import DateTime # old version of mxDateTime, or Zope's Version if we're running with Zope
     except ImportError:
         mxdatetime_available = False
     else:
@@ -60,7 +60,10 @@ MXDATETIME_IMPLEMENTATION = "mxDateTime"
 
 if mxdatetime_available:
     DateTimeType = type(DateTime.now())
-    TimeType = type(DateTime.Time())
+    if hasattr(DateTime, "Time"):
+        TimeType = type(DateTime.Time())
+    else: # Zope
+        TimeType = type(DateTime.DateTime.Time(DateTime.DateTime()))
 
 if datetime_available:
     default_datetime_implementation = DATETIME_IMPLEMENTATION
@@ -336,7 +339,7 @@ class SOCol(object):
 
     def mssqlCreateSQL(self):
         return ' '.join([self.dbName, self._mssqlType()] + self._extraSQL())
-        
+
     def firebirdCreateSQL(self):
         # Ian Sparks pointed out that fb is picky about the order
         # of the NOT NULL clause in a create statement.  So, we handle
@@ -707,7 +710,7 @@ class SOKeyCol(SOCol):
 
     def _sybaseType(self):
         return 'NUMERIC(18,0) NULL'
-    
+
     def _mssqlType(self):
         return 'INT NULL'
 
@@ -1079,7 +1082,7 @@ class SODateCol(SOCol):
 
     def _sybaseType(self):
         return self._postgresType()
-    
+
     def _mssqlType(self):
         """
         SQL Server doesn't have  a DATE data type, to emulate we use a vc(10)
