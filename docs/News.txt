@@ -10,13 +10,14 @@ News
 SQLObject 0.7.1
 ===============
 
+Features & Interface
+--------------------
+
 * Added support for psycopg2_
 
 .. _psycopg2: http://initd.org/projects/psycopg2
 
-* Added support for MSSQL_.
-
-.. _MSSQL: SQLObject.html#ms-sql-server
+* Added support for MSSQL.
 
 * Added ``TimeCol``.
 
@@ -27,6 +28,36 @@ SQLObject 0.7.1
   classes for the joins).
 
 * Implemented ``RLIKE`` (reguluar expression LIKE).
+
+Small Features
+--------------
+
+* Select over RelatedJoin.
+
+* SQLite foreign keys.
+
+* Postgres DB URIs with a non-default path to unix socket.
+
+* Allow the use of foreign keys in selects.
+
+* Implemented addColumn() for SQLite.
+
+* With PySQLite2 use encode()/decode() from PySQLite1 for BLOBCol if available; else use base64.
+
+Bug Fixes
+---------
+
+* Cull patch (clear cache).
+
+* .destroySelf() inside a transaction.
+
+* Synchronize main connection cache during transaction commit.
+
+* Ordering joins with NULLs.
+
+* Fixed bugs with plain/non-plain setters.
+
+* Lots of other bug fixes.
 
 SQLObject 0.7.0
 ===============
