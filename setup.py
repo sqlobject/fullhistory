@@ -19,7 +19,7 @@ if sys.version < '2.2.3':
     DistributionMetadata.download_url = None
 
 setup(name="SQLObject",
-      version="0.7.1",
+      version="0.7.1b1",
       description="Object-Relational Manager, aka database wrapper",
       long_description="""\
 SQLObject is a popular *Object Relational Manager* for providing an
@@ -51,7 +51,7 @@ For development see the `subversion repository
       license="LGPL",
       packages=["sqlobject"] + ['sqlobject.%s' % package for package in subpackages],
       scripts=["scripts/sqlobject-admin"],
-      install_requires=["FormEncode>=0.2.2"],
+      install_requires=["FormEncode>=0.5"],
       extras_require={
         'postgresql': ['psycopg'],
         'mysql': ['MySQLdb'],
