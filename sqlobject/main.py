@@ -420,6 +420,8 @@ class sqlmeta(object):
         conn = connection or soClass._connection
         for columnDef in conn.columnsFromSchema(sqlmeta.table, soClass):
             if columnDef.name not in sqlmeta.columnDefinitions:
+                if isinstance(columnDef.name, unicode):
+                    columnDef.name = columnDef.name.encode('ascii')
                 sqlmeta.addColumn(columnDef)
 
     addColumnsFromDatabase = classmethod(addColumnsFromDatabase)
