@@ -136,7 +136,6 @@ class MySQLConnection(DBAPI):
             colClass, kw = self.guessClass(t)
             if self.kw['use_unicode'] and colClass is col.StringCol:
                 colClass = col.UnicodeCol
-                if self.client_encoding: kw['dbEncoding'] = self.client_encoding
             kw['name'] = soClass.sqlmeta.style.dbColumnToPythonAttr(field)
             kw['notNone'] = not nullAllowed
             if default and t.startswith('int'):
