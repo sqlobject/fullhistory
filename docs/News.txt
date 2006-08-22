@@ -29,6 +29,8 @@ Features & Interface
 
 * Implemented ``RLIKE`` (reguluar expression LIKE).
 
+* Moved _idSequence to sqlmeta.idSequence.
+
 Small Features
 --------------
 
