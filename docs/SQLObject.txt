@@ -1127,9 +1127,26 @@ different types of columns, when SQLObject creates your tables.
     A subclass of `StringCol`.  Also accepts a dbEncoding keyword
     argument, which defaults to ``"UTF-8"``.  Values coming in and
     out from the database will be encoded and decoded.  **Note**:
-    parameters in queries will not be automatically encoded, so if
-    you do a query matching a UnicodeCol column you must apply the
-    encoding yourself.
+    there are some limitations on using UnicodeCol in queries:
+
+    - only simple q-magic fields are supported; no expressions;
+    - only == and <> operators are supported;
+
+    The following code works::
+
+        MyTable.select(u'value' == MyTable.q.name)
+        MyTable.select(MyTable.q.name <> u'value')
+        MyTable.select(OR(MyTable.q.col1 == u'value1', MyTable.q.col2 <> u'value2'))
+        MyTable.selectBy(name = u'value')
+        MyTable.selectBy(col1=u'value1', col2=u'value2')
+
+    The following does not work::
+
+        MyTable.select((MyTable.q.name + MyTable.q.surname) == u'value')
+
+    In that case you must apply the encoding yourself::
+
+        MyTable.select((MyTable.q.name + MyTable.q.surname) == u'value'.encode(dbEncoding))
 
 
 .. Relationships_:
