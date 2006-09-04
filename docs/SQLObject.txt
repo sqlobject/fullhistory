@@ -1139,6 +1139,7 @@ different types of columns, when SQLObject creates your tables.
         MyTable.select(OR(MyTable.q.col1 == u'value1', MyTable.q.col2 <> u'value2'))
         MyTable.selectBy(name = u'value')
         MyTable.selectBy(col1=u'value1', col2=u'value2')
+        MyTable.byCol1(u'value1') # if col1 is an alternateID
 
     The following does not work::
 

@@ -51,22 +51,9 @@ Bug Fixes
 
 * Fixed a longstanding problem with UnicodeCol - at last you can use unicode
   strings in .select() and .selectBy() queries. There are some limitations,
-  though:
+  though; see the description of the UnicodeCol_.
 
-  - only simple q-magic fields are supported; no expressions;
-  - only == and <> operators are supported;
-
-  The following code works::
-
-    MyTable.select(u'value' == MyTable.q.name)
-    MyTable.select(MyTable.q.name <> u'value')
-    MyTable.select(OR(MyTable.q.col1 == u'value1', MyTable.q.col2 <> u'value2'))
-    MyTable.selectBy(name = u'value')
-    MyTable.selectBy(col1=u'value1', col2=u'value2')
-
-  The following still does not work::
-
-    MyTable.select((MyTable.q.name + MyTable.q.surname) == u'value')
+.. _UnicodeCol: SQLObject.html#column-types
 
 * Cull patch (clear cache).
 
