@@ -67,9 +67,9 @@ installable with ``easy_install SQLObject==bugfix``.
 
 # Send announce to:
 #   sqlobject-discuss@lists.sourceforge.net
-#   db-sig@python.org
 #   python-announce@python.org
 #   python-list@python.org
+#   db-sig@python.org
 
 # Email tempate:
 """
