@@ -19,7 +19,7 @@ if sys.version < '2.2.3':
     DistributionMetadata.download_url = None
 
 setup(name="SQLObject",
-      version="0.7.1",
+      version="0.7.1rc1",
       description="Object-Relational Manager, aka database wrapper",
       long_description="""\
 SQLObject is a popular *Object Relational Manager* for providing an
@@ -33,8 +33,13 @@ applications.
 Supports MySQL, PostgreSQL, SQLite, Firebird, Sybase, and MaxDB
 (SAPDB).
 
-For development see the `subversion repository
-<http://svn.colorstudy.com/SQLObject/trunk#egg=SQLObject-0.8dev>`_
+The trunk is available in a `Subversion repository
+<http://svn.sqlobject.org/SQLObject/trunk#egg=SQLObject-dev>`_ installable with
+``easy_install SQLObject==dev``
+
+The 0.7 bugfix branch is `also available
+<http://svn.sqlobject.org/SQLObject/branches/0.7-bugfix#egg=SQLObject-bugfix>`_
+installable with ``easy_install SQLObject==bugfix``.
 """,
       classifiers=[
         "Development Status :: 5 - Production/Stable",
