@@ -100,7 +100,7 @@ Archives:
 http://news.gmane.org/gmane.comp.python.sqlobject
 
 Download:
-http://cheeseshop.python.org/pypi/SQLObject/
+http://cheeseshop.python.org/pypi/SQLObject/@@
 
 News and changes:
 http://sqlobject.org/docs/News.html
