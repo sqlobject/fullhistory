@@ -1110,7 +1110,8 @@ different types of columns, when SQLObject creates your tables.
 `PickleCol`:
     An extension of BLOBCol; this column can store/retrieve any Python object;
     it actually (un)pickles the object from/to string and stores/retrieves the
-    string.
+    string. One can get and set the value of the column but cannot search
+    (use it in WHERE).
 
 `StringCol`:
     A string (character) column.  Extra keywords:
