@@ -30,8 +30,7 @@ SQLObject includes a Python-object-based query language that makes SQL
 more abstract, and provides substantial database independence for
 applications.
 
-Supports MySQL, PostgreSQL, SQLite, Firebird, Sybase, and MaxDB
-(SAPDB).
+Supports MySQL, PostgreSQL, SQLite, Firebird, Sybase, MSSQL and MaxDB (SAPDB).
 
 The trunk is available in a `Subversion repository
 <http://svn.sqlobject.org/SQLObject/trunk#egg=SQLObject-dev>`_ installable with
@@ -53,15 +52,19 @@ installable with ``easy_install SQLObject==bugfix``.
       author="Ian Bicking",
       author_email="ianb@colorstudy.com",
       url="http://sqlobject.org",
+      download_url="http://cheeseshop.python.org/pypi/SQLObject/0.7.1",
       license="LGPL",
       packages=["sqlobject"] + ['sqlobject.%s' % package for package in subpackages],
       scripts=["scripts/sqlobject-admin"],
       install_requires=["FormEncode>=0.2.2"],
       extras_require={
-        'postgresql': ['psycopg'],
         'mysql': ['MySQLdb'],
+        'postgresql': ['psycopg'], # or pgdb from PyGreSQL
         'sqlite': ['pysqlite'],
-        # Others?
+        'firebird': ['kinterbasdb'],
+        'sybase': ['Sybase'],
+        'mssql': ['adodbapi'], # or pymssql
+        'sapdb': ['sapdb'],
         },
       )
 
