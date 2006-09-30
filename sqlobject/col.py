@@ -510,7 +510,9 @@ class StringValidator(validators.Validator):
         if value is None:
             return None
         if isinstance(value, unicode):
-           return value.encode("ascii")
+            connection = state.soObject._connection
+            dbEncoding = getattr(connection, "dbEncoding", None) or "ascii"
+            return value.encode(dbEncoding)
         return value
 
     def from_python(self, value, state):
@@ -1195,9 +1197,9 @@ class BinaryValidator(validators.Validator):
         if value is None:
             return None
         if isinstance(value, str):
-            module = state.soObject._connection.module
-            if module.__name__ in ("sqlite", "pysqlite2.dbapi2"):
-                value = module.decode(value)
+            connection = state.soObject._connection
+            if connection.dbName == "sqlite":
+                value = connection.module.decode(value)
             return value
         if isinstance(value, (buffer_type, state.soObject._connection._binaryType)):
             cachedValue = self._cachedValue
@@ -1256,7 +1258,9 @@ class PickleValidator(BinaryValidator):
         if value is None:
             return None
         if isinstance(value, unicode):
-            value = value.encode("ascii")
+            connection = state.soObject._connection
+            dbEncoding = getattr(connection, "dbEncoding", None) or "ascii"
+            value = value.encode(dbEncoding)
         if isinstance(value, str):
             return pickle.loads(value)
         raise validators.Invalid("expected a pickle string in the PickleCol '%s', got %s %r instead" % \
