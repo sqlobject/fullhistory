@@ -7,8 +7,24 @@ News
 
 .. _start:
 
+SQLObject 0.7.2
+===============
+
+Features & Interface
+--------------------
+
+Small Features
+--------------
+
+Bug Fixes
+---------
+
+* Fixed a number of unicode-related problems with newer MySQLdb.
+
 SQLObject 0.7.1
 ===============
+
+Released 25 Sep 2006.
 
 Features & Interface
 --------------------
