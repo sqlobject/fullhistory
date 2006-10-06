@@ -91,8 +91,13 @@ class InheritableSQLMeta(sqlmeta):
 
         #DSM: Update each child class if needed and existing (only for new
         #DSM: dynamic column as no child classes exists at object creation)
+        if columnDef and hasattr(soClass, "q"):
+            q = getattr(soClass.q, columnDef.name, None)
+        else:
+            q = None
         for c in soClass._childClasses.values():
             c.sqlmeta.addColumn(columnDef, connection=connection, childUpdate=True)
+            if q: setattr(c.q, columnDef.name, q)
 
     addColumn = classmethod(addColumn)
 
@@ -100,10 +105,15 @@ class InheritableSQLMeta(sqlmeta):
         soClass = sqlmeta.soClass
         super(InheritableSQLMeta, sqlmeta).delColumn(column, changeSchema, connection)
 
+        if isinstance(column, str):
+            name = column
+        else:
+            name = column.name
+
         #DSM: Update each child class if needed
         #DSM: and delete properties for this column
         for c in soClass._childClasses.values():
-            delattr(c, name)
+            delattr(c.q, name)
 
     delColumn = classmethod(delColumn)
 
