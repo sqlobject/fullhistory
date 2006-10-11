@@ -1098,6 +1098,13 @@ different types of columns, when SQLObject creates your tables.
     ``ENUM`` type, but will work with other databases too (storage
     just won't be as efficient).
 
+    For PostgreSQL, EnumCol's are implemented using check constraints.
+    Due to the way PostgreSQL handles check constraints involving NULL,
+    specifying None as a member of an EnumCol will effectively mean that,
+    at the SQL level, the check constraint will be ignored (see
+    http://archives.postgresql.org/pgsql-sql/2004-12/msg00065.php for
+    more details).
+
 `FloatCol`:
     Floats.
 
