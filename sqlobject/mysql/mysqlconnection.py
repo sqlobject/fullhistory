@@ -157,6 +157,7 @@ class MySQLConnection(DBAPI):
             if self.kw.get('use_unicode') and colClass is col.StringCol:
                 colClass = col.UnicodeCol
             kw['name'] = soClass.sqlmeta.style.dbColumnToPythonAttr(field)
+            kw['dbName'] = field
             kw['notNone'] = not nullAllowed
             if default and t.startswith('int'):
                 kw['default'] = int(default)

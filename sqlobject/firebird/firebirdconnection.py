@@ -191,6 +191,7 @@ class FirebirdConnection(DBAPI):
                 continue
             colClass, kw = self.guessClass(t, flength, fscale)
             kw['name'] = soClass.sqlmeta.style.dbColumnToPythonAttr(field)
+            kw['dbName'] = field
             kw['notNone'] = not nullAllowed
             kw['default'] = thedefault
             results.append(colClass(**kw))
