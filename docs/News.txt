@@ -10,12 +10,6 @@ News
 SQLObject 0.7.2
 ===============
 
-Features & Interface
---------------------
-
-Small Features
---------------
-
 Bug Fixes
 ---------
 
