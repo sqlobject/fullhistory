@@ -15,6 +15,9 @@ Bug Fixes
 
 * Fixed a number of unicode-related problems with newer MySQLdb.
 
+* InheritableSQLObject.selectBy() now correctly handles foreign keys, even
+  foreign keys from the parent classes.
+
 SQLObject 0.7.1
 ===============
 
