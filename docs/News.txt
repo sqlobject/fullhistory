@@ -18,6 +18,10 @@ Bug Fixes
 * InheritableSQLObject.selectBy() now correctly handles foreign keys, even
   foreign keys from the parent classes.
 
+* If the DB API driver returns timedelta instead of time (MySQLdb sometimes
+  does this) it is converted to time; but if the timedelta has days an
+  exception is raised.
+
 SQLObject 0.7.1
 ===============
 
