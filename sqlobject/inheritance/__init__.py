@@ -38,18 +38,21 @@ class InheritableSelectResults(SelectResults):
                 if registryClass.sqlmeta.table in tablesDict:
                     #DSM: By default, no parents are needed for the clauses
                     tableRegistry[registryClass] = registryClass
-            for registryClass in allClasses:
-                if registryClass.sqlmeta.table in tablesDict:
-                    currentClass = registryClass
-                    while currentClass._parentClass:
-                        currentClass = currentClass._parentClass
-                        if tableRegistry.has_key(currentClass):
-                            #DSM: Must keep the last parent needed
-                            #DSM: (to limit the number of join needed)
-                            tableRegistry[registryClass] = currentClass
+            tableRegistryCopy = tableRegistry.copy()
+            for childClass in tableRegistryCopy:
+                if childClass not in tableRegistry:
+                    continue
+                currentClass = childClass
+                while currentClass:
+                    if tableRegistryCopy.has_key(currentClass):
+                        if currentClass in tableRegistry:
                             #DSM: Remove this class as it is a parent one
                             #DSM: of a needed children
                             del tableRegistry[currentClass]
+                        #DSM: Must keep the last parent needed
+                        #DSM: (to limit the number of join needed)
+                        tableRegistry[childClass] = currentClass
+                    currentClass = currentClass._parentClass
             #DSM: Table registry contains only the last children
             #DSM: or standalone classes
             parentClause = []

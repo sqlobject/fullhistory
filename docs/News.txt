@@ -15,11 +15,14 @@ Bug Fixes
 
 * Fixed a number of unicode-related problems with newer MySQLdb.
 
+* If the DB API driver returns timedelta instead of time (MySQLdb does
+  this) it is converted to time; but if the timedelta has days an exception
+  is raised.
+
 * Fixed a number of bugs in InheritableSQLObject related to foreign keys.
 
-* If the DB API driver returns timedelta instead of time (MySQLdb sometimes
-  does this) it is converted to time; but if the timedelta has days an
-  exception is raised.
+* Fixed a bug in InheritableSQLObject related to the order of tableRegistry
+  dictionary.
 
 SQLObject 0.7.1
 ===============
