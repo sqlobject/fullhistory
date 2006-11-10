@@ -10,6 +10,11 @@ News
 SQLObject 0.7.2
 ===============
 
+Features & Interface
+--------------------
+
+* sqlbuilder.Select now supports JOINs exactly like SQLObject.select.
+
 Bug Fixes
 ---------
 
