@@ -24,6 +24,8 @@ Bug Fixes
 * Fixed a bug in InheritableSQLObject related to the order of tableRegistry
   dictionary.
 
+* A bug fix that allows to use SQLObject with DateTime from Zope.
+
 SQLObject 0.7.1
 ===============
 
