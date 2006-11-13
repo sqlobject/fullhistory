@@ -42,3 +42,5 @@ TODO
 
 * A hierarchy of exceptions. SQLObject should translate exceptions from
   low-level drivers to a consistent set of high-level exceptions.
+
+* Merge SQLObject.create*, .create*SQL methods with DBPI.create* methods.
