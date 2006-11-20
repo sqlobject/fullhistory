@@ -129,11 +129,15 @@ Example::
     ...     class sqlmeta:
     ...         table = "user_table"
     ...     username = StringCol(alternateID=True, length=20)
-    ...     roles = SQLRelatedJoin('Role', intermediateTable='user_roles', createRelatedTable=False)
+    ...     roles = SQLRelatedJoin('Role',
+    ...         intermediateTable='user_roles',
+    ...         createRelatedTable=False)
 
     >>> class Role(SQLObject):
     ...     name = StringCol(alternateID=True, length=20)
-    ...     users = SQLRelatedJoin('User', intermediateTable='user_roles', createRelatedTable=False)
+    ...     users = SQLRelatedJoin('User',
+    ...         intermediateTable='user_roles',
+    ...         createRelatedTable=False)
 
     >>> class UserRoles(SQLObject):
     ...     class sqlmeta:
