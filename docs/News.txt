@@ -35,6 +35,12 @@ Bug Fixes
 
 * A bug fix that allows to use SQLObject with DateTime from Zope.
 
+Documentation Added
+-------------------
+
+Added "How can I define my own intermediate table in my Many-to-Many relationship?" to FAQ.
+
+
 SQLObject 0.7.1
 ===============
 
