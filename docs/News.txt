@@ -7,6 +7,14 @@ News
 
 .. _start:
 
+SQLObject 0.7.3
+===============
+
+Bug Fixes
+---------
+
+* Allow multiple MSSQL connections.
+
 SQLObject 0.7.2
 ===============
 
@@ -39,7 +47,6 @@ Documentation Added
 -------------------
 
 Added "How can I define my own intermediate table in my Many-to-Many relationship?" to FAQ.
-
 
 SQLObject 0.7.1
 ===============
