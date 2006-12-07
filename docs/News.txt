@@ -48,7 +48,8 @@ Bug Fixes
 Documentation Added
 -------------------
 
-Added "How can I define my own intermediate table in my Many-to-Many relationship?" to FAQ.
+* Added "How can I define my own intermediate table in my Many-to-Many
+  relationship?" to FAQ.
 
 SQLObject 0.7.1
 ===============
@@ -135,10 +136,10 @@ Features & Interface
   column.
 
 * New `documented reflection interface
-  <http://sqlobject.org/docs/interface.py.html>`_, using the new
-  ``.sqlmeta`` class/instance.  Most special attributes that started
-  with ``_`` were moved into ``sqlmeta`` (with leading underscore
-  removed).
+  <http://svn.colorstudy.com/SQLObject/docs/interface.py>`_, using the
+  new ``.sqlmeta`` class/instance.  Most special attributes that
+  started with ``_`` were moved into ``sqlmeta`` (with leading
+  underscore removed).
 
 * New aggregate functions for select results, like
   ``cls.select().max(columnName)``: ``.max()``, ``.min()``,
