@@ -25,3 +25,5 @@ interested in contributing you should read the `Developer Guide
 The `Author List <docs/Authors.html>`_ tries to list all the major
 contributors.
 
+There is also an experimental Trac installation for wiki and tickets at
+http://sqlobject.gcu.info/trac.
