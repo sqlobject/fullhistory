@@ -19,6 +19,9 @@ Bug Fixes
 
 * Fixed a bug in MSSQLConnection caused by column names being unicode.
 
+* Fixed a bug in FirebirdConnection caused by column names having trailing
+  spaces.
+
 SQLObject 0.7.2
 ===============
 
