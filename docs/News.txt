@@ -22,6 +22,8 @@ Bug Fixes
 * Fixed a bug in FirebirdConnection caused by column names having trailing
   spaces.
 
+* Fixed a missed import in firebirdconnection.py.
+
 SQLObject 0.7.2
 ===============
 
