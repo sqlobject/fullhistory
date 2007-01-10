@@ -17,6 +17,8 @@ Bug Fixes
 
 * Psycopg1 requires port to be a string; psycopg2 requires port to be an int.
 
+* Fixed a bug in MSSQLConnection caused by column names being unicode.
+
 SQLObject 0.7.2
 ===============
 
