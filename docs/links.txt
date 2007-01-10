@@ -11,9 +11,6 @@ Open Source Projects
 * `sqlos Zope 3 SQLObject integration
   <http://codespeak.net/z3/sqlos/>`_.
 
-* `Subway <http://subway.python-hosting.com/>`_ Web Framework;
-  integrates tightly with SQLObject for its models.
-
 * `Nabu <http://furius.ca/nabu/>`_, a publishing system.
 
 * `Ultra Gleeper <http://www.crummy.com/software/UltraGleeper/>`_, a
@@ -35,9 +32,6 @@ Open Source Projects
 * `Anemon <http://anemon.org/wikini/wakka.php?wiki=FirstPage>`_ DHCP
   server.
 
-* `Planet Plus <http://planetplus.python-hosting.com/>`_; a `CherryPy
-  <http://cherrypy.org>`_ public feed aggregator.
-
 * `Guten <http://guten.sourceforge.net/>`_; an application for
   browsing, reading, and managing books from `Project Gutenberg
   <http://www.gutenberg.org/>`_.
@@ -47,9 +41,6 @@ Articles and Documentation
 
 * `Canonical's SQLObject guide
   <https://wiki.launchpad.canonical.com/SQLObjectGuide>`_.
-
-* `Webware/Paste + SQLObject Tutorial
-  <http://pythonpaste.org/docs/TodoTutorial.html>`_.
 
 * `SQLObject and CherryPy
   <http://www.cherrypy.org/wiki/SQLObjectThreadPerConnection>`_.
