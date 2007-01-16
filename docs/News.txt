@@ -24,6 +24,8 @@ Bug Fixes
 
 * Fixed a missed import in firebirdconnection.py.
 
+* Remove a leading slash in FirebirdConnection.
+
 SQLObject 0.7.2
 ===============
 
