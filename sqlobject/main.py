@@ -804,6 +804,8 @@ class SQLObject(object):
                 currentClass = currentClass._parentClass
                 for column in currentClass.sqlmeta.columnDefinitions.values():
                     if type(column) == col.ForeignKey: continue
+                    if column.name == 'childName':
+                        continue
                     setattr(cls.q, column.name,
                         getattr(currentClass.q, column.name))
 

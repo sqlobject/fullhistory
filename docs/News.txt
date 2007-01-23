@@ -26,6 +26,8 @@ Bug Fixes
 
 * Remove a leading slash in FirebirdConnection.
 
+* Fixed a bug in deep Inheritance tree.
+
 SQLObject 0.7.2
 ===============
 
