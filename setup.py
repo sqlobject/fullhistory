@@ -19,7 +19,7 @@ if sys.version < '2.2.3':
     DistributionMetadata.download_url = None
 
 setup(name="SQLObject",
-      version="0.7.2",
+      version="0.7.3",
       description="Object-Relational Manager, aka database wrapper",
       long_description="""\
 SQLObject is a popular *Object Relational Manager* for providing an
@@ -37,7 +37,7 @@ The trunk is available in a `Subversion repository
 ``easy_install SQLObject==dev``
 
 The 0.7 bugfix branch is `also available
-<http://svn.sqlobject.org/SQLObject/branches/0.7-bugfix#egg=SQLObject-bugfix>`_
+<http://svn.sqlobject.org/SQLObject/branches/0.7#egg=SQLObject-bugfix>`_
 installable with ``easy_install SQLObject==bugfix``.
 """,
       classifiers=[
@@ -52,7 +52,7 @@ installable with ``easy_install SQLObject==bugfix``.
       author="Ian Bicking",
       author_email="ianb@colorstudy.com",
       url="http://sqlobject.org",
-      download_url="http://cheeseshop.python.org/pypi/SQLObject/0.7.2",
+      download_url="http://cheeseshop.python.org/pypi/SQLObject/0.7.3",
       license="LGPL",
       packages=["sqlobject"] + ['sqlobject.%s' % package for package in subpackages],
       scripts=["scripts/sqlobject-admin"],
