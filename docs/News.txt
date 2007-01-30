@@ -10,6 +10,8 @@ News
 SQLObject 0.7.3
 ===============
 
+Released 30 Jan 2007.
+
 Bug Fixes
 ---------
 
