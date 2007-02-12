@@ -10,6 +10,8 @@ News
 SQLObject 0.8.0
 ===============
 
+Released 12 Feb 2007.
+
 Features & Interface
 --------------------
 
