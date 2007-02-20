@@ -12,14 +12,9 @@ class SelectResults(object):
         self.sourceClass = sourceClass
         if clause is None or isinstance(clause, str) and clause == 'all':
             clause = sqlbuilder.SQLTrueClause
+        if not isinstance(clause, sqlbuilder.SQLExpression):
+            clause = sqlbuilder.SQLConstant(clause)
         self.clause = clause
-        tablesDict = sqlbuilder.tablesUsedDict(self.clause)
-        tablesDict[sourceClass.sqlmeta.table] = 1
-        if clauseTables:
-            for table in clauseTables:
-                tablesDict[table] = 1
-        self.clauseTables = clauseTables
-        self.tables = tablesDict.keys()
         self.ops = ops
         if self.ops.get('orderBy', sqlbuilder.NoDefault) is sqlbuilder.NoDefault:
             self.ops['orderBy'] = sourceClass.sqlmeta.defaultOrder
@@ -31,6 +26,29 @@ class SelectResults(object):
         self.ops['dbOrderBy'] = orderBy
         if ops.has_key('connection') and ops['connection'] is None:
             del ops['connection']
+            
+        tablesDict = sqlbuilder.tablesUsedDict(self.clause, self._getConnection().dbName)
+        if clauseTables:
+            for table in clauseTables:
+                tablesDict[table] = 1
+        self.clauseTables = clauseTables
+        # Explicitly post-adding-in sqlmeta.table, sqlbuilder.Select will handle sqlrepr'ing and dupes
+        self.tables = tablesDict.keys() + [sourceClass.sqlmeta.table]
+
+    def queryForSelect(self):
+        columns = [self.sourceClass.q.id] + [getattr(self.sourceClass.q, x.name) for x in self.sourceClass.sqlmeta.columnList]
+        query = sqlbuilder.Select(columns,
+                                  where=self.clause,
+                                  join=self.ops.get('join', sqlbuilder.NoDefault),
+                                  distinct=self.ops.get('distinct',False),
+                                  lazyColumns=self.ops.get('lazyColumns', False),
+                                  start=self.ops.get('start', 0),
+                                  end=self.ops.get('end', None),
+                                  orderBy=self.ops.get('dbOrderBy',sqlbuilder.NoDefault),
+                                  reversed=self.ops.get('reversed', False),
+                                  staticTables=self.tables,
+                                  forUpdate=self.ops.get('forUpdate', False))
+        return query
 
     def __repr__(self):
         return "<%s at %x>" % (self.__class__.__name__, id(self))
@@ -54,14 +72,15 @@ class SelectResults(object):
             desc = False
         if isinstance(orderBy, (str, unicode)):
             if orderBy in self.sourceClass.sqlmeta.columns:
-                val = self.sourceClass.sqlmeta.columns[orderBy].dbName
+                val = getattr(self.sourceClass.q, self.sourceClass.sqlmeta.columns[orderBy].name)
                 if desc:
-                    return '-' + val
+                    return sqlbuilder.DESC(val)
                 else:
                     return val
             else:
+                orderBy = sqlbuilder.SQLConstant(orderBy)
                 if desc:
-                    return '-' + orderBy
+                    return sqlbuilder.DESC(orderBy)
                 else:
                     return orderBy
         else:
@@ -174,7 +193,12 @@ class SelectResults(object):
             Return the accumulate result
         """
         conn = self._getConnection()
-        return conn.accumulateSelect(self, *expressions)
+        exprs = []
+        for expr in expressions:
+            if not isinstance(expr, sqlbuilder.SQLExpression):
+                expr = sqlbuilder.SQLConstant(expr)
+            exprs.append(expr)
+        return conn.accumulateSelect(self, *exprs)
 
     def count(self):
         """ Counting elements of current select results """

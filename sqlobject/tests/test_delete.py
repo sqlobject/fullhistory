@@ -43,5 +43,5 @@ def testDeleteRelatedJoins():
     service_group = ServiceGroup()
     service.addServiceGroup(service_group)
     service.destroySelf()
-    service_group = ServiceGroup.get(1)
+    service_group = ServiceGroup.get(service_group.id)
     assert len(service_group.services) == 0

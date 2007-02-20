@@ -32,14 +32,17 @@ class InheritableSelectResults(SelectResults):
             inheritedTables=None, **ops):
         if clause is None or isinstance(clause, str) and clause == 'all':
             clause = sqlbuilder.SQLTrueClause
-        tablesDict = tablesUsedDict(clause)
+        
+        dbName = (ops.get('connection',None) or sourceClass._connection).dbName
+        
+        tablesDict = sqlbuilder.tablesUsedDict(clause, dbName)
         tablesDict[sourceClass.sqlmeta.table] = 1
         orderBy = ops.get('orderBy')
         if inheritedTables:
             for tableName in inheritedTables:
                 tablesDict[tableName] = 1
         if orderBy and not isinstance(orderBy, basestring):
-            tablesDict.update(tablesUsedDict(orderBy))
+            tablesDict.update(sqlbuilder.tablesUsedDict(orderBy, dbName))
         #DSM: if this class has a parent, we need to link it
         #DSM: and be sure the parent is in the table list.
         #DSM: The following code is before clauseTables

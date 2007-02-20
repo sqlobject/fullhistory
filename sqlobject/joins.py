@@ -235,6 +235,9 @@ class OtherTableToJoin(sqlbuilder.SQLExpression):
         self.interTable = interTable
         self.joinColumn = joinColumn
 
+    def tablesUsedImmediate(self):
+        return [self.otherTable, self.interTable]
+
     def __sqlrepr__(self, db):
         return '%s.%s = %s.%s' % (self.otherTable, self.otherIdName, self.interTable, self.joinColumn)
 
@@ -244,6 +247,9 @@ class JoinToTable(sqlbuilder.SQLExpression):
         self.idName = idName
         self.interTable = interTable
         self.joinColumn = joinColumn
+
+    def tablesUsedImmediate(self):
+        return [self.table, self.interTable]
     
     def __sqlrepr__(self, db):
         return '%s.%s = %s.%s' % (self.interTable, self.joinColumn, self.table, self.idName)
@@ -253,6 +259,9 @@ class TableToId(sqlbuilder.SQLExpression):
         self.table = table
         self.idName = idName
         self.idValue = idValue
+
+    def tablesUsedImmediate(self):
+        return [self.table]
 
     def __sqlrepr__(self, db):
         return '%s.%s = %s' % (self.table, self.idName, self.idValue)
