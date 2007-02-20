@@ -4,7 +4,7 @@
 #from SQLObject import SQLObject
 #from sqlobject.col import Col, KeyCol
 from sqlbuilder import *
-from main import SQLObject
+from main import SQLObject, sqlmeta
 import types, threading
 
 
@@ -57,6 +57,10 @@ class ViewSQLObjectTable(SQLObjectTable):
             else:
                 return self.FieldClass(alias, self.tableName, column.name, attr)
 
+class ViewSQLObjectMeta(sqlmeta):
+    pass
+
+
 class ViewSQLObject(SQLObject):
     '''A SQLObject class that derives all it's values from other SQLObject classes.
         Columns on subclasses should use SQLBuilder constructs for dbName,
@@ -66,6 +70,10 @@ class ViewSQLObject(SQLObject):
             alias as an optional alternate name (as table is typically used for SQLObjects)
         See test_views.py for simple examples.
     '''
+    
+    class sqlmeta(ViewSQLObjectMeta):
+        pass
+    
     def __classinit__(cls, new_attrs):
         SQLObject.__classinit__(cls, new_attrs)
         # like is_base
@@ -81,7 +89,7 @@ class ViewSQLObject(SQLObject):
                 else:
                     columns.append(ColumnAS(col.dbName, n))
             
-            clause = cls.sqlmeta.clause
+            clause = getattr(cls.sqlmeta, 'clause', NoDefault)
             select = Select(columns,
                             distinct=True,
                             distinctOn=cls.sqlmeta.idName,

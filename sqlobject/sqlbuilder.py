@@ -1139,7 +1139,7 @@ class ImportProxyField(SQLObjectField):
     def tablesUsedImmediate(self):
         return [str(self.tableName)]
 
-class ImportProxy(SQLObjectTable):
+class ImportProxy(SQLExpression):
     '''Class to be used in column definitions that rely on other tables that might
         not yet be in a classregistry.
     '''
@@ -1153,7 +1153,7 @@ class ImportProxy(SQLObjectTable):
     def __getattr__(self, attr):
         if self.soClass is None:
             return _Delay(self, attr)
-        return SQLObjectTable.__getattr__(self, attr)
+        return getattr(self.soClass.q, attr)
 
 class _Delay(SQLExpression):
     def __init__(self, proxy, attr):
@@ -1163,10 +1163,7 @@ class _Delay(SQLExpression):
     def __sqlrepr__(self, db):
         if self.proxy.soClass is None:
             return '_DELAYED_' + self.attr
-        return str(self._resolve())
-
-    def __add__(self, other):
-        return str(self) + other
+        return sqlrepr(self._resolve(), db)
 
     def _resolve(self):
         return getattr(self.proxy, self.attr)
