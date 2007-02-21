@@ -67,7 +67,7 @@ class ViewSQLObject(SQLObject):
         and sqlmeta should specify:
             idName as a SQLBuilder construction
             clause as SQLBuilder clause for specifying join conditions or other restrictions
-            alias as an optional alternate name (as table is typically used for SQLObjects)
+            table as an optional alternate name for the class alias
         See test_views.py for simple examples.
     '''
     
@@ -78,7 +78,9 @@ class ViewSQLObject(SQLObject):
         SQLObject.__classinit__(cls, new_attrs)
         # like is_base
         if cls.__name__ != 'ViewSQLObject':
-            if not getattr(cls.sqlmeta, 'alias', None):
+            if getattr(cls.sqlmeta, 'table', None):
+                cls.sqlmeta.alias = cls.sqlmeta.table
+            else:
                 cls.sqlmeta.alias = cls.sqlmeta.style.pythonClassToDBTable(cls.__name__)
             alias = cls.sqlmeta.alias
             columns = [ColumnAS(cls.sqlmeta.idName, 'id')]

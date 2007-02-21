@@ -43,7 +43,10 @@ class ViewPhoneMore(ViewSQLObject):
     number = StringCol(dbName=ViewPhone.q.number)
     timesCalled = IntCol(dbName=func.COUNT(PhoneCall.q.toID))
     minutesCalled = IntCol(dbName=func.SUM(PhoneCall.q.minutes))
-                     
+
+class ViewPhoneMore2(ViewPhoneMore):
+    class sqlmeta:
+        table = 'vpm'
     
 
 def setup_module(mod):
@@ -73,6 +76,9 @@ def testColumnSQLVPC():
     q = sqlrepr(ViewPhoneCall.q)
     assert q.count('phone_call.minutes AS minutes')
     assert q.count('phone_number.number AS number')
+
+def testAliasOverride():
+    assert str(sqlrepr(ViewPhoneMore2.q.id)) == 'vpm.id'
 
 def checkAttr(cls, id, attr, value):
         assert getattr(cls.get(id), attr) == value
@@ -110,3 +116,8 @@ def testSelect():
 def testSelect2():
     s = ViewPhone.select(ViewPhone.q.number==phones[0].number)
     assert s.getOne().phoneNumber == phones[0]
+    
+def testDistinctCount():
+    # This test is for SelectResults non-* based count when distinct
+    # We're really just checking this doesn't raise anything due to lack of sqlrepr'ing
+    assert ViewPhone.select(distinct=True).count() == 2

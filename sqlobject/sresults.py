@@ -211,9 +211,7 @@ class SelectResults(object):
             # COUNT(DISTINCT column) is supported by MySQL and PostgreSQL,
             # but not by SQLite. Perhaps more portable would be subquery:
             #  SELECT COUNT(*) FROM (SELECT DISTINCT id FROM table)
-            count = self.accumulate('COUNT(DISTINCT %s.%s)' % (
-                                             self.sourceClass.sqlmeta.table,
-                                             self.sourceClass.sqlmeta.idName))
+            count = self.accumulate('COUNT(DISTINCT %s)' % self._getConnection().sqlrepr(self.sourceClass.q.id))
         else:
             count = self.accumulate('COUNT(*)')
         if self.ops.get('start'):
