@@ -13,13 +13,13 @@ except NameError: # Python 2.2
     basestring = (types.StringType, types.UnicodeType)
 
 
-def tablesUsedDict(obj):
+def tablesUsedDict(obj, db):
     if hasattr(obj, "tablesUsedDict"):
-        return obj.tablesUsedDict()
+        return obj.tablesUsedDict(db)
     elif isinstance(obj, (tuple, list)):
         d = {}
         for component in obj:
-            d.update(tablesUsedDict(component))
+            d.update(tablesUsedDict(component, db))
         return d
     else:
         return {}
@@ -35,14 +35,14 @@ class InheritableSelectResults(SelectResults):
         
         dbName = (ops.get('connection',None) or sourceClass._connection).dbName
         
-        tablesDict = sqlbuilder.tablesUsedDict(clause, dbName)
+        tablesDict = tablesUsedDict(clause, dbName)
         tablesDict[sourceClass.sqlmeta.table] = 1
         orderBy = ops.get('orderBy')
         if inheritedTables:
             for tableName in inheritedTables:
                 tablesDict[tableName] = 1
         if orderBy and not isinstance(orderBy, basestring):
-            tablesDict.update(sqlbuilder.tablesUsedDict(orderBy, dbName))
+            tablesDict.update(tablesUsedDict(orderBy, dbName))
         #DSM: if this class has a parent, we need to link it
         #DSM: and be sure the parent is in the table list.
         #DSM: The following code is before clauseTables

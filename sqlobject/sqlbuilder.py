@@ -416,7 +416,10 @@ class AliasField(Field):
         self.aliasTable = aliasTable
 
     def __sqlrepr__(self, db):
-        return self.alias + "." + self.fieldName
+        fieldName = self.fieldName
+        if isinstance(fieldName, SQLExpression):
+            fieldName = sqlrepr(fieldName, db)
+        return self.alias + "." + fieldName
     
     def tablesUsedImmediate(self):
         return [self.aliasTable]
@@ -1146,9 +1149,13 @@ class ImportProxy(SQLExpression):
     FieldClass = ImportProxyField
     def __init__(self, clsName, registry=None):
         self.tableName = _DelayClass(self, clsName)
+        self.sqlmeta = _Delay_proxy(table=_DelayClass(self, clsName))
         self.q = self
         self.soClass = None
         classregistry.registry(registry).addClassCallback(clsName,lambda foreign, me: setattr(me, 'soClass', foreign), self)
+
+    def __nonzero__(self):
+        return True
 
     def __getattr__(self, attr):
         if self.soClass is None:
@@ -1163,14 +1170,31 @@ class _Delay(SQLExpression):
     def __sqlrepr__(self, db):
         if self.proxy.soClass is None:
             return '_DELAYED_' + self.attr
-        return sqlrepr(self._resolve(), db)
+        val = self._resolve()
+        if isinstance(val, SQLExpression):
+            val = sqlrepr(val, db)
+        return val
 
     def _resolve(self):
         return getattr(self.proxy, self.attr)
+    
+    # For AliasTable etc
+    def fieldName(self):
+        class _aliasFieldName(SQLExpression):
+            def __init__(self, proxy):
+                self.proxy = proxy
+            def __sqlrepr__(self, db):
+                return self.proxy._resolve().fieldName
+        return _aliasFieldName(self)
+    fieldName = property(fieldName)
 
 class _DelayClass(_Delay):
     def _resolve(self):
         return self.proxy.soClass.sqlmeta.table   
+
+class _Delay_proxy(object):
+    def __init__(self, **kw):
+        self.__dict__.update(kw)
 
 ######
 

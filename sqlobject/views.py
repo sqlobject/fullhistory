@@ -89,10 +89,12 @@ class ViewSQLObject(SQLObject):
                 else:
                     columns.append(ColumnAS(col.dbName, n))
             
+            metajoin   = getattr(cls.sqlmeta, 'join', NoDefault)
             clause = getattr(cls.sqlmeta, 'clause', NoDefault)
             select = Select(columns,
                             distinct=True,
                             distinctOn=cls.sqlmeta.idName,
+                            join=metajoin,
                             clause=clause)
             
             if aggregates:
@@ -110,6 +112,7 @@ class ViewSQLObject(SQLObject):
                     new_alias = Alias(
                                              Select([ColumnAS(cls.sqlmeta.idName, agg_id), agg],
                                                     groupBy=cls.sqlmeta.idName,
+                                                    join=metajoin,
                                                     clause=clause),
                                        agg_alias)
                     agg_join = LEFTJOINOn(last,
