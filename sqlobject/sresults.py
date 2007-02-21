@@ -304,7 +304,8 @@ class SelectResults(object):
         otherClass = getattr(self.sourceClass, "_SO_class_"+col.foreignKey)
         query = sqlbuilder.Alias(self.queryForSelect(), "%s_%s" % (self.sourceClass.__name__, col.name))
         return otherClass.select(otherClass.q.id==getattr(query.q, getattr(self.sourceClass.q, col.name).fieldName),
-                                distinct=True)
+                                distinct=True,
+                                connection=self._getConnection())
         
     def _throughToMultipleJoin(self, join):
         otherClass = join.otherClass
@@ -313,7 +314,8 @@ class SelectResults(object):
         joinColumn = getattr(otherClass.q, join.soClass.sqlmeta.style.dbColumnToPythonAttr(join.joinColumn))
         return otherClass.select(joinColumn == getattr(query.q, self.sourceClass.q.id.fieldName),
                                 distinct=True,
-                                orderBy=join.orderBy)
+                                orderBy=join.orderBy,
+                                connection=self._getConnection())
     
     def _throughToRelatedJoin(self, join):
         otherClass = join.otherClass
@@ -326,7 +328,8 @@ class SelectResults(object):
                      getattr(intTable, join.joinColumn) == getattr(query.q, join.joinColumn))
         ret = otherClass.select(clause,
                                 distinct=True,
-                                orderBy=join.orderBy)
+                                orderBy=join.orderBy,
+                                connection=self._getConnection())
         print ret
         return ret
 
