@@ -1,6 +1,7 @@
 import sqlbuilder
 import dbconnection
 import main
+import joins
 
 StringType = type('')
 
@@ -280,5 +281,60 @@ class SelectResults(object):
                 "More than one result returned from query: %s"
                 % results)
         return results[0]
+
+    def throughTo(self):
+        return _throughTo_getter(self)
+    throughTo = property(throughTo)
+
+    def _throughTo(self, attr):
+        ref = self.sourceClass.sqlmeta.columns.get(attr.endswith('ID') and attr or attr+'ID', None)
+        if ref and ref.foreignKey:
+            return self._throughToFK(ref)
+        else:
+            join = [x for x in self.sourceClass.sqlmeta.joins if x.joinMethodName==attr]
+            if join:
+                join = join[0]
+                if hasattr(join, 'otherColumn'):
+                    return self._throughToRelatedJoin(join)
+                return self._throughToMultipleJoin(join)
+        
+        raise AttributeError("throughTo argument (got %s) should be name of foreignKey or SQL*Join in %s" % (attr, self.sourceClass))
+    
+    def _throughToFK(self, col):
+        otherClass = getattr(self.sourceClass, "_SO_class_"+col.foreignKey)
+        query = sqlbuilder.Alias(self.queryForSelect(), "%s_%s" % (self.sourceClass.__name__, col.name))
+        return otherClass.select(otherClass.q.id==getattr(query.q, getattr(self.sourceClass.q, col.name).fieldName),
+                                distinct=True)
+        
+    def _throughToMultipleJoin(self, join):
+        otherClass = join.otherClass
+        query = self.queryForSelect()
+        query = sqlbuilder.Alias(query, "%s_%s" % (self.sourceClass.__name__, join.joinMethodName))
+        joinColumn = getattr(otherClass.q, join.soClass.sqlmeta.style.dbColumnToPythonAttr(join.joinColumn))
+        return otherClass.select(joinColumn == getattr(query.q, self.sourceClass.q.id.fieldName),
+                                distinct=True,
+                                orderBy=join.orderBy)
+    
+    def _throughToRelatedJoin(self, join):
+        otherClass = join.otherClass
+        intTable = sqlbuilder.Table(join.intermediateTable)
+        print join.joinColumn, join.otherColumn
+        query = self.queryForSelect().newItems([getattr(intTable, join.joinColumn)])
+        query = sqlbuilder.Alias(query, "%s_%s" % (self.sourceClass.__name__, join.joinMethodName))
+        print query
+        clause = sqlbuilder.AND(otherClass.q.id == getattr(intTable, join.otherColumn),
+                     getattr(intTable, join.joinColumn) == getattr(query.q, join.joinColumn))
+        ret = otherClass.select(clause,
+                                distinct=True,
+                                orderBy=join.orderBy)
+        print ret
+        return ret
+
+
+class _throughTo_getter(object):
+    def __init__(self, inst):
+        self.sresult = inst
+    def __getattr__(self, attr):
+        return self.sresult._throughTo(attr)
 
 __all__ = ['SelectResults']
