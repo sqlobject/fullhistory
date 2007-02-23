@@ -227,6 +227,7 @@ if Decimal:
     registerConverter(Decimal, DecimalConverter)
 
 def sqlrepr(obj, db=None):
+    import sqlbuilder
     try:
         reprFunc = obj.__sqlrepr__
     except AttributeError:
@@ -236,4 +237,17 @@ def sqlrepr(obj, db=None):
                   (type(obj), repr(obj))
         return converter(obj, db)
     else:
-        return reprFunc(db)
+#        return reprFunc(db)
+        cache = getattr(obj, '_sqlreprCache', {})
+        if not isinstance(cache, dict):
+            #Alias etc
+            cache = {}
+        ret = cache.get(db, None)
+        if ret is None:
+            ret = reprFunc(db)
+            try:
+                cache[db] = ret
+                obj._sqlreprCache = cache
+            except TypeError:
+                pass
+        return ret

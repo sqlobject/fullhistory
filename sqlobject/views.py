@@ -78,18 +78,27 @@ class ViewSQLObject(SQLObject):
         SQLObject.__classinit__(cls, new_attrs)
         # like is_base
         if cls.__name__ != 'ViewSQLObject':
+            dbName = hasattr(cls,'_connection') and cls._connection.dbName or None
+            
             if getattr(cls.sqlmeta, 'table', None):
                 cls.sqlmeta.alias = cls.sqlmeta.table
             else:
                 cls.sqlmeta.alias = cls.sqlmeta.style.pythonClassToDBTable(cls.__name__)
             alias = cls.sqlmeta.alias
             columns = [ColumnAS(cls.sqlmeta.idName, 'id')]
-            aggregates = []
+            # {sqlrepr-key: [restriction, *aggregate-column]}
+            aggregates = {'':[None]}
             for n,col in cls.sqlmeta.columns.iteritems():
-                if isinstance(col.dbName, SQLCall):
-                    aggregates.append(ColumnAS(col.dbName, n))
+                ascol = ColumnAS(col.dbName, n)
+                if isAggregate(col.dbName):
+                    restriction = getattr(col, 'aggregateClause',None)
+                    if restriction:
+                        restrictkey = sqlrepr(restriction, dbName)
+                        aggregates[restrictkey] = aggregates.get(restrictkey, [restriction]) + [ascol]
+                    else:
+                        aggregates[''].append(ascol)
                 else:
-                    columns.append(ColumnAS(col.dbName, n))
+                    columns.append(ascol)
             
             metajoin   = getattr(cls.sqlmeta, 'join', NoDefault)
             clause = getattr(cls.sqlmeta, 'clause', NoDefault)
@@ -99,7 +108,9 @@ class ViewSQLObject(SQLObject):
                             join=metajoin,
                             clause=clause)
             
-            if aggregates:
+            aggregates = aggregates.values()
+            
+            if len(aggregates) > 1:
                 join = []
                 last_alias = "%s_base" % alias
                 last_id = "id"
@@ -107,22 +118,28 @@ class ViewSQLObject(SQLObject):
                 columns = [SQLConstant("%s.%s"%(last_alias,x.expr2)) for x in columns]
                 
                 for i, agg in enumerate(aggregates):
+                    restriction = agg[0]
+                    if restriction is None:
+                        restriction = clause
+                    else:
+                        restriction = AND(clause, restriction)
+                    agg = agg[1:]
                     agg_alias = "%s_%s" % (alias, i)
                     agg_id = '%s_id'%agg_alias
                     if not last.q.alias.endswith('base'):
                         last = None
-                    new_alias = Alias(
-                                             Select([ColumnAS(cls.sqlmeta.idName, agg_id), agg],
-                                                    groupBy=cls.sqlmeta.idName,
-                                                    join=metajoin,
-                                                    clause=clause),
+                    new_alias = Alias(Select([ColumnAS(cls.sqlmeta.idName, agg_id)]+agg,
+                                             groupBy=cls.sqlmeta.idName,
+                                             join=metajoin,
+                                             clause=restriction),
                                        agg_alias)
                     agg_join = LEFTJOINOn(last,
                                        new_alias,
                                        "%s.%s = %s.%s" % (last_alias, last_id, agg_alias, agg_id))
                     
                     join.append(agg_join)
-                    columns.append(SQLConstant("%s.%s"%(agg_alias, agg.expr2)))
+                    for col in agg:
+                        columns.append(SQLConstant("%s.%s"%(agg_alias, col.expr2)))
                     
                     last = new_alias
                     last_alias = agg_alias
@@ -134,6 +151,12 @@ class ViewSQLObject(SQLObject):
             cls.q = ViewSQLObjectTable(cls)
             for n,col in cls.sqlmeta.columns.iteritems():
                 col.dbName = getattr(cls.q, n)
-
+            
+def isAggregate(expr):
+    if isinstance(expr, SQLCall):
+        return True
+    if isinstance(expr, SQLOp):
+        return isAggregate(expr.expr1) or isAggregate(expr.expr2)
+    return False
 
 ######

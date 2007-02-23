@@ -188,13 +188,16 @@ class SQLExpression:
     def tablesUsed(self, db):
         return self.tablesUsedDict(db).keys()
     def tablesUsedDict(self, db):
-        tables = {}
-        for table in self.tablesUsedImmediate():
-            if hasattr(table, '__sqlrepr__'):
-                table = sqlrepr(table, db)
-            tables[table] = 1
-        for component in self.components():
-            tables.update(tablesUsedDict(component, db))
+        tables = getattr(db, 'tableCache', {}).get(id(self), None)
+        if tables is None:
+            tables = {}
+            for table in self.tablesUsedImmediate():
+                if hasattr(table, '__sqlrepr__'):
+                    table = sqlrepr(table, db)
+                tables[table] = 1
+            for component in self.components():
+                tables.update(tablesUsedDict(component, db))
+            getattr(db, 'tableCache', {})[id(self)] = tables
         return tables
     def tablesUsedImmediate(self):
         return []
@@ -434,7 +437,7 @@ class AliasTable(Table):
     def __init__(self, table, alias=None):
         if hasattr(table, "sqlmeta"):
             tableName = SQLConstant(table.sqlmeta.table)
-        elif isinstance(table, Select):
+        elif isinstance(table, (Select,Union)):
             assert alias is not None, "Alias name cannot be constructed from Select instances, please provide 'alias' kw."
             tableName = Subquery('', table)
             table = None
@@ -472,6 +475,24 @@ class Alias(SQLExpression):
     def components(self):
         return [self.q]
 
+
+class Union(SQLExpression):
+    def __init__(self, *tables):
+        tabs = []
+        for t in tables:
+            if not isinstance(t, SQLExpression) and hasattr(t, 'sqlmeta'):
+                t = t.sqlmeta.table
+                if isinstance(t, Alias):
+                    t = t.q
+                if isinstance(t, Table):
+                    t = t.tableName
+                if not isinstance(t, SQLExpression):
+                    t = SQLConstant(t.sqlmeta.table)
+            tabs.append(t)
+        self.tables = tabs
+    
+    def __sqlrepr__(self, db):
+        return " UNION ".join([str(sqlrepr(t, db)) for t in self.tables])
 
 ########################################
 ## SQL Statements
@@ -1174,6 +1195,12 @@ class _Delay(SQLExpression):
         if isinstance(val, SQLExpression):
             val = sqlrepr(val, db)
         return val
+
+    def tablesUsedImmediate(self):
+        return getattr(self._resolve(), 'tablesUsedImmediate', lambda: [])()
+    
+    def components(self):
+        return getattr(self._resolve(), 'components', lambda: [])()
 
     def _resolve(self):
         return getattr(self.proxy, self.attr)
