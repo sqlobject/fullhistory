@@ -88,7 +88,9 @@ class ViewSQLObject(SQLObject):
             columns = [ColumnAS(cls.sqlmeta.idName, 'id')]
             # {sqlrepr-key: [restriction, *aggregate-column]}
             aggregates = {'':[None]}
-            for n,col in cls.sqlmeta.columns.iteritems():
+            inverseColumns = dict([(y,x) for x,y in cls.sqlmeta.columns.iteritems()])
+            for col in cls.sqlmeta.columnList:
+                n = inverseColumns[col]
                 ascol = ColumnAS(col.dbName, n)
                 if isAggregate(col.dbName):
                     restriction = getattr(col, 'aggregateClause',None)
@@ -109,8 +111,9 @@ class ViewSQLObject(SQLObject):
                             clause=clause)
             
             aggregates = aggregates.values()
+            #print cls.__name__, sqlrepr(aggregates, dbName)
             
-            if len(aggregates) > 1:
+            if aggregates != [[None]]:
                 join = []
                 last_alias = "%s_base" % alias
                 last_id = "id"
