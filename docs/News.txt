@@ -7,6 +7,15 @@ News
 
 .. _start:
 
+SQLObject 0.7.4
+===============
+
+Bug Fixes
+---------
+
+* Another round of changes to create/drop the tables in the right order
+  in the command-line client `sqlobject-admin`.
+
 SQLObject 0.7.3
 ===============
 
