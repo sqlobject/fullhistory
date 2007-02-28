@@ -1109,7 +1109,9 @@ different types of columns, when SQLObject creates your tables.
     Floats.
 
 `ForeignKey`:
-    A key to another table/class.  Use like ``user = ForeignKey('User')``.
+    A key to another table/class.  Use like ``user = ForeignKey('User')``. It
+    can check for referential integrity using the keyword argument `cascade`,
+    please see ForeignKey_ for details.
 
 `IntCol`:
     Integers.
@@ -1163,9 +1165,42 @@ different types of columns, when SQLObject creates your tables.
 Relationships Between Classes/Tables
 ------------------------------------
 
+ForeignKey
+~~~~~~~~~~
+
 You can use the `ForeignKey` to handle foreign references in a table,
 but for back references and many-to-many relationships you'll use
 joins.
+
+`ForeignKey` allows you to specify referential integrity using the keyword
+`cascade`, which can have these values:
+
+`None`:
+    No action is taken on related deleted columns (this is the default).
+    Following the Person/Address example, if you delete the object `Person` with
+    id 1 (Jonh Doe), the `Address` with id 1 (123 W Main St) will be kept
+    untouched (with ``perdonID=1``).
+`False`:
+    Deletion of an object that has other objects related to it using a
+    `ForeignKey` will fail (sets ``ON DELETE RESTRICT``).
+    Following the Person/Address example, if you delete the object `Person` with
+    id 1 (Jonh Doe) a `SQLObjectIntegrityError` exception will be raised,
+    because the `Address` with id 1 (123 W Main St) has a reference
+    (``personID=1``) to it.
+`True`:
+    Deletion of an object that has other objects related to it using a
+    `ForeignKey` will delete all the related objects too (sets ``ON DELETE
+    CASCADE``).
+    Following the Person/Address example, if you delete the object `Person` with
+    id 1 (Jonh Doe), the `Address` with id 1 (123 W Main St) will be deleted too.
+`'null'`:
+    Deletion of an object that has other objects related to it using a
+    `ForeignKey` will set the `ForeignKey` column to `NULL`/`None` (sets
+    ``ON DELETE SET NULL``).
+    Following the Person/Address example, if you delete the object `Person` with
+    id 1 (Jonh Doe), the `Address` with id 1 (123 W Main St) will be kept but
+    the reference to person will be set to `NULL`/`None` (``perdonID=None``).
+
 
 MultipleJoin and SQLMultipleJoin: One-to-Many
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
