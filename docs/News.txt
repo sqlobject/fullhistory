@@ -124,6 +124,8 @@ Bug Fixes
 * Another round of changes to create/drop the tables in the right order
   in the command-line client `sqlobject-admin`.
 
+* Fixed a bug in UnicodeField - allow comparison with None.
+
 SQLObject 0.7.3
 ===============
 
