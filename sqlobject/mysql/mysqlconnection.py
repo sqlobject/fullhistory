@@ -65,7 +65,7 @@ class MySQLConnection(DBAPI):
         except self.module.OperationalError, e:
             raise OperationalError(
                 "%s; used connection string: host=%s, port=%s, db=%s, user=%s, pwd=%s" % (
-                e, self.host, self.port, self.db, self.user, self.password)                
+                e, self.host, self.port, self.db, self.user, self.password)
             )
 
         if hasattr(conn, 'autocommit'):
@@ -169,7 +169,7 @@ class MySQLConnection(DBAPI):
     def createIDColumn(self, soClass):
         if soClass.sqlmeta.idType == str:
             return '%s TEXT PRIMARY KEY' % soClass.sqlmeta.idName
-        return '%s INT UNSIGNED PRIMARY KEY AUTO_INCREMENT' % soClass.sqlmeta.idName
+        return '%s INT PRIMARY KEY AUTO_INCREMENT' % soClass.sqlmeta.idName
 
     def joinSQLType(self, join):
         return 'INT NOT NULL'

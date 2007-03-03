@@ -115,6 +115,15 @@ Bug Fixes
 
 * Fixed aggregators and accumulators with inheritance.
 
+SQLObject 0.8.1
+===============
+
+Bug Fixes
+---------
+
+* ID columns are reverted back from INT UNSIGNED to INT for MySQL to be in
+  accord with FOREIGN KEYs.
+
 SQLObject 0.7.4
 ===============
 
