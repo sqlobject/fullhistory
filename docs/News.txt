@@ -129,6 +129,12 @@ Bug Fixes
 SQLObject 0.7.4
 ===============
 
+Small Features
+--------------
+
+* For MySQLdb 1.2.2+ call ping(True) on the connection to allow
+  autoreconnect after a timeout.
+
 Bug Fixes
 ---------
 
