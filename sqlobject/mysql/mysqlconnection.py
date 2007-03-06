@@ -11,7 +11,7 @@ class MySQLConnection(DBAPI):
     def __init__(self, db, user, passwd='', host='localhost', port=None, **kw):
         global MySQLdb
         if MySQLdb is None:
-            import MySQLdb
+            import MySQLdb, MySQLdb.constants.CR, MySQLdb.constants.ER
         self.module = MySQLdb
         self.host = host
         self.port = port
@@ -53,6 +53,10 @@ class MySQLConnection(DBAPI):
         try:
             conn = self.module.connect(host=self.host, port=self.port,
                 db=self.db, user=self.user, passwd=self.password, **self.kw)
+            if MySQLdb.version_info[0] > 1 or (MySQLdb.version_info[0] == 1 and
+                                               (MySQLdb.version_info[1] > 2 or (MySQLdb.version_info[1] == 2 and
+                                                                                MySQLdb.version_info[2] >= 2))):
+                conn.ping(True) # Attempt to reconnect. This setting is persistent.
         except self.module.OperationalError, e:
             raise self.module.OperationalError(
                 "%s; used connection string: host=%s, port=%s, db=%s, user=%s, pwd=%s" % (
