@@ -7,6 +7,19 @@ News
 
 .. _start:
 
+SQLObject 0.8.1
+===============
+
+Bug Fixes
+---------
+
+* ID columns are reverted back from INT UNSIGNED to INT for MySQL to be in
+  accord with FOREIGN KEYs.
+
+* Fixed return value from Firebird/MaxdbConnection.createTable().
+
+* Fixed and simplified DatabaseIndex.get().
+
 SQLObject 0.8.0
 ===============
 
@@ -114,17 +127,6 @@ Bug Fixes
 * Order by several columns with inheritance.
 
 * Fixed aggregators and accumulators with inheritance.
-
-SQLObject 0.8.1
-===============
-
-Bug Fixes
----------
-
-* ID columns are reverted back from INT UNSIGNED to INT for MySQL to be in
-  accord with FOREIGN KEYs.
-
-* Fixed return value from Firebird/MaxdbConnection.createTable().
 
 SQLObject 0.7.4
 ===============
