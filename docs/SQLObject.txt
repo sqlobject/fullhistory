@@ -1314,6 +1314,19 @@ SingleJoin: One-to-One
 Similar to `MultipleJoin`, but returns just one object, not a list.
 
 
+Connection pooling
+------------------
+
+Connection object acquires a new low-level DB API connection from the pool
+and stores it; the low-level connection is removed from the pool;
+"releasing" means "return it to the pool". For single-threaded programs
+there is one connection in the pool.
+
+If the pool is empty a new low-level connection opened; if one has
+disabled pooling (by setting conn._pool = None) the connection will be
+closed instead of returning to the pool.
+
+
 Transactions
 ------------
 
@@ -1332,7 +1345,19 @@ The ``trans`` object here is essentially a wrapper around a single
 database connection, and `commit` and `rollback` just pass that
 message to the low-level connection.
 
-If you want to begin a new transaction after a .rollback() call .begin().
+One can call as much .commit()'s, but after a .rollback() one has to call
+.begin(). The last .commit() should be called as .commit(close=True) to
+release low-level connection.
+
+If you want to use transactions you should also turn `_cacheValues`
+off, like::
+
+    class Person(SQLObject):
+        _cacheValue = False
+
+This, though, makes attribute access very slow (SQLObject queries database
+for an every attribute access). If one wants to set `_cacheValue = True`
+one has to synchronize objects between threads herself.
 
 You can use SELECT FOR UPDATE in those databases that support it::
 
