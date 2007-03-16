@@ -20,6 +20,9 @@ Bug Fixes
 
 * Fixed and simplified DatabaseIndex.get().
 
+* Fixed ConnectionHub.doInTransaction() - close low-level connection on
+  commit() to prevent connections leaking.
+
 SQLObject 0.8.0
 ===============
 

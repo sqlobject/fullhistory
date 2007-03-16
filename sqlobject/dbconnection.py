@@ -983,7 +983,7 @@ class ConnectionHub(object):
                 conn.rollback()
                 raise
             else:
-                conn.commit()
+                conn.commit(close=True)
                 return value
         finally:
             self.threadConnection = old_conn
