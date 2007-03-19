@@ -134,6 +134,8 @@ Bug Fixes
 SQLObject 0.7.4
 ===============
 
+Released 19 Mar 2007.
+
 Small Features
 --------------
 
