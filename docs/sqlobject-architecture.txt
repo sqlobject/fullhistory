@@ -4,8 +4,8 @@
 
 .q is an object that returns special attributes of type
 sqlbuilder.SQLExpression. SQLExpression is a special class that overrides
-almost all Python magic methods and upon any operation it, instead of
-evaluating, it constructs another instance of SQLExpression that remembers
+almost all Python magic methods and upon any operation instead of
+evaluating it constructs another instance of SQLExpression that remembers
 what operation it has to do. A kind of symbolic algebra. Example:
 
    SQLExpression("foo") > 30
