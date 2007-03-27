@@ -188,28 +188,13 @@ class SQLExpression:
     def tablesUsed(self, db):
         return self.tablesUsedDict(db).keys()
     def tablesUsedDict(self, db):
-        doCache = hasattr(db, 'doTablesUsedCache')
-        tables = None
-        if doCache:
-            cache = getattr(self, '_tablesUsedCache', {})
-            if not isinstance(cache, dict):
-                #Alias etc
-                cache = {}
-            tables = cache.get(db, None)
-        if tables is None:
-            tables = {}
-            for table in self.tablesUsedImmediate():
-                if hasattr(table, '__sqlrepr__'):
-                    table = sqlrepr(table, db)
-                tables[table] = 1
-            for component in self.components():
-                tables.update(tablesUsedDict(component, db))
-            if doCache:
-                try:
-                    cache[db] = tables
-                    self._tablesUsedCache = cache
-                except TypeError:
-                    pass
+        tables = {}
+        for table in self.tablesUsedImmediate():
+            if hasattr(table, '__sqlrepr__'):
+                table = sqlrepr(table, db)
+            tables[table] = 1
+        for component in self.components():
+            tables.update(tablesUsedDict(component, db))
         return tables
     def tablesUsedImmediate(self):
         return []

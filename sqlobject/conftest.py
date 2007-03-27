@@ -16,7 +16,7 @@ try:
 except ImportError: # Python 2.2
     pass
 else:
-    pkg_resources.require('SQLObject')
+    pass #pkg_resources.require('SQLObject')
 
 connectionShortcuts = {
     'mysql': 'mysql://test@localhost/test',

@@ -237,20 +237,4 @@ def sqlrepr(obj, db=None):
                   (type(obj), repr(obj))
         return converter(obj, db)
     else:
-        doCache = hasattr(db, 'doSQLReprCache')
-        ret = None
-        if doCache:
-            cache = getattr(obj, '_sqlreprCache', {})
-            if not isinstance(cache, dict):
-                #Alias etc
-                cache = {}
-            ret = cache.get(db, None)
-        if ret is None:
-            ret = reprFunc(db)
-            if doCache:
-                try:
-                    cache[db] = ret
-                    obj._sqlreprCache = cache
-                except TypeError:
-                    pass
-        return ret
+        return reprFunc(db)
