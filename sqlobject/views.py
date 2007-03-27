@@ -78,7 +78,7 @@ class ViewSQLObject(SQLObject):
         SQLObject.__classinit__(cls, new_attrs)
         # like is_base
         if cls.__name__ != 'ViewSQLObject':
-            dbName = hasattr(cls,'_connection') and cls._connection.dbName or None
+            dbName = hasattr(cls,'_connection') and (cls._connection and cls._connection.dbName) or None
             
             if getattr(cls.sqlmeta, 'table', None):
                 cls.sqlmeta.alias = cls.sqlmeta.table
