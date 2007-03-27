@@ -1,6 +1,7 @@
 import sqlbuilder
 import dbconnection
 import main
+import joins
 
 StringType = type('')
 
@@ -12,14 +13,9 @@ class SelectResults(object):
         self.sourceClass = sourceClass
         if clause is None or isinstance(clause, str) and clause == 'all':
             clause = sqlbuilder.SQLTrueClause
+        if not isinstance(clause, sqlbuilder.SQLExpression):
+            clause = sqlbuilder.SQLConstant(clause)
         self.clause = clause
-        tablesDict = sqlbuilder.tablesUsedDict(self.clause)
-        tablesDict[str(sourceClass.sqlmeta.table)] = 1
-        if clauseTables:
-            for table in clauseTables:
-                tablesDict[str(table)] = 1
-        self.clauseTables = clauseTables
-        self.tables = tablesDict.keys()
         self.ops = ops
         if self.ops.get('orderBy', sqlbuilder.NoDefault) is sqlbuilder.NoDefault:
             self.ops['orderBy'] = sourceClass.sqlmeta.defaultOrder
@@ -31,6 +27,29 @@ class SelectResults(object):
         self.ops['dbOrderBy'] = orderBy
         if ops.has_key('connection') and ops['connection'] is None:
             del ops['connection']
+            
+        tablesDict = sqlbuilder.tablesUsedDict(self.clause, self._getConnection().dbName)
+        if clauseTables:
+            for table in clauseTables:
+                tablesDict[table] = 1
+        self.clauseTables = clauseTables
+        # Explicitly post-adding-in sqlmeta.table, sqlbuilder.Select will handle sqlrepr'ing and dupes
+        self.tables = tablesDict.keys() + [sourceClass.sqlmeta.table]
+
+    def queryForSelect(self):
+        columns = [self.sourceClass.q.id] + [getattr(self.sourceClass.q, x.name) for x in self.sourceClass.sqlmeta.columnList]
+        query = sqlbuilder.Select(columns,
+                                  where=self.clause,
+                                  join=self.ops.get('join', sqlbuilder.NoDefault),
+                                  distinct=self.ops.get('distinct',False),
+                                  lazyColumns=self.ops.get('lazyColumns', False),
+                                  start=self.ops.get('start', 0),
+                                  end=self.ops.get('end', None),
+                                  orderBy=self.ops.get('dbOrderBy',sqlbuilder.NoDefault),
+                                  reversed=self.ops.get('reversed', False),
+                                  staticTables=self.tables,
+                                  forUpdate=self.ops.get('forUpdate', False))
+        return query
 
     def __repr__(self):
         return "<%s at %x>" % (self.__class__.__name__, id(self))
@@ -54,14 +73,15 @@ class SelectResults(object):
             desc = False
         if isinstance(orderBy, (str, unicode)):
             if orderBy in self.sourceClass.sqlmeta.columns:
-                val = self.sourceClass.sqlmeta.columns[orderBy].dbName
+                val = getattr(self.sourceClass.q, self.sourceClass.sqlmeta.columns[orderBy].name)
                 if desc:
-                    return '-' + val
+                    return sqlbuilder.DESC(val)
                 else:
                     return val
             else:
+                orderBy = sqlbuilder.SQLConstant(orderBy)
                 if desc:
-                    return '-' + orderBy
+                    return sqlbuilder.DESC(orderBy)
                 else:
                     return orderBy
         else:
@@ -174,7 +194,12 @@ class SelectResults(object):
             Return the accumulate result
         """
         conn = self._getConnection()
-        return conn.accumulateSelect(self, *expressions)
+        exprs = []
+        for expr in expressions:
+            if not isinstance(expr, sqlbuilder.SQLExpression):
+                expr = sqlbuilder.SQLConstant(expr)
+            exprs.append(expr)
+        return conn.accumulateSelect(self, *exprs)
 
     def count(self):
         """ Counting elements of current select results """
@@ -186,9 +211,7 @@ class SelectResults(object):
             # COUNT(DISTINCT column) is supported by MySQL and PostgreSQL,
             # but not by SQLite. Perhaps more portable would be subquery:
             #  SELECT COUNT(*) FROM (SELECT DISTINCT id FROM table)
-            count = self.accumulate('COUNT(DISTINCT %s.%s)' % (
-                                             self.sourceClass.sqlmeta.table,
-                                             self.sourceClass.sqlmeta.idName))
+            count = self.accumulate('COUNT(DISTINCT %s)' % self._getConnection().sqlrepr(self.sourceClass.q.id))
         else:
             count = self.accumulate('COUNT(*)')
         if self.ops.get('start'):
@@ -256,5 +279,63 @@ class SelectResults(object):
                 "More than one result returned from query: %s"
                 % results)
         return results[0]
+
+    def throughTo(self):
+        return _throughTo_getter(self)
+    throughTo = property(throughTo)
+
+    def _throughTo(self, attr):
+        ref = self.sourceClass.sqlmeta.columns.get(attr.endswith('ID') and attr or attr+'ID', None)
+        if ref and ref.foreignKey:
+            return self._throughToFK(ref)
+        else:
+            join = [x for x in self.sourceClass.sqlmeta.joins if x.joinMethodName==attr]
+            if join:
+                join = join[0]
+                if hasattr(join, 'otherColumn'):
+                    return self._throughToRelatedJoin(join)
+                return self._throughToMultipleJoin(join)
+        
+        raise AttributeError("throughTo argument (got %s) should be name of foreignKey or SQL*Join in %s" % (attr, self.sourceClass))
+    
+    def _throughToFK(self, col):
+        otherClass = getattr(self.sourceClass, "_SO_class_"+col.foreignKey)
+        query = sqlbuilder.Alias(self.queryForSelect(), "%s_%s" % (self.sourceClass.__name__, col.name))
+        return otherClass.select(otherClass.q.id==getattr(query.q, getattr(self.sourceClass.q, col.name).fieldName),
+                                distinct=True,
+                                connection=self._getConnection())
+        
+    def _throughToMultipleJoin(self, join):
+        otherClass = join.otherClass
+        query = self.queryForSelect()
+        query = sqlbuilder.Alias(query, "%s_%s" % (self.sourceClass.__name__, join.joinMethodName))
+        joinColumn = getattr(otherClass.q, join.soClass.sqlmeta.style.dbColumnToPythonAttr(join.joinColumn))
+        return otherClass.select(joinColumn == getattr(query.q, self.sourceClass.q.id.fieldName),
+                                distinct=True,
+                                orderBy=join.orderBy,
+                                connection=self._getConnection())
+    
+    def _throughToRelatedJoin(self, join):
+        otherClass = join.otherClass
+        intTable = sqlbuilder.Table(join.intermediateTable)
+        print join.joinColumn, join.otherColumn
+        query = self.queryForSelect().newItems([getattr(intTable, join.joinColumn)])
+        query = sqlbuilder.Alias(query, "%s_%s" % (self.sourceClass.__name__, join.joinMethodName))
+        print query
+        clause = sqlbuilder.AND(otherClass.q.id == getattr(intTable, join.otherColumn),
+                     getattr(intTable, join.joinColumn) == getattr(query.q, join.joinColumn))
+        ret = otherClass.select(clause,
+                                distinct=True,
+                                orderBy=join.orderBy,
+                                connection=self._getConnection())
+        print ret
+        return ret
+
+
+class _throughTo_getter(object):
+    def __init__(self, inst):
+        self.sresult = inst
+    def __getattr__(self, attr):
+        return self.sresult._throughTo(attr)
 
 __all__ = ['SelectResults']
