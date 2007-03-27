@@ -2,11 +2,7 @@ from sqlobject import *
 from sqlobject.sqlbuilder import *
 from sqlobject.tests.dbtest import *
 
-''' Going to test that complex sqlbuilder constructions are never
-    prematurely stringified. A straight-forward approach is to use
-    Bools, since postgresql wants special formatting in queries.
-    The test is whether a call to sqlrepr(x, 'postgres') includes
-    the appropriate bool formatting throughout.
+''' Tests retrieving objects through a join/fk on a selectResults
 '''
 
 class SRThrough1(SQLObject):
