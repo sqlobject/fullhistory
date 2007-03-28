@@ -79,7 +79,7 @@ from converters import sqlrepr, registerConverter, TRUE, FALSE
 
 safeSQLRE = re.compile(r'^[a-zA-Z_][a-zA-Z0-9_\.]*$')
 def sqlIdentifier(obj):
-    # some db drivers return unicode column names 
+    # some db drivers return unicode column names
     return isinstance(obj, types.StringTypes) and bool(safeSQLRE.search(obj.strip()))
 
 
@@ -418,7 +418,7 @@ class AliasField(Field):
         if isinstance(fieldName, SQLExpression):
             fieldName = sqlrepr(fieldName, db)
         return self.alias + "." + fieldName
-    
+
     def tablesUsedImmediate(self):
         return [self.aliasTable]
 
@@ -456,7 +456,7 @@ class AliasTable(Table):
         if self.table:
             attr = getattr(self.table.q, attr).fieldName
         return self.FieldClass(self.tableName, attr, self.alias, self)
-    
+
     def __sqlrepr__(self, db):
         return "%s %s %s" % (sqlrepr(self.tableName, db), self.as_string, self.alias)
 
@@ -485,7 +485,7 @@ class Union(SQLExpression):
                     t = SQLConstant(t.sqlmeta.table)
             tabs.append(t)
         self.tables = tabs
-    
+
     def __sqlrepr__(self, db):
         return " UNION ".join([str(sqlrepr(t, db)) for t in self.tables])
 
@@ -521,7 +521,7 @@ class Select(SQLExpression):
         self.ops['reversed'] = reversed
         self.ops['forUpdate'] = forUpdate
         self.ops['staticTables'] = staticTables
-        
+
     def clone(self, **newOps):
         ops = self.ops.copy()
         ops.update(newOps)
@@ -558,7 +558,7 @@ class Select(SQLExpression):
         clause = self.ops['clause']
         if isinstance(clause, (str, unicode)):
             clause = SQLConstant('(%s)' % clause)
-            
+
         if clause == SQLTrueClause:
             newClause = filter_clause
         else:
@@ -566,7 +566,7 @@ class Select(SQLExpression):
         return self.newClause(newClause)
 
     def __sqlrepr__(self, db):
-        
+
         select = "SELECT"
         if self.ops['distinct']:
             select += " DISTINCT"
@@ -1182,7 +1182,7 @@ class _Delay(SQLExpression):
     def __init__(self, proxy, attr):
         self.attr = attr
         self.proxy = proxy
-    
+
     def __sqlrepr__(self, db):
         if self.proxy.soClass is None:
             return '_DELAYED_' + self.attr
@@ -1193,13 +1193,13 @@ class _Delay(SQLExpression):
 
     def tablesUsedImmediate(self):
         return getattr(self._resolve(), 'tablesUsedImmediate', lambda: [])()
-    
+
     def components(self):
         return getattr(self._resolve(), 'components', lambda: [])()
 
     def _resolve(self):
         return getattr(self.proxy, self.attr)
-    
+
     # For AliasTable etc
     def fieldName(self):
         class _aliasFieldName(SQLExpression):
@@ -1212,7 +1212,7 @@ class _Delay(SQLExpression):
 
 class _DelayClass(_Delay):
     def _resolve(self):
-        return self.proxy.soClass.sqlmeta.table   
+        return self.proxy.soClass.sqlmeta.table
 
 class _Delay_proxy(object):
     def __init__(self, **kw):
