@@ -160,7 +160,7 @@ class SQLExpression:
 
     def __repr__(self):
         try:
-            return self.__sqlrepr__(default_sqlrepr_db)
+            return self.__sqlrepr__(None)
         except AssertionError:
             return '<%s %s>' % (
                 self.__class__.__name__, hex(id(self))[2:])
