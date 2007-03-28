@@ -227,7 +227,6 @@ if Decimal:
     registerConverter(Decimal, DecimalConverter)
 
 def sqlrepr(obj, db=None):
-    import sqlbuilder
     try:
         reprFunc = obj.__sqlrepr__
     except AttributeError:

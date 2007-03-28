@@ -77,8 +77,6 @@ import classregistry
 
 from converters import sqlrepr, registerConverter, TRUE, FALSE
 
-default_sqlrepr_db = None
-
 safeSQLRE = re.compile(r'^[a-zA-Z_][a-zA-Z0-9_\.]*$')
 def sqlIdentifier(obj):
     # some db drivers return unicode column names 
