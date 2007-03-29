@@ -96,7 +96,9 @@ class ViewSQLObject(SQLObject):
             clause = getattr(cls.sqlmeta, 'clause', NoDefault)
             select = Select(columns,
                             distinct=True,
-                            distinctOn=cls.sqlmeta.idName,
+                            # @@ LDO check if this really mattered for performance
+                            # @@ Postgres (and MySQL?) extension!
+                            #distinctOn=cls.sqlmeta.idName,
                             join=metajoin,
                             clause=clause)
             
@@ -108,7 +110,7 @@ class ViewSQLObject(SQLObject):
                 last_alias = "%s_base" % alias
                 last_id = "id"
                 last = Alias(select, last_alias)
-                columns = [SQLConstant("%s.%s"%(last_alias,x.expr2)) for x in columns]
+                columns = [ColumnAS(SQLConstant("%s.%s"%(last_alias,x.expr2)), x.expr2) for x in columns]
                 
                 for i, agg in enumerate(aggregates):
                     restriction = agg[0]
@@ -132,7 +134,7 @@ class ViewSQLObject(SQLObject):
                     
                     join.append(agg_join)
                     for col in agg:
-                        columns.append(SQLConstant("%s.%s"%(agg_alias, col.expr2)))
+                        columns.append(ColumnAS(SQLConstant("%s.%s"%(agg_alias, col.expr2)),col.expr2))
                     
                     last = new_alias
                     last_alias = agg_alias
