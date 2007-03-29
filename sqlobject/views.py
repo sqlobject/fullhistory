@@ -7,16 +7,6 @@ from sqlbuilder import *
 from main import SQLObject, sqlmeta
 import types, threading
 
-
-class ColumnAS(SQLOp):
-    ''' Just like SQLOp('AS', expr, name) except without the parentheses '''
-    def __init__(self, expr, name):
-        if isinstance(name, (str, unicode)):
-            name = SQLConstant(name)  
-        SQLOp.__init__(self, 'AS', expr, name)
-    def __sqlrepr__(self, db):
-        return "%s %s %s" % (sqlrepr(self.expr1, db), self.op, sqlrepr(self.expr2, db))
-
 ####
 
 class ViewSQLObjectField(SQLObjectField):
