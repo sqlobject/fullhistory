@@ -49,4 +49,5 @@ def testThroughMultipleJoin():
 def testThroughRelatedJoin():
     assert list(threes[0].twos.throughTo.threes) == [threes[0], threes[1]]
 
-    
+def testThroughFKAndJoin():
+    assert list(threes[0].ones.throughTo.three.throughTo.twos) == [twos[0]]
