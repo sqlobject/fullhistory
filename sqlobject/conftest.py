@@ -16,7 +16,7 @@ try:
 except ImportError: # Python 2.2
     pass
 else:
-    pkg_resources.require('SQLObject')
+    pass #pkg_resources.require('SQLObject')
 
 connectionShortcuts = {
     'mysql': 'mysql://test@localhost/test',
@@ -24,7 +24,7 @@ connectionShortcuts = {
     'postgres': 'postgres:///test',
     'postgresql': 'postgres:///test',
     'pygresql': 'pygresql://localhost/test',
-    'sqlite': 'sqlite:/:memory:',
+    'sqlite': 'sqlite:///tmp/test_sqlite.db',
     'sybase': 'sybase://test:test123@sybase/test?autoCommit=0',
     'firebird': 'firebird://sysdba:masterkey@localhost/var/lib/firebird/data/test.gdb',
     'mssql': 'mssql://sa:@127.0.0.1/test'
