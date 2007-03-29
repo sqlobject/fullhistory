@@ -316,23 +316,27 @@ class SelectResults(object):
 
     def _throughToFK(self, col):
         otherClass = getattr(self.sourceClass, "_SO_class_"+col.foreignKey)
-        query = sqlbuilder.Alias(self.queryForSelect(), "%s_%s" % (self.sourceClass.__name__, col.name))
-        return otherClass, otherClass.q.id==getattr(query.q, getattr(self.sourceClass.q, col.name).fieldName)
+        colName = col.name
+        query = self.queryForSelect().newItems([sqlbuilder.ColumnAS(getattr(self.sourceClass.q, colName), colName)])
+        query = sqlbuilder.Alias(query, "%s_%s" % (self.sourceClass.__name__, col.name))
+        return otherClass, otherClass.q.id==getattr(query.q, colName)
 
     def _throughToMultipleJoin(self, join):
         otherClass = join.otherClass
-        query = self.queryForSelect()
+        colName = join.soClass.sqlmeta.style.dbColumnToPythonAttr(join.joinColumn)
+        query = self.queryForSelect().newItems([sqlbuilder.ColumnAS(self.sourceClass.q.id, self.sourceClass.q.id.fieldName)])
         query = sqlbuilder.Alias(query, "%s_%s" % (self.sourceClass.__name__, join.joinMethodName))
-        joinColumn = getattr(otherClass.q, join.soClass.sqlmeta.style.dbColumnToPythonAttr(join.joinColumn))
+        joinColumn = getattr(otherClass.q, colName)
         return otherClass, joinColumn==getattr(query.q, self.sourceClass.q.id.fieldName)
 
     def _throughToRelatedJoin(self, join):
         otherClass = join.otherClass
         intTable = sqlbuilder.Table(join.intermediateTable)
-        query = self.queryForSelect().newItems([getattr(intTable, join.joinColumn)])
+        colName = join.joinColumn
+        query = self.queryForSelect().newItems([sqlbuilder.ColumnAS(getattr(intTable, colName), colName)])
         query = sqlbuilder.Alias(query, "%s_%s" % (self.sourceClass.__name__, join.joinMethodName))
         clause = sqlbuilder.AND(otherClass.q.id == getattr(intTable, join.otherColumn),
-                     getattr(intTable, join.joinColumn) == getattr(query.q, join.joinColumn))
+                     getattr(intTable, colName) == getattr(query.q, colName))
         return otherClass, clause
 
 __all__ = ['SelectResults']
