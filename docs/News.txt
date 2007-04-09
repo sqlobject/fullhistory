@@ -7,6 +7,15 @@ News
 
 .. _start:
 
+SQLObject 0.8.2
+===============
+
+Bug Fixes
+---------
+
+* Fixed ConnectionHub.doInTransaction() - if the original connection was
+  processConnection - reset processConnection, not threadConnection.
+
 SQLObject 0.8.1
 ===============
 
