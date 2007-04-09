@@ -142,6 +142,15 @@ Bug Fixes
 
 * Fixed aggregators and accumulators with inheritance.
 
+SQLObject 0.7.5
+===============
+
+Bug Fixes
+---------
+
+* Fixed test_deep_inheritance.py - setup classes in the correct order
+  (required for Postgres 8.0+ which is strict about referential integrity).
+
 SQLObject 0.7.4
 ===============
 
