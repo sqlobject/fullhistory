@@ -951,7 +951,7 @@ if datetime_available:
             try:
                 stime = time.strptime(value, self.format)
             except:
-                raise validators.Invalid("expected an date/time string of the '%s' format in the DateTimeCol '%s', got %s %r instead" % \
+                raise validators.Invalid("expected a date/time string of the '%s' format in the DateTimeCol '%s', got %s %r instead" % \
                     (self.format, self.name, type(value), value), value, state)
             return datetime.datetime(*stime[:6])
 
@@ -983,7 +983,7 @@ if mxdatetime_available:
             try:
                 stime = time.strptime(value, self.format)
             except:
-                raise validators.Invalid("expected an date/time string of the '%s' format in the DateTimeCol '%s', got %s %r instead" % \
+                raise validators.Invalid("expected a date/time string of the '%s' format in the DateTimeCol '%s', got %s %r instead" % \
                     (self.format, self.name, type(value), value), value, state)
             return DateTime.mktime(stime)
 
@@ -1054,6 +1054,8 @@ class DateTimeCol(Col):
 if datetime_available:
     class DateValidator(DateTimeValidator):
         def to_python(self, value, state):
+            if isinstance(value, datetime.datetime):
+                value = value.date()
             if isinstance(value, datetime.date):
                 return value
             value = super(DateValidator, self).to_python(value, state)
