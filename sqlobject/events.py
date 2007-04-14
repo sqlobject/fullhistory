@@ -138,6 +138,16 @@ class DeleteColumnSignal(Signal):
     post_funcs are called with ``(cls, so_column_obj)``
     """
 
+class AddJoinSignal(Signal):
+    """
+    Called when a join is added to a class, with arguments 
+    ``(cls, join_name, join_definition, post_funcs)``.
+    This is called *after* the join has been added,
+    and is called for each join after class creation.
+
+    post_funcs are called with ``(cls, so_join_obj)``
+    """
+
 # @@: Signals for indexes and joins?  These are mostly event consumers,
 # though.
 

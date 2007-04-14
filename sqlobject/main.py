@@ -510,6 +510,9 @@ class sqlmeta(object):
     ########################################
 
     def addJoin(cls, joinDef):
+        post_funcs = []
+        cls.send(events.AddJoinSignal, cls.soClass,
+                 joinDef.name, joinDef, post_funcs)
         sqlmeta = cls
         soClass = cls.soClass
         # The name of the method we'll create.  If it's
@@ -556,6 +559,9 @@ class sqlmeta(object):
 
         if soClass._SO_finishedClassCreation:
             makeProperties(soClass)
+            
+        for func in post_funcs:
+            func(soClass, join)
 
     addJoin = classmethod(addJoin)
 
