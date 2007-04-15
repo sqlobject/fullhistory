@@ -10,14 +10,14 @@ class MaterializedSQLObject(SQLObject):
 def _addColumn(cls, connection, column_name, column_definition, changeSchema, post_funcs):
     def f(cls, col):
         if col.foreignKey:
-            dep.add((cls.__name__, col.name), (col.foreignKey, 'id'))
+            dep.add((cls.__name__, col.name), (col.foreignKey, 'id', lambda cls=cls,col=col: getattr(cls.q, col.origName)))
     post_funcs.append(f)
 
 events.listen(_addColumn, MaterializedSQLObject, events.AddColumnSignal)
 
 def _addJoin(cls, join_name, join_definition, post_funcs):
     def f(cls, join):
-        dep.add((cls.__name__, join.joinMethodName), (join.otherClassName, 'id'))
+        dep.add((cls.__name__, join.joinMethodName), (join.otherClassName, 'id', lambda cls=cls,join=join: getattr(cls.q, join.joinMethodName)))
     post_funcs.append(f)
 
 events.listen(_addJoin, MaterializedSQLObject, events.AddJoinSignal)

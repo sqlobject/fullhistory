@@ -25,13 +25,13 @@ class B(object):
 def test_addDependency():
     dep = DependencyManager()
     dep.add(('B', 'name'), ('A', 'name'))
-    assert dep.get(('A', 'name')) == set([('B', 'name')])
+    assert dep.get('A', 'name') == set([('B', 'name')])
 
 def test_addDependencies():
     dep = DependencyManager()
     dep.add(('B', 'name'),     ('A', 'name'))
     dep.add(('B', 'condName'), ('A', 'name'))
-    assert dep.get(('A', 'name')) == set((('B', 'name'),
+    assert dep.get('A', 'name') == set((('B', 'name'),
                                           ('B', 'condName')))
 
 def test_addDepWithDecorator():
@@ -41,11 +41,11 @@ def test_addDepWithDecorator():
         
         a = A()        
         
-        @dep.dependentOn(('A', 'name'))
+        @dep.dependentOn('A', 'name')
         def name(self):
             return self.a.name
 
-    assert dep.get(('A', 'name')) == set([('C', 'name')])
+    assert dep.get('A', 'name') == set([('C', 'name')])
 
 def test_addDepsWithDecorator():
     dep = DependencyManager()
@@ -55,13 +55,13 @@ def test_addDepsWithDecorator():
         a = A()
         b = B()
         
-        @dep.dependentOn(('B', 'name'))
-        @dep.dependentOn(('A', 'name'))
+        @dep.dependentOn('B', 'name')
+        @dep.dependentOn('A', 'name')
         def name(self):
             return self.a.name + self.b.name
 
-    assert dep.get(('A', 'name')) == set([('C', 'name')])
-    assert dep.get(('B', 'name')) == set([('C', 'name')])
+    assert dep.get('A', 'name') == set([('C', 'name')])
+    assert dep.get('B', 'name') == set([('C', 'name')])
     
     
 
@@ -122,7 +122,7 @@ def test_customItems():
                                 ('c','x'): (('x', 2), {})
                                 }
     
-    assert dep.get(('a','w')) == set([('x', 1), ('x', 2)])
+    assert dep.get('a','w') == set([('x', 1), ('x', 2)])
     
 
 #def test_addDepWithSignal():
