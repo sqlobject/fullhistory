@@ -49,6 +49,7 @@ import declarative
 import events
 from sresults import SelectResults
 from formencode import schema, compound
+from converters import registerConverter
 
 import sys
 if sys.version_info[:3] < (2, 2, 0):
@@ -1623,6 +1624,12 @@ class SQLObject(object):
             value = dbconnection.connectionForURI(value)
         cls._connection = value
     setConnection = classmethod(setConnection)
+
+    def __sqlrepr__(self, db):
+        return sqlbuilder.sqlrepr(self.__class__.q.id==self.id)
+    
+    def tablesUsedImmediate(self):
+        return [self.__class__.q]
 
 
 def capitalize(name):

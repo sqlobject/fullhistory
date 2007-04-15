@@ -168,6 +168,9 @@ class SQLExpression:
     def __str__(self):
         return repr(self)
 
+#    def __hash__(self):
+#        return id(self)
+
     def __cmp__(self, other):
         raise VersionError, "Python 2.1+ required"
     def __rcmp__(self, other):
@@ -349,7 +352,6 @@ class UnicodeField(SQLObjectField):
 
 registerConverter(UnicodeField, SQLExprConverter)
 
-
 class Table(SQLExpression):
     FieldClass = Field
 
@@ -382,6 +384,16 @@ class SQLObjectTable(Table):
             raise AttributeError
         if attr == 'id':
             return self.FieldClass(self.tableName, self.soClass.sqlmeta.idName, attr)
+        elif attr+'ID' in self.soClass.sqlmeta.columns:
+            column = self.soClass.sqlmeta.columns[attr+'ID']
+            return getattr(self, column.name)==getattr(self.soClass, '_SO_class_'+column.foreignKey).q.id
+        elif attr in [x.joinMethodName for x in self.soClass.sqlmeta.joins]:
+            join = [x for x in self.soClass.sqlmeta.joins if x.joinMethodName == attr][0]
+            if hasattr(join, 'otherColumn'):
+                return AND(join.otherClass.q.id == Field(join.intermediateTable, join.otherColumn),
+                             Field(join.intermediateTable, join.joinColumn) == self.soClass.q.id)
+            else:
+                return getattr(join.otherClass.q, join.joinColumn)==self.soClass.q.id
         elif attr not in self.soClass.sqlmeta.columns:
             raise AttributeError("%s instance has no attribute '%s'" % (self.soClass.__name__, attr))
         else:
