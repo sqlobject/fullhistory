@@ -8,9 +8,6 @@ report with the link and title
 Articles and Documentation
 --------------------------
 
-* `Canonical's SQLObject guide
-  <https://wiki.launchpad.canonical.com/SQLObjectGuide>`_.
-
 * `SQLObject and CherryPy
   <http://www.cherrypy.org/wiki/SQLObjectThreadPerConnection>`_.
 
