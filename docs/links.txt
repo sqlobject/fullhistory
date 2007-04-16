@@ -39,9 +39,6 @@ Open Source Projects
 Articles and Documentation
 --------------------------
 
-* `Canonical's SQLObject guide
-  <https://wiki.launchpad.canonical.com/SQLObjectGuide>`_.
-
 * `SQLObject and CherryPy
   <http://www.cherrypy.org/wiki/SQLObjectThreadPerConnection>`_.
 
