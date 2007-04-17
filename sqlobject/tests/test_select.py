@@ -1,6 +1,6 @@
 from __future__ import generators # for enumerate
 from sqlobject import *
-from sqlobject.tests.dbtest import *
+from dbtest import *
 
 try:
     enumerate
@@ -70,6 +70,12 @@ def test_04_indexed_ended_by_exception():
     except IndexError:
         pass
     assert count == len(names)
+
+def test_05_select_limit():
+    setupIter()
+    assert len(list(IterTest.select(limit=2))) == 2
+    raises(AssertionError, IterTest.select(limit=2).distinct)
+    raises(AssertionError, IterTest.select(limit=2).clone, start=1)
 
 def test_selectBy():
     setupClass(IterTest)
