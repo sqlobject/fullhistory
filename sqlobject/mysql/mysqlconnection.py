@@ -150,6 +150,14 @@ class MySQLConnection(DBAPI):
             self.printDebug(conn, id, 'QueryIns', 'result')
         return id
 
+    def _queryAddLimitOffset(cls, query, start, end):
+        if not start:
+            return "%s LIMIT %i" % (query, end)
+        if not end:
+            return "%s LIMIT %i, -1" % (query, start)
+        return "%s LIMIT %i, %i" % (query, start, end-start)
+    _queryAddLimitOffset = classmethod(_queryAddLimitOffset)
+
     def createReferenceConstraint(self, soClass, col):
         return col.mysqlCreateReferenceConstraint()
 

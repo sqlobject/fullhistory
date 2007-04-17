@@ -637,24 +637,12 @@ class Select(SQLExpression):
                 select += " ORDER BY %s" % ", ".join([sqlrepr(reverser(x), db) for x in orderBy])
             else:
                 select += " ORDER BY %s" % sqlrepr(reverser(orderBy), db)
+        start, end = self.ops['start'], self.ops['end']
         if self.ops['limit'] is not NoDefault:
-            select += " LIMIT %s" % sqlrepr(self.ops['limit'], db)
-        elif self.ops['start'] or self.ops['end']:
-            start, end = self.ops['start'], self.ops['end']
-            if db == 'mysql':
-                if not start:
-                    select += "%s LIMIT %i" % end
-                elif not end:
-                    select += "%s LIMIT %i, -1" % start
-                else:
-                    select +="%s LIMIT %i, %i" % (start, end-start)
-            else:
-                if not start:
-                    select += " LIMIT %i" % end
-                elif not end:
-                    select += " OFFSET %i" % start
-                else:
-                    select += " LIMIT %i OFFSET %i" % (end-start, start)
+            end = start + limit
+        if start or end:
+            from dbconnection import dbConnectionForScheme
+            select = dbConnectionForScheme(db)._queryAddLimitOffset(select, start, end)
         if self.ops['forUpdate']:
             select += " FOR UPDATE"
         return select

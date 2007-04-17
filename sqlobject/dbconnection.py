@@ -925,10 +925,8 @@ class ConnectionURIOpener(object):
             return self.cachedURIs[uri]
         if uri.find(':') != -1:
             scheme, rest = uri.split(':', 1)
-            assert self.schemeBuilders.has_key(scheme), (
-                   "No SQLObject driver exists for %s (only %s)"
-                   % (scheme, ', '.join(self.schemeBuilders.keys())))
-            conn = self.schemeBuilders[scheme]().connectionFromURI(uri)
+            connCls = self.dbConnectionForScheme(scheme)
+            conn = connCls.connectionFromURI(uri)
         else:
             # We just have a name, not a URI
             assert self.instanceNames.has_key(uri), \
@@ -938,8 +936,15 @@ class ConnectionURIOpener(object):
         self.cachedURIs[uri] = conn
         return conn
 
+    def dbConnectionForScheme(self, scheme):
+        assert self.schemeBuilders.has_key(scheme), (
+               "No SQLObject driver exists for %s (only %s)"
+               % (scheme, ', '.join(self.schemeBuilders.keys())))
+        return self.schemeBuilders[scheme]()
+
 TheURIOpener = ConnectionURIOpener()
 
 registerConnection = TheURIOpener.registerConnection
 registerConnectionInstance = TheURIOpener.registerConnectionInstance
 connectionForURI = TheURIOpener.connectionForURI
+dbConnectionForScheme = TheURIOpener.dbConnectionForScheme
