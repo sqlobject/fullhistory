@@ -23,6 +23,9 @@ class MaterializedOne(MaterializedSQLObject):
         return self.twos.sum('length')
 
 class MaterializedTwo(MaterializedSQLObject):
+    class sqlmeta:
+        cachedIn = 'cache_materialized_two'
+    
     detail = StringCol()
     length = IntCol()
     one = ForeignKey('MaterializedOne')
@@ -73,3 +76,11 @@ def testProcessInstances():
                                                          ('MaterializedTwo', '_get_name'): [twos[0], twos[1]],
                                                          ('MaterializedTwo', '_get_name2'): [twos[0], twos[1]],
                                                          }
+    
+def testCacheObject():
+    assert MaterializedOne.sqlmeta.cacheClass.sqlmeta.table == 'materialized_one_cache'
+    # Overridden by MaterializedTow.sqlmeta.cachedIn
+    assert MaterializedTwo.sqlmeta.cacheClass.sqlmeta.table == 'cache_materialized_two'
+
+def testCacheObject():
+    assert ones[0]._SO_cacheObject is None

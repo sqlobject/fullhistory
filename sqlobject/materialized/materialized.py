@@ -5,7 +5,16 @@ from dependency import *
 class MaterializedSQLObject(SQLObject):
     
     class sqlmeta(_sqlmeta):
-        pass
+        cachedIn = None
+    
+        def setClass(cls, soClass):
+            super(cls, sqlmeta).setClass(soClass)
+            
+            if cls.cachedIn is None:
+                cls.cachedIn = cls.table + '_cache'
+            cls.cacheClass = type(cls.soClass.__name__+'Cache', (SQLObject,))
+            
+        setClass = classmethod(setClass)
 
 def _addColumn(cls, connection, column_name, column_definition, changeSchema, post_funcs):
     def f(cls, col):
@@ -47,4 +56,14 @@ def cachedAs(colType, name=None):
     def decorate(func):
         return MaterializedAttr(func, colType, name=name)
     return decorate
-        
+
+
+
+def _processCacheClass(new_class_name, bases, new_attrs, post_funcs, early_funcs):
+    def f(cls):
+        for name, value in new_attrs.items():
+            if isinstance(value, MaterializedAttr):
+                cls.sqlmeta.
+    post_funcs.append(f)
+
+listen(_processCacheClass, MaterializedSQLObject, ClassCreateSignal)        
