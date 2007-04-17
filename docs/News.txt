@@ -201,6 +201,16 @@ Bug Fixes
 
 * Fixed aggregators and accumulators with inheritance.
 
+SQLObject 0.7.6
+===============
+
+Bug Fixes
+---------
+
+* Fixed a minor comparison problem in test_decimal.py.
+
+* Fixed a longstanding bug with .select() ignoring 'limit' parameter.
+
 SQLObject 0.7.5
 ===============
 
