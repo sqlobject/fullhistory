@@ -1044,6 +1044,15 @@ column.
     You can use classes (defined below) for this, but if those don't
     work it's sometimes easiest just to use `sqlType`.  Only necessary
     if SQLObject is creating your tables.
+`validator`:
+    formencode_-like validator_. Making long story short, this is
+    an object that provides ``to_python()`` and ``from_python()``
+    to validate *and* convert (adapt or cast) the values when they are
+    read/written from/to the database. You should see formencode_
+    validator_ documentation for more details.
+
+.. _formencode: http://formencode.org/
+.. _validator: http://formencode.org/Validator.html
 
 Column Types
 ~~~~~~~~~~~~
