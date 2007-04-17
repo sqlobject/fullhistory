@@ -18,7 +18,7 @@ def test_1decimal():
         return
     setupClass(DecimalTable)
     d = DecimalTable(col1=21.12)
-    assert d.col1 == 21.12
+    assert float(d.col1) == 21.12
 
 if Decimal and supports('decimalColumn'):
     def test_2Decimal():

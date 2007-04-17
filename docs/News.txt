@@ -7,6 +7,14 @@ News
 
 .. _start:
 
+SQLObject 0.7.6
+===============
+
+Bug Fixes
+---------
+
+* Fixed a minor comparison problem in test_decimal.py.
+
 SQLObject 0.7.5
 ===============
 
