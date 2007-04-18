@@ -10,11 +10,12 @@ MT = ImportProxy('MaterializedTwo')
 
 class MaterializedOne(MaterializedSQLObject):
     name = StringCol()
-    twos = SQLMultipleJoin('MaterializedTwo', joinColumn='one_id')
+    twos = SQLMultipleJoin('MaterializedTwo', joinColumn='oneID')
     
     @cachedAs(IntCol)
-    @dep.dependentOn('MaterializedOne', 'twos', MO.q.twos)
+    @dep.dependentOn('MaterializedOne', 'twos')
     def _get_twoCount(self):
+        print "getting twoCount", self.twos.count()
         return self.twos.count()
     
     @cachedAs(IntCol)
@@ -41,8 +42,15 @@ class MaterializedTwo(MaterializedSQLObject):
     def _get_name2(self):
         return self.one.name + self.detail
     
+    @cachedAs(StringCol)
+    @dep.dependentOn('MaterializedTwo', 'detail')
+    @dep.dependentOn('MaterializedTwo', 'name')
+    def _get_name3(self):
+        ''' dep on dep '''
+        return self.name + self.detail
+    
 def setup_module(mod):
-    setupClass([MaterializedOne, MaterializedTwo])
+    setupClass([MaterializedOne, MaterializedTwo, MaterializedOne.sqlmeta.cacheClass, MaterializedTwo.sqlmeta.cacheClass])
     mod.ones = inserts(MaterializedOne, (('S',),
                                          ('T',),
                                         ), 'name')
@@ -54,8 +62,8 @@ def setup_module(mod):
     
 def testSetup():
     deps = dep.get('MaterializedOne', 'name')
-    assert set([(x,y) for x,y,z in deps]) == set([('MaterializedTwo','_get_name'),
-                                               ('MaterializedTwo','_get_name2')])
+    assert set([(x,y) for x,y,z in deps]) == set([('MaterializedTwo','name'),
+                                               ('MaterializedTwo','name2')])
     assert [z for x,y,z in deps][0] != [None, None]
     
 def testSetupDepsForFK():
@@ -73,14 +81,62 @@ def testSetupDepsForJoin():
 def testProcessInstances():
     
     assert dep.instancesToProcess(ones[0], ['name']) == {
-                                                         ('MaterializedTwo', '_get_name'): [twos[0], twos[1]],
-                                                         ('MaterializedTwo', '_get_name2'): [twos[0], twos[1]],
+                                                         ('MaterializedTwo', 'name'): [twos[0], twos[1]],
+                                                         ('MaterializedTwo', 'name2'): [twos[0], twos[1]],
                                                          }
     
-def testCacheObject():
+def testCacheClass():
     assert MaterializedOne.sqlmeta.cacheClass.sqlmeta.table == 'materialized_one_cache'
     # Overridden by MaterializedTow.sqlmeta.cachedIn
     assert MaterializedTwo.sqlmeta.cacheClass.sqlmeta.table == 'cache_materialized_two'
+    
+    assert 'name' in MaterializedTwo.sqlmeta.cacheClass.sqlmeta.columns
 
-def testCacheObject():
-    assert ones[0]._SO_cacheObject is None
+def testManualCacheObject():
+    obj = twos[0]
+    assert hasattr(obj, '_SO_cacheObject')
+    assert obj._SO_cacheObject.name == None
+    obj._SO_cacheObject.name = 'Not Right'
+    obj._SO_cacheObject.name_dirty = False
+    assert obj._SO_cacheObject.name == 'Not Right'
+    
+def testDepSettingCacheObject():
+    obj = twos[1]
+    assert obj._SO_cacheObject.name == None
+    dep.process(obj.one, ['name'])
+    assert obj._SO_cacheObject.name == obj._get_name.func(obj)
+
+def testModificationSettingCacheObject():
+    obj = twos[2]
+    assert obj._SO_cacheObject.name == None
+    obj.one.name = 'G'
+    assert obj._SO_cacheObject.name == 'G'
+    assert obj.name == 'G'
+
+def testJoinUpdateSettingCacheObject():
+    obj = ones[0]
+    prev = obj.detailSize
+    obj.twos[0].length += 4
+    assert obj._SO_cacheObject.detailSize == prev + 4
+    assert obj.detailSize == prev + 4
+
+def testJoinAdditionSettingCacheObject():
+    obj = ones[1]
+    prevS = obj.detailSize
+    prevC = obj.twoCount
+    new_two = MaterializedTwo(detail='f', length=4, one=obj)
+    assert obj._SO_cacheObject.detailSize == prevS + new_two.length
+    assert obj._SO_cacheObject.twoCount == prevC + 1
+    assert obj.detailSize == prevS + new_two.length
+    
+def testJoinDeletionSettingCacheObject():
+    obj = ones[1]
+    prevS = obj.detailSize
+    prevC = obj.twoCount
+    new_two = MaterializedTwo(detail='g', length=5, one=obj)
+    assert obj._SO_cacheObject.detailSize == prevS + new_two.length
+    assert obj._SO_cacheObject.twoCount == prevC + 1
+    new_two.destroySelf()
+    assert obj.twos.count() == prevC
+    assert obj._SO_cacheObject.detailSize == prevS
+    assert obj._SO_cacheObject.twoCount == prevC

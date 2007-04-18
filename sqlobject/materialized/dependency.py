@@ -3,6 +3,7 @@ from sqlobject import sqlbuilder
 from sqlobject.events import *
 from sqlobject.include.pydispatch import dispatcher
 from sqlobject import classregistry
+from sqlobject import SQLObject
 
 from operator import isCallable
 import inspect
@@ -104,7 +105,6 @@ class SQLDependency(Dependency):
     def __init__(self, target, source, *extras):
         if isinstance(source[0], sqlbuilder.SQLExpression):
             source = (str(source[0].tableName), str(source[0].fieldName)) + source[1:]
-            print source
         if len(source) == 3:
             other = source[2]
             try:
@@ -115,6 +115,8 @@ class SQLDependency(Dependency):
             source = source[:2]
         else:
             extras = (None,) + extras
+        if target[1][:5] == '_get_':
+            target = (target[0], target[1][5:])
         self.target = self.DependencyItemClass(target, *extras)
         self.source = self.DependencyItemClass(source, *extras)
 
@@ -130,44 +132,41 @@ class SQLDependencyManager(DependencyManager):
             
             targetClass = classregistry.findClass(targetClassName, class_registry=inst.sqlmeta.registry)
             
-            print "Route", route
             if inspect.isfunction(route):
                 argspec = inspect.getargspec(route)
-                print "argspec", argspec
                 if len(argspec[0]) == len(argspec[3]) and not argspec[1] and not argspec[2]:
-                    print "exec", route()
                     route = route()
-            print "RouteX", route
             if route is None:
                 route = lambda i,c: [i]
             elif isinstance(route, sqlbuilder.SQLExpression):
-                route = lambda i,c,r=route: c.select(sqlbuilder.AND(r, i))
+                route = lambda i,c,r=route: c.select(sqlbuilder.AND(r, i), connection=i._connection)
             
             ret.setdefault((targetClassName, targetAttr),[]).extend(route(inst, targetClass))
         return ret
         
-    def process(self, inst, attrs):
-        for (cls, attr), insts in self.instancesToProcess(inst, attrs).iteritems():
+    def process(self, inst, attrs, _toProcess=None):
+        if _toProcess is None:
+            _toProcess = self.instancesToProcess(inst, attrs)
+        for (cls, attr), insts in _toProcess.iteritems():
+            print insts
             for inst in insts:
-                inst._SO_resetCache(attr)
+                inst._SO_updateCacheObject([attr])
+                self.process(inst, [attr])
 
-    
-    def FK(self, name):
-        '''route for foreign key'''
-        def f(inst, cls):
-            return cls.select(cls.q.id==getattr(inst, name+'ID'))
-        return f
-    
-    def J(self, name):
-        '''route for join'''
-        def f(inst, cls):
-            return cls.select(getattr(cls.q,name)==inst.id)
-        return f
-    
-    def S(self, *args):
-        '''route for self'''
-        if not len(args):
-            return self.S
-        return args[0]
 
 dep = SQLDependencyManager()
+
+
+def _processDepsOnChange(inst, kwargs):
+    dep.process(inst, kwargs.keys())
+
+listen(_processDepsOnChange, SQLObject, RowUpdatedSignal)
+listen(_processDepsOnChange, SQLObject, RowCreatedSignal)
+
+def _processDepsOnDelete(inst, post_funcs):
+    attrs = ['id'] + inst.sqlmeta.columns.keys()
+    toProcess = dep.instancesToProcess(inst, attrs)
+    def f(inst, toProcess=toProcess):
+        dep.process(inst, attrs, _toProcess=toProcess)
+    post_funcs.append(f)
+listen(_processDepsOnDelete, SQLObject, RowDestroySignal)
