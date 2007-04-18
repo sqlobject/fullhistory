@@ -41,14 +41,31 @@ def test_row_create():
     assert len(watcher.log) == 2
     assert watcher.log[0] == ({'name': 'foo'}, [])
 
-def test_row_destrow():
+def test_row_created():
+    setupClass(EventTester)
+    watcher = make_listen(events.RowCreatedSignal)
+    a = EventTester(name='foo')
+    b = EventTester(name='bar')
+    assert len(watcher.log) == 2
+    assert watcher.log[0] == (a, {'id': a.id, 'name': 'foo'})
+    assert watcher.log[1] == (b, {'id': b.id, 'name': 'bar'})
+
+def test_row_destroyrow():
     setupClass(EventTester)
     watcher = make_listen(events.RowDestroySignal)
     f = EventTester(name='foo')
     assert not watcher.log
     f.destroySelf()
+    assert watcher.log == [(f,[])]
+
+def test_row_destroyedrow():
+    setupClass(EventTester)
+    watcher = make_listen(events.RowDestroyedSignal)
+    f = EventTester(name='foo')
+    assert not watcher.log
+    f.destroySelf()
     assert watcher.log == [(f,)]
-    
+
 def test_row_update():
     setupClass(EventTester)
     watcher = make_listen(events.RowUpdateSignal)
@@ -57,9 +74,20 @@ def test_row_update():
     f.name = 'bar2'
     f.set(name='bar3')
     assert watcher.log == [
+        (f, {'name': 'bar2'}, []),
+        (f, {'name': 'bar3'}, [])]
+
+def test_row_updated():
+    setupClass(EventTester)
+    watcher = make_listen(events.RowUpdatedSignal)
+    f = EventTester(name='bar')
+    assert not watcher.log
+    f.name = 'bar2'
+    f.set(name='bar3')
+    assert watcher.log == [
         (f, {'name': 'bar2'}),
         (f, {'name': 'bar3'})]
-    
+
 def test_add_column():
     setupClass(EventTester)
     watcher = make_listen(events.AddColumnSignal)

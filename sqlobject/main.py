@@ -1049,9 +1049,10 @@ class SQLObject(object):
         # in the database, and we can't insert it until all
         # the parts are set.  So we just keep them in a
         # dictionary until later:
+        post_funcs = []
         d = {name: value}
         if not self.sqlmeta._creating:
-            self.sqlmeta.send(events.RowUpdateSignal, self, d)
+            self.sqlmeta.send(events.RowUpdateSignal, self, d, post_funcs)
         if len(d) != 1 or name not in d:
             return self.set(**d)
         value = d[name]
@@ -1073,10 +1074,15 @@ class SQLObject(object):
 
         if self.sqlmeta.cacheValues:
             setattr(self, instanceName(name), value)
+        
+        for func in post_funcs:
+            func(self)
+        self.sqlmeta.send(events.RowUpdatedSignal, self, d)
 
     def set(self, **kw):
+        post_funcs = []
         if not self.sqlmeta._creating:
-            self.sqlmeta.send(events.RowUpdateSignal, self, kw)
+            self.sqlmeta.send(events.RowUpdateSignal, self, kw, post_funcs)
         # set() is used to update multiple values at once,
         # potentially with one SQL statement if possible.
 
@@ -1160,6 +1166,10 @@ class SQLObject(object):
                 self._connection._SO_update(self, args)
         finally:
             self._SO_writeLock.release()
+        
+        for func in post_funcs:
+            func(self)
+        self.sqlmeta.send(events.RowUpdatedSignal, self, kw)
 
     def _SO_selectInit(self, row):
         for col, colValue in zip(self.sqlmeta.columnList, row):
@@ -1223,6 +1233,10 @@ class SQLObject(object):
         self._create(id, **kw)
         for func in post_funcs:
             func(self)
+        
+        kw = kw.copy()
+        kw['id'] = self.id
+        self.sqlmeta.send(events.RowCreatedSignal, self, kw)
 
     def _create(self, id, **kw):
 
@@ -1279,9 +1293,6 @@ class SQLObject(object):
         cache = self._connection.cache
         cache.created(id, self.__class__, self)
         self._init(id)
-        post_funcs = []
-        kw = dict([('class',self.__class__),('id',id)])
-        self.sqlmeta.send(events.RowCreatedSignal, kw, post_funcs)
 
 
     def _SO_getID(self, obj):
@@ -1506,7 +1517,8 @@ class SQLObject(object):
     clearTable = classmethod(clearTable)
 
     def destroySelf(self):
-        self.sqlmeta.send(events.RowDestroySignal, self)
+        post_funcs = []
+        self.sqlmeta.send(events.RowDestroySignal, self, post_funcs)
         # Kills this object.  Kills it dead!
 
         klass = self.__class__
@@ -1567,6 +1579,10 @@ class SQLObject(object):
         self.sqlmeta._obsolete = True
         self._connection._SO_delete(self)
         self._connection.cache.expire(self.id, self.__class__)
+        
+        for func in post_funcs:
+            func(self)
+        self.sqlmeta.send(events.RowDestroyedSignal, self)
 
     def delete(cls, id, connection=None):
         obj = cls.get(id, connection=connection)

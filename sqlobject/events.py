@@ -82,11 +82,7 @@ class RowCreateSignal(Signal):
 class RowCreatedSignal(Signal):
     """
     Called after an instance is created, with the class as the
-    sender.  Called with the arguments ``(kwargs, post_funcs)``.
-    There may be a ``connection`` argument.  ``kwargs``may be usefully
-    modified.  ``post_funcs`` is a list of callbacks, intended to have
-    functions appended to it, and are called with the arguments
-    ``(new_instance)``.
+    sender.  Called with the arguments ``(new_instance, kwargs)``.
 
     Note: this is not called when an instance is created from an
     existing database row.
@@ -97,9 +93,25 @@ class RowCreatedSignal(Signal):
 class RowDestroySignal(Signal):
     """
     Called before an instance is deleted.  Sender is the instance's
-    class.  Arguments are ``(instance)``.  You cannot cancel the delete,
+    class.  Arguments are ``(instance, post_funcs)``. You cannot cancel the delete,
     but you can raise an exception (which will probably cancel the
     delete, but also cause an uncaught exception if not expected).
+    
+    ``post_funcs`` is a list of callbacks, intended to have
+    functions appended to it, and are called with the arguments
+    ``(deleted_instance)``.
+
+    Note: this is not called when an instance is destroyed through
+    garbage collection.
+
+    @@: Should this allow ``instance`` to be a primary key, so that a
+    row can be deleted without first fetching it?
+    """
+    
+class RowDestroyedSignal(Signal):
+    """
+    Called after an instance is deleted.  Sender is the instance's
+    class.  Arguments are ``(instance)``.
 
     Note: this is not called when an instance is destroyed through
     garbage collection.
@@ -112,9 +124,21 @@ class RowUpdateSignal(Signal):
     """
     Called when an instance is updated through a call to ``.set()``
     (or a column attribute assignment).  The arguments are
-    ``(instance, kwargs)``.  ``kwargs`` can be modified.  This is run
-    *before* the instance is updated; if you want to look at the
-    current values, simply look at ``instance``.
+    ``(instance, kwargs, post_funcs)``.  ``kwargs`` can be modified.
+    This is run *before* the instance is updated; if you want to look
+    at the current values, simply look at ``instance``.
+    
+    ``post_funcs`` is a list of callbacks, intended to have
+    functions appended to it, and are called with the arguments
+    ``(deleted_instance)``.
+    
+    """
+
+class RowUpdatedSignal(Signal):
+    """
+    Called when an instance is updated through a call to ``.set()``
+    (or a column attribute assignment).  The arguments are
+    ``(instance, kwargs)``.  This is run *after* the instance is updated.
     """
 
 class AddColumnSignal(Signal):
