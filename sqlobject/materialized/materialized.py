@@ -1,7 +1,8 @@
 from sqlobject import SQLObject, SQLObjectNotFound, sqlmeta as _sqlmeta
 from sqlobject import events, col
 from sqlobject.main import makeProperties
-from dependency import *
+from dependency import dep
+from sqlobject.events import *
 
 class materialized_sqlmeta(_sqlmeta):
     cachedIn = None
@@ -16,6 +17,7 @@ class materialized_sqlmeta(_sqlmeta):
             cachedIn = cls.table + '_cache'
         class cache_sqlmeta:
             table = cachedIn
+            idType = cls.idType
             
         cls.cacheClass = type(cls.soClass.__name__+'Cache', (SQLObject,), {'sqlmeta': cache_sqlmeta})
         
@@ -28,13 +30,11 @@ class MaterializedSQLObject(SQLObject):
     def _init(self, id, connection=None, **kw):
         super(MaterializedSQLObject, self)._init(id, connection=connection, **kw)
         try:
-            self._SO_cacheObject = self.sqlmeta.cacheClass.get(self.id, connection=connection)
+            self._SO_cacheObject = self.sqlmeta.cacheClass.get(self.id, connection=self._connection)
         except SQLObjectNotFound:
-            self._SO_cacheObject = None
+            print self.sqlmeta.cacheClass._connection, connection
+            self._SO_cacheObject = self.sqlmeta.cacheClass(id=self.id, connection=self._connection)
     
-    def _create(self, id, **kw):
-        super(MaterializedSQLObject, self)._create(id, **kw)
-        self._SO_cacheObject = self.sqlmeta.cacheClass(id=self.id)
 
     def _SO_updateCacheObject(self, attrs):
         for attr in attrs:

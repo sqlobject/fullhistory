@@ -2,7 +2,7 @@ from py.test import raises
 from sqlobject import *
 from sqlobject.tests.dbtest import *
 from sqlobject.materialized import *
-from sqlobject.sqlbuilder import ImportProxy
+from sqlobject.sqlbuilder import ImportProxy, AND
 
 MO = ImportProxy('MaterializedOne')
 MT = ImportProxy('MaterializedTwo')
@@ -13,15 +13,30 @@ class MaterializedOne(MaterializedSQLObject):
     twos = SQLMultipleJoin('MaterializedTwo', joinColumn='oneID')
     
     @cachedAs(IntCol)
-    @dep.dependentOn('MaterializedOne', 'twos')
+    @dependentOn('MaterializedOne', 'twos')
     def _get_twoCount(self):
         print "getting twoCount", self.twos.count()
         return self.twos.count()
     
     @cachedAs(IntCol)
-    @dep.dependentOn('MaterializedTwo', 'length', MO.q.twos)
+    @dependentOn('MaterializedTwo', 'length', MO.q.twos)
     def _get_detailSize(self):
         return self.twos.sum('length')
+
+    @cachedAs(IntCol)
+    @dependentOn('MaterializedTwo', 'id', AND(MO.q.twos, MT.q.length<=4))
+    def _get_smallTwoCount(self):
+        return self.twos.filter(MT.q.length<=4).count()
+    
+    @dependentOn('MaterializedTwo', 'id', AND(MO.q.twos, MT.q.length<=4))
+    def _get_smallTwos(self):
+        print "getting small twos"
+        return self.twos.filter(MT.q.length<=4)
+    
+    @cachedAs(IntCol)
+    @dependentOn('MaterializedOne', 'smallTwos')
+    def _get_smallTwoCount2(self):
+        return self.smallTwos.count()
 
 class MaterializedTwo(MaterializedSQLObject):
     class sqlmeta:
@@ -32,19 +47,19 @@ class MaterializedTwo(MaterializedSQLObject):
     one = ForeignKey('MaterializedOne')
     
     @cachedAs(StringCol)
-    @dep.dependentOn('MaterializedOne', 'name', MT.q.one)
+    @dependentOn('MaterializedOne', 'name', MT.q.one)
     def _get_name(self):
         return self.one.name
     
     @cachedAs(StringCol)
-    @dep.dependentOn('MaterializedTwo', 'detail')
-    @dep.dependentOn('MaterializedOne', 'name', MT.q.one)
+    @dependentOn('MaterializedTwo', 'detail')
+    @dependentOn('MaterializedOne', 'name', MT.q.one)
     def _get_name2(self):
         return self.one.name + self.detail
     
     @cachedAs(StringCol)
-    @dep.dependentOn('MaterializedTwo', 'detail')
-    @dep.dependentOn('MaterializedTwo', 'name')
+    @dependentOn('MaterializedTwo', 'detail')
+    @dependentOn('MaterializedTwo', 'name')
     def _get_name3(self):
         ''' dep on dep '''
         return self.name + self.detail
@@ -74,8 +89,8 @@ def testSetupDepsForFK():
     
 def testSetupDepsForJoin():
     deps = dep.get('MaterializedTwo', 'id')
-    assert set((x,y) for x,y,z in deps) == set([('MaterializedOne', 'twos')])
-    assert [z for x,y,z in deps][0] is not None
+    assert ('MaterializedOne', 'twos') in set((x,y) for x,y,z in deps)
+    assert None not in [z for x,y,z in deps]
     
     
 def testProcessInstances():
@@ -113,6 +128,12 @@ def testModificationSettingCacheObject():
     assert obj._SO_cacheObject.name == 'G'
     assert obj.name == 'G'
 
+def testChainedModificationSettingCacheObject():
+    obj = twos[2]
+    obj.one.name = 'G'
+    assert obj._SO_cacheObject.name3 == 'G'+obj.detail
+    assert obj.name3 == 'G'+obj.detail
+
 def testJoinUpdateSettingCacheObject():
     obj = ones[0]
     prev = obj.detailSize
@@ -137,6 +158,21 @@ def testJoinDeletionSettingCacheObject():
     assert obj._SO_cacheObject.detailSize == prevS + new_two.length
     assert obj._SO_cacheObject.twoCount == prevC + 1
     new_two.destroySelf()
-    assert obj.twos.count() == prevC
     assert obj._SO_cacheObject.detailSize == prevS
     assert obj._SO_cacheObject.twoCount == prevC
+
+def testRestrictedDependencyRoute():
+    assert twos[1].length <= 4
+    insts = dep.instancesToProcess(twos[1], ['id'])
+    assert insts[('MaterializedOne', 'smallTwoCount')] == [ones[0]]
+    assert twos[3].length > 4
+    insts = dep.instancesToProcess(twos[3], ['id'])
+    assert insts[('MaterializedOne', 'smallTwoCount')] == []
+    
+def testRestrictedDependencyRoute2():
+    assert twos[1].length <= 4
+    insts = dep.instancesToProcess(twos[1], ['id'])
+    assert insts[('MaterializedOne', 'smallTwos')] == [ones[0]]
+    assert twos[3].length > 4
+    insts = dep.instancesToProcess(twos[3], ['id'])
+    assert insts[('MaterializedOne', 'smallTwos')] == []

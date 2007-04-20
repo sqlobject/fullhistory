@@ -148,13 +148,14 @@ class SQLDependencyManager(DependencyManager):
         if _toProcess is None:
             _toProcess = self.instancesToProcess(inst, attrs)
         for (cls, attr), insts in _toProcess.iteritems():
-            print insts
             for inst in insts:
                 inst._SO_updateCacheObject([attr])
                 self.process(inst, [attr])
 
 
 dep = SQLDependencyManager()
+
+dependentOn = dep.dependentOn
 
 
 def _processDepsOnChange(inst, kwargs):
@@ -168,5 +169,6 @@ def _processDepsOnDelete(inst, post_funcs):
     toProcess = dep.instancesToProcess(inst, attrs)
     def f(inst, toProcess=toProcess):
         dep.process(inst, attrs, _toProcess=toProcess)
-    post_funcs.append(f)
+    if toProcess:
+        post_funcs.append(f)
 listen(_processDepsOnDelete, SQLObject, RowDestroySignal)
