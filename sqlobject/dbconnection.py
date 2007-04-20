@@ -450,7 +450,7 @@ class DBAPI(DBConnection):
         if type(join) is str:
             join_str = ' ' + join
         elif isinstance(join, sqlbuilder.SQLJoin):
-            if tables and join.table1:
+            if join.table1:
                 join_str = ", "
             else:
                 join_str = ' '
@@ -458,11 +458,13 @@ class DBAPI(DBConnection):
         else:
             join_str = ""
             for j in join:
-                if tables and j.table1:
+                if j.table1:
                     sep = ", "
                 else:
                     sep = ' '
                 join_str += sep + self.sqlrepr(j)
+        if not tables and join_str.startswith(','):
+            join_str = join_str[1:].strip()
         return join_str
 
     def _addWhereClause(self, select, startSelect, limit=1, order=1):
