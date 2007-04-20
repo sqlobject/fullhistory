@@ -53,8 +53,6 @@ Small Features
 
 * Support for DEFAULT SQL attribute via defaultSQL keyword argument.
 
-* Support for MySQL storage ENGINEs.
-
 * cls.tableExists() as a shortcut for conn.tableExists(cls.sqlmeta.table).
 
 * cls.deleteMany(), cls.deleteBy().
