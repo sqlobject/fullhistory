@@ -17,6 +17,8 @@ Bug Fixes
 
 * Fixed a longstanding bug with .select() ignoring 'limit' parameter.
 
+* Fixed a bug with absent comma in JOINs.
+
 SQLObject 0.7.5
 ===============
 
