@@ -506,3 +506,25 @@ there is no table, there is no corresponding "table" class, and SQLObject
 cannot return a list of meaningful objects.
 
 You can use a lower-level machinery available in SQLBuilder_.
+
+How can I specify the MySQL engine to use, or tweak other SQL-engine specific features?
+---------------------------------------------------------------------------------------
+
+You can *ALTER* the table just before creation using the ``sqlmeta``
+attribute ``createSQL``, for example::
+
+    class SomeObject(SQLObject):
+        class sqlmeta:
+            createSQL = { 'mysql' : 'ALTER TABLE some_object ENGINE InnoDB' }
+        # your columns here
+
+Maybe you want to specify the charset too? No problem::
+
+    class SomeObject(SQLObject):
+        class sqlmeta:
+            createSQL = { 'mysql' : '''
+                 ALTER TABLE some_object ENGINE InnoDB;
+                 ALTER TABLE some_object CHARACTER SET utf8
+                     COLLATE utf8_estonian_ci''' }
+        # your columns here
+
