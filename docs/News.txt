@@ -211,6 +211,10 @@ Bug Fixes
 
 * Fixed a bug with absent comma in JOINs.
 
+* Fixed sqlbuilder - .startswith(), .endswith() and .contains() assumed
+  their parameter must be a string; now you can pass an SQLExpression:
+  Table.q.name.contains(func.upper('a')), for example.
+
 SQLObject 0.7.5
 ===============
 
