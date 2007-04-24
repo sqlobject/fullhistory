@@ -1,5 +1,6 @@
 from __future__ import generators # for enumerate
 from sqlobject import *
+from sqlobject.sqlbuilder import func
 from dbtest import *
 
 try:
@@ -76,6 +77,13 @@ def test_05_select_limit():
     assert len(list(IterTest.select(limit=2))) == 2
     raises(AssertionError, IterTest.select(limit=2).distinct)
     raises(AssertionError, IterTest.select(limit=2).clone, start=1)
+
+def test_06_like():
+    setupIter()
+    assert len(list(IterTest.select(IterTest.q.name.startswith('a')))) == 1
+    assert len(list(IterTest.select(IterTest.q.name.endswith('a')))) == 1
+    assert len(list(IterTest.select(IterTest.q.name.contains('a')))) == 1
+    assert len(list(IterTest.select(IterTest.q.name.contains(func.lower('A'))))) == 1
 
 def test_selectBy():
     setupClass(IterTest)
