@@ -4,6 +4,7 @@ from sqlbuilder import AND, OR, NOT, IN, LIKE, RLIKE, DESC, CONTAINSSTRING, cons
 from styles import *
 from joins import *
 from index import *
+from derived import *
 from dbconnection import connectionForURI
 import dberrors
 

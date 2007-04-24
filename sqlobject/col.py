@@ -131,6 +131,7 @@ class SOCol(object):
                  title=None,
                  tags=[],
                  origName=None,
+                 derived=False,
                  extra_vars=None):
 
         super(SOCol, self).__init__()
@@ -150,6 +151,7 @@ class SOCol(object):
         self.creationOrder = creationOrder
 
         self.immutable = immutable
+        self.derived = derived
 
         # cascade can be one of:
         # None: no constraint is generated

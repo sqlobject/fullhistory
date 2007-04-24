@@ -1201,9 +1201,10 @@ class ImportProxy(SQLExpression):
         return True
 
     def __getattr__(self, attr):
-        if self.soClass is None:
+        try:
+            return getattr(self.soClass.q, attr)
+        except AttributeError:
             return _Delay(self, attr)
-        return getattr(self.soClass.q, attr)
 
 class _Delay(SQLExpression):
     def __init__(self, proxy, attr):

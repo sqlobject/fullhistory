@@ -293,6 +293,8 @@ class sqlmeta(object):
         # None of these objects can be shared with superclasses
         cls.columns = {}
         cls.columnList = []
+        cls.columnsExtended= {}
+        cls.columnListExtended = []
         # These, however, can be shared:
         cls.columnDefinitions = cls.columnDefinitions.copy()
         cls.indexes = []
@@ -339,9 +341,13 @@ class sqlmeta(object):
                 "add the column %r"
                 % (soClass.__module__, soClass.__name__, name, name))
         sqlmeta.columnDefinitions[name] = columnDef
-        sqlmeta.columns[name] = column
+        sqlmeta.columnsExtended[name] = column
         # A stable-ordered version of the list...
-        sqlmeta.columnList.append(column)
+        sqlmeta.columnListExtended.append(column)
+        
+        if not column.derived:
+            sqlmeta.columns[name] = column
+            sqlmeta.columnList.append(column)
 
         ###################################################
         # Create the getter function(s).  We'll start by
@@ -350,7 +356,9 @@ class sqlmeta(object):
         # we'll alias that to _SO_get_columnName.  This
         # allows a sort of super call, even though there's
         # no superclass that defines the database access.
-        if sqlmeta.cacheValues:
+        if column.derived:
+            getter = column.__get__
+        elif sqlmeta.cacheValues:
             # We create a method here, which is just a function
             # that takes "self" as the first argument.
             getter = eval('lambda self: self._SO_loadValue(%s)' % repr(instanceName(name)))
@@ -475,9 +483,12 @@ class sqlmeta(object):
         cls.send(events.DeleteColumnSignal, connection, column.name, column,
                  post_funcs)
         name = column.name
-        del sqlmeta.columns[name]
+        del sqlmeta.columnsExtended[name]
         del sqlmeta.columnDefinitions[name]
-        sqlmeta.columnList.remove(column)
+        sqlmeta.columnListExtended.remove(column)
+        if not column.derived:
+            del sqlmeta.columns[name]
+            sqlmeta.columnList.remove(column)
         delattr(soClass, rawGetterName(name))
         if sqlmeta._plainGetters.has_key(name):
             delattr(soClass, getterName(name))
