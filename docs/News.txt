@@ -23,6 +23,8 @@ Bug Fixes
   their parameter must be a string; now you can pass an SQLExpression:
   Table.q.name.contains(func.upper('a')), for example.
 
+* Yet another patch to properly initialize MySQL connection encoding.
+
 SQLObject 0.7.5
 ===============
 
