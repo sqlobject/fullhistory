@@ -2,17 +2,21 @@ from sqlobject import *
 from sqlobject.sqlbuilder import ImportProxy
 from sqlobject.tests.dbtest import *
 
+DPerson = ImportProxy('DerivePerson')
+DPhone = ImportProxy('DerivePhone')
+DPhoneCall = ImportProxy('DerivePhoneCall')
+
 class DerivePerson(SQLObject):
     name = StringCol(alternateID=True)
     city = StringCol()
     phones = SQLMultipleJoin('DerivePhone', joinColumn='personID')
     
-    primaryPhone = OneFrom('phones', query=ImportProxy('DerivePhone').q.isPrimary==True)
-    secondaryPhones = FilterFrom('phones', query=ImportProxy('DerivePhone').q.isPrimary==False)
+    primaryPhone = OneFrom('phones', query=DPhone.q.isPrimary==True)
+    secondaryPhones = FilterFrom('phones', query=DPhone.q.isPrimary==False)
     
-    primaryMinutes = ValueFrom('primaryPhone', ImportProxy('DerivePhone').q.totalMinutes)
-    mostMinutes = MaxFrom('phones', ImportProxy('DerivePhone').q.totalMinutes)
-    mostSecondaryMinutes = MaxFrom('secondaryPhones', ImportProxy('DerivePhone').q.totalMinutes)
+    primaryMinutes = ValueFrom('primaryPhone', 'totalMinutes')
+    mostMinutes = MaxFrom('phones', DPhone.q.totalMinutes)
+    mostSecondaryMinutes = MaxFrom('secondaryPhones', DPhone.q.totalMinutes)
 #    mostUsedPhone = OneFrom('phones', query=ImportProxy('DerivePhone').q.totalMinutes==SelfProxy.q.mostMinutes)
     
 
@@ -20,8 +24,8 @@ class DerivePhone(SQLObject):
     number = StringCol(alternateID=True)
     isPrimary = BoolCol()
     
-    city = ValueFrom('person', ImportProxy('Person').q.city)
-    totalMinutes = SumFrom('calls', ImportProxy('DerivePhoneCall').q.minutes)
+    city = ValueFrom('person', 'city')
+    totalMinutes = SumFrom('calls', DPhoneCall.q.minutes)
 #    totalLocalMinutes = SumFrom('calls', ImportProxy('DerivedPhoneCall').q.minutes,
 #            query=ImportProxy('DerivedPhoneCall').q.city == SelfProxy.q.city)
     
@@ -69,3 +73,7 @@ def test_aggregates():
     assert ph1.totalMinutes == ph1.calls.sum(DerivePhoneCall.q.minutes)
     #assert ph1.totalLocalMinutes == ph1.calls.filter(DerivePhone.sum(DerivePhoneCall.q.minutes)
     
+def test_valueFrom():
+    ph1 = DerivePhone.byNumber('1234')
+    assert ph1.city == ph1.person.city
+    assert ph1.person.primaryMinutes == ph1.totalMinutes
