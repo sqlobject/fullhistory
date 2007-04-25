@@ -566,11 +566,13 @@ create SQL manually (quoting is automatic if you use ``q``).
 
 .. _orderBy:
 
-You can use the keyword arguments `orderBy` to create ``ORDER BY`` in
-the select statements: `orderBy` takes a string, which should be the
-*database* name of the column, or a column in the form
-``Person.q.firstName``.  You can use ``"-colname"`` to specify
-descending order, or call ``MyClass.select().reversed()``.
+You can use the keyword arguments `orderBy` to create ``ORDER BY`` in the
+select statements: `orderBy` takes a string, which should be the *database*
+name of the column, or a column in the form ``Person.q.firstName``.  You
+can use ``"-colname"`` or ``DESC(Person.q.firstName``) to specify
+descending order (this is translated to DESC, so it works on non-numeric
+types as well), or call ``MyClass.select().reversed()``. orderBy can also
+take a list of columns in the same format: ``["-weight", "name"]``.
 
 You can use the special class variable `_defaultOrder` to give a
 default ordering for all selects.  To get an unordered result when
