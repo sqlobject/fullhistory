@@ -162,6 +162,8 @@ Bug Fixes
 
 * Yet another patch to properly initialize MySQL connection encoding.
 
+* More documentation about orderBy.
+
 SQLObject 0.7.5
 ===============
 
