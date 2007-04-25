@@ -934,7 +934,7 @@ class SQLObject(object):
             try:
                 val = cls(_SO_fetch_no_create=1)
                 val._SO_validatorState = SQLObjectState(val)
-                val._init(id, connection, selectResults)
+                val._init(id, connection=connection, selectResults=selectResults)
                 cache.put(id, cls, val)
             finally:
                 cache.finishPut(cls)

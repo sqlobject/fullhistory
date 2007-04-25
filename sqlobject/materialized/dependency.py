@@ -1,22 +1,9 @@
 from sqlobject import declarative
 from sqlobject import sqlbuilder
-from sqlobject.events import *
-from sqlobject.include.pydispatch import dispatcher
 from sqlobject import classregistry
 from sqlobject import SQLObject
 
-from operator import isCallable
 import inspect
-
-def _processDependentOn(new_class_name, bases, new_attrs, post_funcs, early_funcs):
-    def f(cls):
-        for name, value in new_attrs.items():
-            if hasattr(value, '_dependentOn'):
-                for dep, maker, source in value._dependentOn:
-                    dep.add(maker(cls, name, value),source)
-    early_funcs.append(f)
-
-listen(_processDependentOn, dispatcher.Any, ClassCreateSignal)
 
 class depFromClsAttr(object):
     def __call__(self, cls, name, value):
@@ -80,9 +67,12 @@ class DependencyManager(object):
         factory = kw.pop('factory', None)
         if factory is None:
             factory = self.DependencyClass.DecoratorFactory()
+        if not isinstance(source[0], (list, tuple)):
+            source = (source,)
         def decorate(func):
             depOn = getattr(func, '_dependentOn', [])
-            depOn.append((self, factory, source))
+            for s in source:
+                depOn.append((self, factory, s))
             setattr(func, '_dependentOn', depOn)
             return func
         return decorate
@@ -149,26 +139,11 @@ class SQLDependencyManager(DependencyManager):
             _toProcess = self.instancesToProcess(inst, attrs)
         for (cls, attr), insts in _toProcess.iteritems():
             for inst in insts:
-                inst._SO_updateCacheObject([attr])
-                self.process(inst, [attr])
+                changed = inst._SO_updateCacheObject([attr])
+                if changed:
+                    self.process(inst, [attr])
 
 
 dep = SQLDependencyManager()
 
 dependentOn = dep.dependentOn
-
-
-def _processDepsOnChange(inst, kwargs):
-    dep.process(inst, kwargs.keys())
-
-listen(_processDepsOnChange, SQLObject, RowUpdatedSignal)
-listen(_processDepsOnChange, SQLObject, RowCreatedSignal)
-
-def _processDepsOnDelete(inst, post_funcs):
-    attrs = ['id'] + inst.sqlmeta.columns.keys()
-    toProcess = dep.instancesToProcess(inst, attrs)
-    def f(inst, toProcess=toProcess):
-        dep.process(inst, attrs, _toProcess=toProcess)
-    if toProcess:
-        post_funcs.append(f)
-listen(_processDepsOnDelete, SQLObject, RowDestroySignal)

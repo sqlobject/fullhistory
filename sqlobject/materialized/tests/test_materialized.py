@@ -63,7 +63,7 @@ class MaterializedTwo(MaterializedSQLObject):
     def _get_name3(self):
         ''' dep on dep '''
         return self.name + self.detail
-    
+
 def setup_module(mod):
     setupClass([MaterializedOne, MaterializedTwo, MaterializedOne.sqlmeta.cacheClass, MaterializedTwo.sqlmeta.cacheClass])
     mod.ones = inserts(MaterializedOne, (('S',),
