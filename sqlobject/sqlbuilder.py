@@ -740,12 +740,12 @@ class SQLJoin(SQLExpression):
     def __init__(self, table1, table2, op=','):
         if table1 and type(table1) <> str:
             if isinstance(table1, Alias):
-                table1 = "%s AS %s" % (table1.q.tableName, table1.q.alias)
+                table1 = "%s %s %s" % (table1.q.tableName, AliasField.as_string, table1.q.alias)
             else:
                 table1 = table1.sqlmeta.table
         if type(table2) <> str:
             if isinstance(table2, Alias):
-                table2 = "%s AS %s" % (table2.q.tableName, table2.q.alias)
+                table2 = "%s %s %s" % (table2.q.tableName, AliasField.as_string, table2.q.alias)
             else:
                 table2 = table2.sqlmeta.table
         self.table1 = table1
