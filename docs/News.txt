@@ -205,8 +205,6 @@ SQLObject 0.7.6
 Bug Fixes
 ---------
 
-* Fixed a minor comparison problem in test_decimal.py.
-
 * Fixed a longstanding bug with .select() ignoring 'limit' parameter.
 
 * Fixed a bug with absent comma in JOINs.
@@ -218,7 +216,11 @@ Bug Fixes
 * Fixed a longstanding bug with sqlbuilder.Select() with groupBy being a
   sequence.
 
+* Fixed a bug with Aliases in JOINs.
+
 * Yet another patch to properly initialize MySQL connection encoding.
+
+* Fixed a minor comparison problem in test_decimal.py.
 
 * More documentation about orderBy.
 
