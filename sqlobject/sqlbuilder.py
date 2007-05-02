@@ -505,11 +505,17 @@ class Select(SQLExpression):
         if self.whereClause is not NoDefault:
             select += " WHERE %s" % sqlrepr(self.whereClause, db)
         if self.groupBy is not NoDefault:
-            select += " GROUP BY %s" % sqlrepr(self.groupBy, db)
+            groupBy = sqlrepr(self.groupBy, db)
+            if isinstance(self.groupBy, list) or isinstance(self.groupBy, tuple):
+                groupBy = groupBy[1:-1] # Remove parens
+            select += " GROUP BY %s" % groupBy
         if self.having is not NoDefault:
             select += " HAVING %s" % sqlrepr(self.having, db)
         if self.orderBy is not NoDefault:
-            select += " ORDER BY %s" % sqlrepr(self.orderBy, db)
+            orderBy = sqlrepr(self.orderBy, db)
+            if isinstance(self.orderBy, list) or isinstance(self.orderBy, tuple):
+                orderBy = orderBy[1:-1] # Remove parens
+            select += " ORDER BY %s" % orderBy
         if self.limit is not NoDefault:
             select += " LIMIT %s" % sqlrepr(self.limit, db)
         return select
