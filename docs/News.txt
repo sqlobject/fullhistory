@@ -213,7 +213,7 @@ Bug Fixes
   their parameter must be a string; now you can pass an SQLExpression:
   Table.q.name.contains(func.upper('a')), for example.
 
-* Fixed a longstanding bug with sqlbuilder.Select() with groupBy being a
+* Fixed a longstanding bug in sqlbuilder.Select() with groupBy being a
   sequence.
 
 * Fixed a bug with Aliases in JOINs.
