@@ -510,7 +510,7 @@ You can use a lower-level machinery available in SQLBuilder_.
 How can I specify the MySQL engine to use, or tweak other SQL-engine specific features?
 ---------------------------------------------------------------------------------------
 
-You can *ALTER* the table just before creation using the ``sqlmeta``
+You can *ALTER* the table just after creation using the ``sqlmeta``
 attribute ``createSQL``, for example::
 
     class SomeObject(SQLObject):
