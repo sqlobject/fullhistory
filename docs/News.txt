@@ -775,4 +775,3 @@ Features
 .. _select docs: SQLObject.html#selecting-multiple-objects
 
 .. _Col docs: SQLObject.html#col-class-specifying-columns
-
