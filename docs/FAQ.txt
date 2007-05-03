@@ -522,9 +522,7 @@ Maybe you want to specify the charset too? No problem::
 
     class SomeObject(SQLObject):
         class sqlmeta:
-            createSQL = { 'mysql' : '''
-                 ALTER TABLE some_object ENGINE InnoDB;
-                 ALTER TABLE some_object CHARACTER SET utf8
-                     COLLATE utf8_estonian_ci''' }
-        # your columns here
-
+            createSQL = { 'mysql' : [
+                 'ALTER TABLE some_object ENGINE InnoDB',
+                 '''ALTER TABLE some_object CHARACTER SET utf8
+                     COLLATE utf8_estonian_ci''']
