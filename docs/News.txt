@@ -7,6 +7,16 @@ News
 
 .. _start:
 
+SQLObject 0.8.3
+===============
+
+Released 3 May 2007.
+
+Bug Fixes
+---------
+
+* A number of bugfixes forward-ported from 0.7.6.
+
 SQLObject 0.8.2
 ===============
 
@@ -146,6 +156,8 @@ Bug Fixes
 
 SQLObject 0.7.6
 ===============
+
+Released 3 May 2007.
 
 Bug Fixes
 ---------
