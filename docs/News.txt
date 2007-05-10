@@ -10,6 +10,8 @@ News
 SQLObject 0.9.0
 ===============
 
+Released 10 May 2007.
+
 Features & Interface
 --------------------
 
@@ -61,6 +63,16 @@ Bug Fixes
 ---------
 
 * idName can be inherited from the parent sqlmeta class.
+
+SQLObject 0.8.4
+===============
+
+Released 10 May 2007.
+
+Bug Fixes
+---------
+
+* A number of bugfixes forward-ported from 0.7.7.
 
 SQLObject 0.8.3
 ===============
@@ -211,6 +223,8 @@ Bug Fixes
 
 SQLObject 0.7.7
 ===============
+
+Released 10 May 2007.
 
 Bug Fixes
 ---------
