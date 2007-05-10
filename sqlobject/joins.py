@@ -259,6 +259,10 @@ class TableToId(sqlbuilder.SQLExpression):
 
 class SOSQLRelatedJoin(SORelatedJoin):
     def performJoin(self, inst):
+        if inst.sqlmeta._perConnection:
+            conn = inst._connection
+        else:
+            conn = None
         results = self.otherClass.select(sqlbuilder.AND(
             OtherTableToJoin(
                 self.otherClass.sqlmeta.table, self.otherClass.sqlmeta.idName, 
@@ -269,7 +273,8 @@ class SOSQLRelatedJoin(SORelatedJoin):
                 self.intermediateTable, self.joinColumn
             ),
             TableToId(self.soClass.sqlmeta.table, self.soClass.sqlmeta.idName, inst.id),
-        ), clauseTables=(self.soClass.sqlmeta.table, self.otherClass.sqlmeta.table, self.intermediateTable))
+        ), clauseTables=(self.soClass.sqlmeta.table, self.otherClass.sqlmeta.table, self.intermediateTable),
+        connection=conn)
         if self.orderBy is NoDefault:
             self.orderBy = self.otherClass.sqlmeta.defaultOrder
         return results.orderBy(self.orderBy)
