@@ -209,6 +209,14 @@ Bug Fixes
 
 * Fixed aggregators and accumulators with inheritance.
 
+SQLObject 0.7.7
+===============
+
+Bug Fixes
+---------
+
+* Fixed a bug in MySQL connection in case there is no charset in the DB URI.
+
 SQLObject 0.7.6
 ===============
 
