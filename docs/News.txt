@@ -164,6 +164,11 @@ Bug Fixes
 
 * Fixed aggregators and accumulators with inheritance.
 
+SQLObject 0.7
+=============
+
+* Minor correction in the tests: we fully support EnumCol in Postgres.
+
 SQLObject 0.7.7
 ===============
 
