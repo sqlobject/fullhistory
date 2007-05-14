@@ -32,7 +32,6 @@ and you can use it like::
             return
 """
 supportsMatrix = {
-    '+restrictedEnum': 'postgres',
     '-transactions': 'mysql',
     '-dropTableCascade': 'sybase mssql',
     '-fromDatabase': 'sqlite',
