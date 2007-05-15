@@ -224,6 +224,9 @@ Bug Fixes
 SQLObject 0.7
 =============
 
+* Replaced calls to style.dbColumnToPythonAttr() in joins.py by name/dbName
+  lookup in case the user named columns differently using dbName.
+
 * Minor correction in the tests: we fully support EnumCol in Postgres.
 
 SQLObject 0.7.7
