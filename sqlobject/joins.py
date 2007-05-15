@@ -146,6 +146,12 @@ class SOMultipleJoin(SOJoin):
             conn = None
         return self._applyOrderBy([self.otherClass.get(id, conn) for (id,) in ids if id is not None], self.otherClass)
 
+    def _dbNameToPythonName(self):
+        for column in self.otherClass.sqlmeta.columns.values():
+            if column.dbName == self.joinColumn:
+                return column.name
+        return self.soClass.sqlmeta.style.dbColumnToPythonAttr(self.joinColumn)
+
 class MultipleJoin(Join):
     baseClass = SOMultipleJoin
 
@@ -156,7 +162,8 @@ class SOSQLMultipleJoin(SOMultipleJoin):
             conn = inst._connection
         else:
             conn = None
-        results = self.otherClass.select(getattr(self.otherClass.q, self.soClass.sqlmeta.style.dbColumnToPythonAttr(self.joinColumn)) == inst.id, connection=conn)
+        pythonColumn = self._dbNameToPythonName()
+        results = self.otherClass.select(getattr(self.otherClass.q, pythonColumn) == inst.id, connection=conn)
         if self.orderBy is NoDefault:
             self.orderBy = self.otherClass.sqlmeta.defaultOrder
         return results.orderBy(self.orderBy)
@@ -242,7 +249,7 @@ class JoinToTable(sqlbuilder.SQLExpression):
         self.idName = idName
         self.interTable = interTable
         self.joinColumn = joinColumn
-    
+
     def __sqlrepr__(self, db):
         return '%s.%s = %s.%s' % (self.interTable, self.joinColumn, self.table, self.idName)
 
@@ -263,7 +270,7 @@ class SOSQLRelatedJoin(SORelatedJoin):
             conn = None
         results = self.otherClass.select(sqlbuilder.AND(
             OtherTableToJoin(
-                self.otherClass.sqlmeta.table, self.otherClass.sqlmeta.idName, 
+                self.otherClass.sqlmeta.table, self.otherClass.sqlmeta.idName,
                 self.intermediateTable, self.otherColumn
             ),
             JoinToTable(
@@ -294,7 +301,7 @@ class SOSingleJoin(SOMultipleJoin):
             conn = inst._connection
         else:
             conn = None
-        pythonColumn = self.soClass.sqlmeta.style.dbColumnToPythonAttr(self.joinColumn)
+        pythonColumn = self._dbNameToPythonName()
         results = self.otherClass.select(
             getattr(self.otherClass.q, pythonColumn) == inst.id,
             connection=conn
