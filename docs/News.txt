@@ -7,13 +7,16 @@ News
 
 .. _start:
 
-SQLObject 0.7
-=============
+SQLObject 0.7.8
+===============
 
 * Replaced calls to style.dbColumnToPythonAttr() in joins.py by name/dbName
   lookup in case the user named columns differently using dbName.
 
 * Minor correction in the tests: we fully support EnumCol in Postgres.
+
+* MySQLConnection now recognizes Enum and Double columns when drawing the
+  database scheme from DB.
 
 SQLObject 0.7.7
 ===============
