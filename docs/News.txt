@@ -172,7 +172,7 @@ SQLObject 0.7.8
 
 * Minor correction in the tests: we fully support EnumCol in Postgres.
 
-* MySQLConnection now recognizes Enum and Double columns when drawing the
+* MySQLConnection now recognizes Enum, Double and Time columns when drawing the
   database scheme from DB.
 
 SQLObject 0.7.7
