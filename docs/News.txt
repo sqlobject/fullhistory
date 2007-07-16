@@ -10,6 +10,9 @@ News
 SQLObject 0.7.8
 ===============
 
+Bug Fixes
+---------
+
 * Replaced calls to style.dbColumnToPythonAttr() in joins.py by name/dbName
   lookup in case the user named columns differently using dbName.
 
@@ -19,6 +22,8 @@ SQLObject 0.7.8
   database scheme from DB.
 
 * Minor fix in FirebirdConnection.fromDatabase.
+
+* Fixed a bug with default field values for columns for firebird connection.
 
 SQLObject 0.7.7
 ===============
