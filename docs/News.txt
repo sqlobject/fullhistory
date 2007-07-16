@@ -240,6 +240,8 @@ SQLObject 0.7.8
 * MySQLConnection now recognizes Enum, Double and Time columns when drawing the
   database scheme from DB.
 
+* Minor fix in FirebirdConnection.fromDatabase.
+
 SQLObject 0.7.7
 ===============
 
