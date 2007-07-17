@@ -182,6 +182,9 @@ Bug Fixes
 
 * Fixed a bug with default field values for columns for firebird connection.
 
+* Prevent a deadlock in declarative.threadSafeMethod() by not reacquiring
+  the class lock.
+
 SQLObject 0.7.7
 ===============
 
