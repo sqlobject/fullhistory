@@ -72,6 +72,14 @@ Bug Fixes
 
 * idName can be inherited from the parent sqlmeta class.
 
+SQLObject 0.8.5
+===============
+
+Small Features
+--------------
+
+* Suppress the second RowUpdateSignal in .set() called from ._SO_setValue().
+
 SQLObject 0.8.4
 ===============
 
