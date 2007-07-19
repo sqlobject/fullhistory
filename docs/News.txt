@@ -7,6 +7,14 @@ News
 
 .. _start:
 
+SQLObject 0.8.5
+===============
+
+Small Features
+--------------
+
+* Suppress the second RowUpdateSignal in .set() called from ._SO_setValue().
+
 SQLObject 0.8.4
 ===============
 
