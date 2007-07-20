@@ -195,6 +195,9 @@ Bug Fixes
 
 * Fixed a bug in col.createSQL().
 
+* Fixed a bug in converting date/time for years < 1000 (time.strptime()
+  requires exactly 4 digits for %Y, hence a year < 1000 must be 0-padded).
+
 SQLObject 0.7.7
 ===============
 
