@@ -75,8 +75,8 @@ Bug Fixes
 SQLObject 0.8.5
 ===============
 
-Small Features
---------------
+Bug Fixes
+---------
 
 * Suppress the second RowUpdateSignal in .set() called from ._SO_setValue().
 
@@ -253,7 +253,7 @@ Bug Fixes
 
 * Minor fix in FirebirdConnection.fromDatabase.
 
-* Fixed a bug with default field values for columns for firebird connection.
+* Fixed a bug with default field values for columns for Firebird connection.
 
 * Prevent a deadlock in declarative.threadSafeMethod() by not reacquiring
   the class lock.
