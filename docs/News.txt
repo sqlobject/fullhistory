@@ -23,7 +23,7 @@ Bug Fixes
 
 * Minor fix in FirebirdConnection.fromDatabase.
 
-* Fixed a bug with default field values for columns for firebird connection.
+* Fixed a bug with default field values for columns for Firebird connection.
 
 * Prevent a deadlock in declarative.threadSafeMethod() by not reacquiring
   the class lock.
