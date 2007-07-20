@@ -193,6 +193,8 @@ Bug Fixes
 * Prevent a deadlock in declarative.threadSafeMethod() by not reacquiring
   the class lock.
 
+* Fixed a bug in col.createSQL().
+
 SQLObject 0.7.7
 ===============
 

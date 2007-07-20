@@ -285,7 +285,7 @@ class SOCol(object):
         return r + '>'
 
     def createSQL(self):
-        return ' '.join([self._sqlType() + self._extraSQL()])
+        return ' '.join([self._sqlType()] + self._extraSQL())
 
     def _extraSQL(self):
         result = []
