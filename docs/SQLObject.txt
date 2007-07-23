@@ -1720,6 +1720,38 @@ The two drivers currently supported are:
 .. _pymssql: http://pymssql.sourceforge.net/
 .. _adodbapi: http://adodbapi.sourceforge.net/
 
+Events (signals)
+================
+
+Signals are a mechanism to be notified when data or schema changes happen
+through SQLObject. This may be useful for doing custom data validation,
+logging changes, setting default attributes, etc. Some of what signals can
+do is also possible by overriding methods, but signals may provide
+a cleaner way, especially across classes not related by inheritance.
+
+Example::
+
+   from sqlobject.events import listen, RowUpdateSignal, RowCreatedSignal
+   from model import Users
+
+   def update_listener(instance, kwargs):
+       """keep "last_updated" field current"""
+       import datetime
+       # BAD method 1, causes infinite recursion?
+       # instance should be read-only
+       instance.last_updated = datetime.datetime.now()
+       # GOOD method 2
+       kwargs['last_updated'] = datetime.datetime.now()
+
+   def created_listener(kwargs, post_funcs):
+       """"email me when new users added"""
+       # email() implementation left as an exercise for the reader
+       msg = "%s just was just added to the database!" % kwargs['name']
+       email(msg)
+
+   listen(update_listener, Users, RowUpdateSignal)
+   listen(created_listener, Users, RowCreatedSignal)
+
 Exported Symbols
 ================
 
