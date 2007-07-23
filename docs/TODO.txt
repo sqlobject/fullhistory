@@ -33,9 +33,6 @@ TODO
 * Refactor ``DBConnection`` to use parameterized queries instead of
   generating query strings.
 
-* Deprecate support for Python 2.2. Start using logging instead of print
-  for debugging output.
-
 * A hierarchy of exceptions. SQLObject should translate exceptions from
   low-level drivers to a consistent set of high-level exceptions.
 
