@@ -20,10 +20,10 @@ TODO
 
 * Profile of SQLObject performance, so that I can identify bottlenecks.
 
-* Increase hooks with FormEncode (unreleased) validation and form
-  generation package, so SQLObject classes (read: schemas) can be
-  published for editing more directly and easily.  (First step: get
-  Schema-generating method into sqlmeta class)
+* Increase hooks with FormEncode validation and form generation package, so
+  SQLObject classes (read: schemas) can be published for editing more
+  directly and easily.  (First step: get Schema-generating method into
+  sqlmeta class)
 
 * Automatic joins in select queries.
 
@@ -35,10 +35,6 @@ TODO
 
 * Deprecate support for Python 2.2. Start using logging instead of print
   for debugging output.
-
-* Event system. This will effect columns; patterns like ``onUpdate``
-  methods and whatnot.  Probably will use PyDispatcher:
-  http://pydispatcher.sourceforge.net/
 
 * A hierarchy of exceptions. SQLObject should translate exceptions from
   low-level drivers to a consistent set of high-level exceptions.
