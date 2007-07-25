@@ -78,6 +78,8 @@ SQLObject 0.8.5
 Bug Fixes
 ---------
 
+* Run post_funcs after sending RowCreatedSignal.
+
 * Suppress the second RowUpdateSignal in .set() called from ._SO_setValue().
 
 SQLObject 0.8.4
