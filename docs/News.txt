@@ -10,6 +10,8 @@ News
 SQLObject 0.9.1
 ===============
 
+Released 25 July 2007.
+
 Bug Fixes
 ---------
 
@@ -76,6 +78,8 @@ Bug Fixes
 
 SQLObject 0.8.5
 ===============
+
+Released 25 July 2007.
 
 Bug Fixes
 ---------
@@ -245,6 +249,8 @@ Bug Fixes
 
 SQLObject 0.7.8
 ===============
+
+Released 25 July 2007.
 
 Bug Fixes
 ---------
