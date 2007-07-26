@@ -17,6 +17,8 @@ Bug Fixes
 
 * Suppress the second RowUpdateSignal in .set() called from ._SO_setValue().
 
+* A number of bugfixes ported from `SQLObject 0.7.8`_.
+
 SQLObject 0.8.4
 ===============
 
