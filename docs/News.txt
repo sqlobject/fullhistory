@@ -7,6 +7,11 @@ News
 
 .. _start:
 
+SQLObject 0.8.6
+===============
+
+* A number of changes ported from `SQLObject 0.7.9`_.
+
 SQLObject 0.8.5
 ===============
 
@@ -177,6 +182,15 @@ Bug Fixes
 * Order by several columns with inheritance.
 
 * Fixed aggregators and accumulators with inheritance.
+
+SQLObject 0.7.9
+===============
+
+Other Changes
+-------------
+
+* Changed the default value for 'varchar' in BLOBColumns from 'auto' to False
+  (so that the default type for the columns in  MySQL is BLOB, not TEXT).
 
 SQLObject 0.7.8
 ===============
