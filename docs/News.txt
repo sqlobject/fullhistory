@@ -38,7 +38,7 @@ Bug Fixes
 Other Changes
 -------------
 
-* Changed string quoting style for PostgreSQL and MySQL from \' to ''.
+* Changed string quoting style for PostgreSQL and MySQL from \\' to ''.
 
 SQLObject 0.7.7
 ===============
