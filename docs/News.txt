@@ -7,6 +7,15 @@ News
 
 .. _start:
 
+SQLObject 0.7.9
+===============
+
+Other Changes
+-------------
+
+* Changed the default value for 'varchar' in BLOBColumns from 'auto' to False
+  (so that the default type for the columns in  MySQL is BLOB, not TEXT).
+
 SQLObject 0.7.8
 ===============
 
