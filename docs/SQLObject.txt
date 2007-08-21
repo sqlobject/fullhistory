@@ -1909,7 +1909,7 @@ method.  For example::
 
 will generate the query::
 
-    SELECT * FROM my_table, table1
+    SELECT my_table.* FROM my_table, table1
     LEFT JOIN table2 ON table1.name = table2.value;
 
 .. _FAQ: FAQ.html#how-can-i-do-a-left-join
@@ -1923,7 +1923,7 @@ None::
 
 will generate the query::
 
-    SELECT * FROM my_table
+    SELECT my_table.* FROM my_table
     LEFT JOIN table2 ON my_table.name = table1.value;
 
 The join argument for .select() can be a JOIN() or a sequence (list/tuple)
@@ -1948,7 +1948,7 @@ Use Alias from SQLBuilder_. Example::
 
 will generate the query::
 
-    SELECT * FROM my_table, my_table AS my_table_alias
+    SELECT my_table.* FROM my_table, my_table AS my_table_alias
     WHERE my_table.name = my_table_alias.value;
 
 Can I use a JOIN() with aliases?
@@ -1964,7 +1964,7 @@ for.  Code::
 
 will result in the query::
 
-    SELECT * FROM other_table,
+    SELECT my_table.* FROM other_table,
         my_table LEFT JOIN other_table AS other_table_alias
     WHERE my_table.name == other_table.value AND
         my_table.col1 = other_table_alias.col2.
