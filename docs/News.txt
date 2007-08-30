@@ -10,6 +10,8 @@ News
 SQLObject 0.9.2
 ===============
 
+* A number of changes ported from `SQLObject 0.7.9`_.
+
 SQLObject 0.9.1
 ===============
 
@@ -257,6 +259,12 @@ Bug Fixes
 
 SQLObject 0.7.9
 ===============
+
+Bug Fixes
+---------
+
+* Remove 'limit' from SelectResults after setting start/end so .clone()
+  never see limit again.
 
 Other Changes
 -------------
