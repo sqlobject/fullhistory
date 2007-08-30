@@ -35,6 +35,7 @@ class SelectResults(object):
                "'limit' cannot be used with 'start' or 'end'"
             ops["start"] = 0
             ops["end"] = ops["limit"]
+            del ops["limit"]
 
     def __repr__(self):
         return "<%s at %x>" % (self.__class__.__name__, id(self))
@@ -145,13 +146,13 @@ class SelectResults(object):
                 if self.ops.get('end', None) is not None \
                    and self.ops['end'] < end:
                     end = self.ops['end']
-            return self.clone(limit=None, start=start, end=end)
+            return self.clone(start=start, end=end)
         else:
             if value < 0:
                 return list(iter(self))[value]
             else:
                 start = self.ops.get('start', 0) + value
-                return list(self.clone(limit=None, start=start, end=start+1))[0]
+                return list(self.clone(start=start, end=start+1))[0]
 
     def __iter__(self):
         # @@: This could be optimized, using a simpler algorithm
@@ -178,10 +179,11 @@ class SelectResults(object):
 
     def count(self):
         """ Counting elements of current select results """
-        assert not self.ops.get('limit'), "'limit' is meaningless with 'distinct'"
+        assert not self.ops.get('start') and not self.ops.get('end'), \
+            "start/end/limit have no meaning with 'count'"
         assert not (self.ops.get('distinct') and (self.ops.get('start')
                                                   or self.ops.get('end'))), \
-               "distinct-counting of sliced objects is not supported"
+            "distinct-counting of sliced objects is not supported"
         if self.ops.get('distinct'):
             # Column must be specified, so we are using unique ID column.
             # COUNT(DISTINCT column) is supported by MySQL and PostgreSQL,
