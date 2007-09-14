@@ -10,6 +10,9 @@ News
 SQLObject 0.9.2
 ===============
 
+* Fixed a bug in Versioning - do not copy "alternateID" and "unique"
+  attributes from the versioned table.
+
 * A number of changes ported from `SQLObject 0.7.9`_.
 
 SQLObject 0.9.1
