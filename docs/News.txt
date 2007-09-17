@@ -267,7 +267,7 @@ Bug Fixes
 ---------
 
 * Remove 'limit' from SelectResults after setting start/end so .clone()
-  never see limit again.
+  never sees limit again.
 
 * Fixed a bug in sqlbuilder._LikeQuoted() - call sqlrepr() on the
   expression to escape single quotes if the expression is a string.
