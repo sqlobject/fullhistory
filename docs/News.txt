@@ -10,6 +10,10 @@ News
 SQLObject 0.8.6
 ===============
 
+* Removed SelectResults.__nonzero__, which was a design mistake. Raising an
+  exception in __nonzero__() is inconsistent with other iterators
+  (bool(iter([])) => True).
+
 * A number of changes ported from `SQLObject 0.7.9`_.
 
 SQLObject 0.8.5
