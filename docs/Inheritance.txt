@@ -282,7 +282,7 @@ parent id.  This will look like the following request::
 Limitations and notes
 ~~~~~~~~~~~~~~~~~~~~~
 
-* Only simple inheritance will work.  It is not possible to inherit
+* Only single inheritance will work.  It is not possible to inherit
   from multiple SQLObject classes.
 * It is possible to inherit from an inherited class and this will
   work well.  In the above example, you can have a Chief class that
@@ -297,6 +297,18 @@ Limitations and notes
   set lazyUpdate to True. If you need this, you have to patch SQLObject
   and override many methods - _SO_setValue(), sync(), syncUpdate() at
   least. Patches will be gladly accepted.
+* You'd better restrain yourself to simple use cases. The inheritance
+  implementation is easiliy choked on more complex cases.
+* A join between tables inherited from the same parent produces incorrect
+  result due to joins to the same parent table (they must use different
+  aliases).
+* Inheritance works in two stages - first it draws the IDs from the parent
+  table and then it drwas the rows from the children tables. The first
+  stage could fail if you try to do complex things. For example,
+  Children.select(orderBy=Children.q.column, distinct=True)
+  could fail because at the first stage inheritance generates a SELECT
+  query for the parent table with ORDER BY the column from the children
+  table.
 * I made it because I needed to be able to have automatic
   inheritance with linked tables.
 * This version works for me; it may not work for you.  I tried to do
