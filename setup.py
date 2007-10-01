@@ -19,7 +19,7 @@ if sys.version < '2.2.3':
     DistributionMetadata.download_url = None
 
 setup(name="SQLObject",
-      version="0.7.8",
+      version="0.7.9b1",
       description="Object-Relational Manager, aka database wrapper",
       long_description="""\
 SQLObject is a popular *Object Relational Manager* for providing an
@@ -52,7 +52,7 @@ installable with ``easy_install SQLObject==bugfix``.
       author="Ian Bicking",
       author_email="ianb@colorstudy.com",
       url="http://sqlobject.org",
-      download_url="http://cheeseshop.python.org/pypi/SQLObject/0.7.8",
+      download_url="http://cheeseshop.python.org/pypi/SQLObject/0.7.9b1",
       license="LGPL",
       packages=["sqlobject"] + ['sqlobject.%s' % package for package in subpackages],
       scripts=["scripts/sqlobject-admin"],
