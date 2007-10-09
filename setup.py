@@ -56,7 +56,7 @@ For development see the `subversion repository
       author="Ian Bicking",
       author_email="ianb@colorstudy.com",
       url="http://sqlobject.org/",
-      download_url="http://cheeseshop.python.org/pypi/SQLObject/",
+      download_url="http://cheeseshop.python.org/pypi/SQLObject/0.8.5",
       license="LGPL",
       packages=["sqlobject"] + ['sqlobject.%s' % package for package in subpackages],
       scripts=["scripts/sqlobject-admin"],
