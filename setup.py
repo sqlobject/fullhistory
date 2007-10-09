@@ -42,7 +42,7 @@ applications.
 Supports MySQL, PostgreSQL, SQLite, Firebird, Sybase, MSSQL and MaxDB (SAPDB).
 
 For development see the `subversion repository
-<http://svn.colorstudy.com/SQLObject/trunk#egg=SQLObject-0.10dev>`_
+<http://svn.colorstudy.com/SQLObject/branches/0.9>`_
 """,
       classifiers=[
         "Development Status :: 5 - Production/Stable",
