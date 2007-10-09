@@ -278,6 +278,8 @@ Bug Fixes
 
 * Fixed StringCol and UnicodeCol: use sqlType with MSSQL.
 
+* Fixed startswith/endswith/contains for UnicodeCol.
+
 Other Changes
 -------------
 
