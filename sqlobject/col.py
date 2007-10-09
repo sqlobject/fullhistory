@@ -483,6 +483,8 @@ class SOStringLikeCol(SOCol):
         return type
 
     def _mssqlType(self):
+        if self.customSQLType is not None:
+            return self.customSQLType
         if not self.length:
             type = 'varchar(4000)'
         elif self.varchar:
