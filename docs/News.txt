@@ -276,6 +276,8 @@ Bug Fixes
 * Fixed a bug in sqlbuilder._LikeQuoted() - call sqlrepr() on the
   expression to escape single quotes if the expression is a string.
 
+* Fixed StringCol and UnicodeCol: use sqlType with MSSQL.
+
 Other Changes
 -------------
 
