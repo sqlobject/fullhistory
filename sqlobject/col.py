@@ -603,7 +603,7 @@ class SOIntCol(SOCol):
     def __init__(self, **kw):
         self.length = popKey(kw, 'length')
         self.unsigned = bool(popKey(kw, 'unsigned'))
-        self.zerofill = bool(popKey(kw, 'unsigned'))
+        self.zerofill = bool(popKey(kw, 'zerofill'))
         SOCol.__init__(self, **kw)
 
     def autoConstraints(self):
