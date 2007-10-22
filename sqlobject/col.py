@@ -691,7 +691,7 @@ class SOBoolCol(SOCol):
         return 'BOOL'
 
     def _mysqlType(self):
-        return "TINYINT"
+        return "BOOL"
 
     def _sybaseType(self):
         return "BIT"
