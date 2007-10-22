@@ -27,7 +27,10 @@ Other Changes
 -------------
 
 * Changed the default value for 'varchar' in BLOBColumns from 'auto' to False
-  (so that the default type for the columns in  MySQL is BLOB, not TEXT).
+  (so that the default type for the columns in MySQL is BLOB, not TEXT).
+
+* Changed the implementation type in BoolCol under MySQL from TINYINT to
+  BOOL (which is a synonym for TINYINT(1)).
 
 SQLObject 0.7.8
 ===============
