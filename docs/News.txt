@@ -10,6 +10,8 @@ News
 SQLObject 0.8.6
 ===============
 
+Released 30 Oct 2007.
+
 * Removed SelectResults.__nonzero__, which was a design mistake. Raising an
   exception in __nonzero__() is inconsistent with other iterators
   (bool(iter([])) => True).
@@ -189,6 +191,8 @@ Bug Fixes
 
 SQLObject 0.7.9
 ===============
+
+Released 30 Oct 2007.
 
 Bug Fixes
 ---------
