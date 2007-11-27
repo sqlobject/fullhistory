@@ -1,3 +1,4 @@
+import base64
 from sqlobject.dbconnection import DBAPI
 from sqlobject.col import popKey
 from sqlobject import col, sqlbuilder
@@ -36,6 +37,9 @@ class SQLiteConnection(DBAPI):
                 except ImportError:
                     import sqlite
                     using_sqlite2 = False
+            if using_sqlite2:
+                sqlite.encode = base64.encodestring
+                sqlite.decode = base64.decodestring
         self.module = sqlite
         self.filename = filename  # full path to sqlite-db-file
         self._memory = filename == ':memory:'
@@ -55,15 +59,6 @@ class SQLiteConnection(DBAPI):
             for col_type in "text", "char", "varchar", "date", "time", "datetime", "timestamp":
                 sqlite.register_converter(col_type, stop_pysqlite2_converting_strings)
                 sqlite.register_converter(col_type.upper(), stop_pysqlite2_converting_strings)
-            try:
-                from sqlite import encode, decode
-            except ImportError:
-                import base64
-                sqlite.encode = base64.encodestring
-                sqlite.decode = base64.decodestring
-            else:
-                sqlite.encode = encode
-                sqlite.decode = decode
             global sqlite2_Binary
             if sqlite2_Binary is None:
                 sqlite2_Binary = sqlite.Binary
