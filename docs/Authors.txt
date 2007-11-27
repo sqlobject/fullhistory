@@ -17,4 +17,5 @@ Contributions have been made by:
 * alexander smishlajev <alex at ank-sia.com>
 * Yaroslav Samchuk <yarcat at ank-sia.com>
 * Shahms King <shahms at shahms.com>
+* Dan Pascu <dan at ag-projects.com>
 * Oleg Broytmann <phd at phd.pp.ru>
