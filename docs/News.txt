@@ -10,6 +10,8 @@ News
 SQLObject 0.7.10
 ================
 
+Released 10 Jan 2008.
+
 * With PySQLite2 do not use encode()/decode() from PySQLite1 - always use
   base64 for BLOBs.
 
