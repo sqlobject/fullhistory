@@ -7,6 +7,12 @@ News
 
 .. _start:
 
+SQLObject 0.9.4
+===============
+
+* Prevent MultipleJoin from removing the intermediate table if it was not
+  created by the Join.
+
 SQLObject 0.9.3
 ===============
 
