@@ -10,6 +10,8 @@ News
 SQLObject 0.9.4
 ===============
 
+* Use list.reverse() in manager/command.py for Python 2.3 compatibility.
+
 * Prevent MultipleJoin from removing the intermediate table if it was not
   created by the Join.
 
