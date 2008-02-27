@@ -689,7 +689,9 @@ class CommandDrop(Command):
         v = self.options.verbose
         dropped = 0
         not_existing = 0
-        for soClass in self.classes().__reversed__():
+        rev_classes = self.classes()
+        rev_classes.reverse()
+        for soClass in rev_classes:
             exists = soClass._connection.tableExists(soClass.sqlmeta.table)
             if v >= 1:
                 if exists:
