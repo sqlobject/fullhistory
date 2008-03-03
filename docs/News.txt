@@ -73,7 +73,7 @@ Features & Interface
 * Use sets instead of dicts in tablesUsed. Dropped tablesUsedDict function;
   instead there is tablesUsedSet that returns a set of strings.
 
-* SQLBuilder tablesUsedDict handles sqlrepr'able objects.
+* SQLBuilder tablesUsedSet handles sqlrepr'able objects.
 
 SQLObject 0.9.4
 ===============
