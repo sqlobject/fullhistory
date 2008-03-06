@@ -10,6 +10,8 @@ News
 SQLObject 0.9.4
 ===============
 
+Released 3 Mar 2008.
+
 * Use list.reverse() in manager/command.py for Python 2.2 compatibility.
 
 * Prevent MultipleJoin from removing the intermediate table if it was not
