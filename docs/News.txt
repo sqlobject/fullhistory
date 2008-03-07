@@ -7,6 +7,11 @@ News
 
 .. _start:
 
+SQLObject 0.9.5
+===============
+
+* Fixed a minor bug in SQLiteConnection.columnsFromSchema() - set dbName.
+
 SQLObject 0.9.4
 ===============
 
