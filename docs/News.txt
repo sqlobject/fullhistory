@@ -7,6 +7,11 @@ News
 
 .. _start:
 
+SQLObject 0.9.6
+===============
+
+* A bug in inheritable delColumn() that doesn't removes properties was fixed.
+
 SQLObject 0.9.5
 ===============
 
