@@ -10,7 +10,7 @@ News
 SQLObject 0.9.6
 ===============
 
-* A bug in inheritable delColumn() that doesn't removes properties was fixed.
+* A bug in inheritable delColumn() that doesn't remove properties was fixed.
 
 * A minor bug was fixed in col.py - the registry must be passed to findClass().
 
