@@ -7,6 +7,11 @@ News
 
 .. _start:
 
+SQLObject 0.10.2
+================
+
+* A number of changes ported from `SQLObject 0.9.7`_.
+
 SQLObject 0.10.1
 ================
 
@@ -85,6 +90,11 @@ Features & Interface
 
 * Under MySQL, PickleCol no longer uses TEXT column types; the smallest
   column is now BLOB - it is not possible to create TINYBLOB column.
+
+SQLObject 0.9.7
+===============
+
+* Aggregate functions now honors 'distinct'.
 
 SQLObject 0.9.6
 ===============
