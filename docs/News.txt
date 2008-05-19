@@ -7,6 +7,11 @@ News
 
 .. _start:
 
+SQLObject 0.9.7
+===============
+
+* Aggregate functions now honors 'distinct'.
+
 SQLObject 0.9.6
 ===============
 
