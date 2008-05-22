@@ -627,7 +627,7 @@ class SOIntCol(SOCol):
         if self.unsigned:
             _ret = _ret + " UNSIGNED"
         if self.zerofill:
-            _ret = _reg + " ZEROFILL"
+            _ret = _ret + " ZEROFILL"
         return _ret
 
     def _sqlType(self):
