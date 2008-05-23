@@ -1,5 +1,5 @@
 """
-SQLObject 0.9
+SQLObject 0.9.7b1
 """
 
 from main import *
