@@ -10,6 +10,8 @@ News
 SQLObject 0.9.7
 ===============
 
+Released 30 May 2008.
+
 Small Features
 --------------
 
