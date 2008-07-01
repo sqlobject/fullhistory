@@ -14,22 +14,18 @@ class DecimalTable(SQLObject):
     col1 = DecimalCol(size=6, precision=4)
 
 if supports('decimalColumn'):
-    def test_1decimal():
+    def test_1_decimal():
         """Tests new instance with a float in col1."""
         setupClass(DecimalTable)
         d = DecimalTable(col1=21.12)
-        # psycopg2 returns float as Decimal
-        if Decimal and isinstance(d.col1, Decimal):
+        if Decimal:
             assert d.col1 == Decimal("21.12")
         else:
             assert d.col1 == 21.12
 
     if Decimal:
-        def test_2Decimal():
+        def test_2_decimal():
             """Tests new instance with a Decimal in col1."""
             setupClass(DecimalTable)
             d = DecimalTable(col1=Decimal("21.12"))
-            if isinstance(d.col1, Decimal):
-                assert d.col1 == Decimal("21.12")
-            else:
-                assert d.col1 == 21.12
+            assert d.col1 == Decimal("21.12")
