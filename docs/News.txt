@@ -7,6 +7,11 @@ News
 
 .. _start:
 
+SQLObject 0.10.3
+================
+
+* A number of changes ported from `SQLObject 0.9.8`_.
+
 SQLObject 0.10.2
 ================
 
@@ -92,6 +97,12 @@ Features & Interface
 
 * Under MySQL, PickleCol no longer uses TEXT column types; the smallest
   column is now BLOB - it is not possible to create TINYBLOB column.
+
+SQLObject 0.9.8
+===============
+
+* Convert decimal.to_eng_string() to str to work around a bug in Python 2.5.2;
+  see http://mail.python.org/pipermail/python-dev/2008-March/078189.html
 
 SQLObject 0.9.7
 ===============
