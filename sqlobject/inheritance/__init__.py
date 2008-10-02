@@ -3,6 +3,7 @@ from sqlobject import classregistry
 from sqlobject.col import StringCol, ForeignKey
 from sqlobject.main import sqlmeta, SQLObject, SelectResults, True, False, \
    makeProperties, unmakeProperties, getterName, setterName
+from sqlobject import events
 import iteration
 
 
@@ -109,9 +110,16 @@ class InheritableSQLMeta(sqlmeta):
                 setattr(soClass, getterName(cname), eval(
                     'lambda self: self._parent.%s' % cname))
                 if not col.immutable:
-                    setattr(soClass, setterName(cname), eval(
-                        'lambda self, val: setattr(self._parent, %s, val)'
-                        % repr(cname)))
+                    def make_setfunc(cname):
+                        def setfunc(self, val):
+                            if not self.sqlmeta._creating and not getattr(self.sqlmeta, "row_update_sig_suppress", False):
+                                self.sqlmeta.send(events.RowUpdateSignal, self, {cname : val})
+                                
+                            result = setattr(self._parent, cname, val)
+                        return setfunc
+
+                    setfunc = make_setfunc(cname)
+                    setattr(soClass, setterName(cname), setfunc)
             if childUpdate:
                 makeProperties(soClass)
                 return
@@ -223,6 +231,12 @@ class InheritableSQLObject(SQLObject):
     sqlmeta = InheritableSQLMeta
     _inheritable = True
     SelectResultsClass = InheritableSelectResults
+
+    def set(self, **kw):
+        if self._parent:
+            SQLObject.set(self, _suppress_set_sig=True, **kw)
+        else:
+            SQLObject.set(self, **kw)
 
     def __classinit__(cls, new_attrs):
         SQLObject.__classinit__(cls, new_attrs)
