@@ -4,7 +4,6 @@ except NameError:
     # For Python 2.3:
     from sqlobject.events import sorted
 
-from py.test import raises
 from sqlobject import *
 from sqlobject.inheritance import InheritableSQLObject
 from sqlobject.versioning import Versioning
@@ -96,6 +95,7 @@ def test_inheritable_versioning():
     assert not hasattr(government, 'versions')
 
     monarchy = Monarchy(name='UK', monarch='king george iv')
+    assert len(list(monarchy.versions)) == 0
     monarchy.set(name='queen elisabeth ii')
     assert len(list(monarchy.versions)) == 1
     assert monarchy.versions[0].name == "UK"
@@ -107,6 +107,8 @@ def test_inheritable_versioning():
     vchild.set(name='toon', weapon='dynamite')
     assert len(list(base.versions)) == num_base_versions
     assert len(list(vchild.versions)) == 1
+    vchild.name = "newname" #test setting using setattr directly rather than .set
+    assert len(list(vchild.versions)) == 2
 
 def test_restore():
     setup()
