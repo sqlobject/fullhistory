@@ -7,6 +7,14 @@ News
 
 .. _start:
 
+SQLObject 0.10.4
+================
+
+Released 8 Dec 2008.
+
+* Fixed createSQL constrains generation under MySQL when the table's name
+  includes the database's name (contains a dot).
+
 SQLObject 0.10.3
 ================
 
@@ -99,6 +107,13 @@ Features & Interface
 
 * Under MySQL, PickleCol no longer uses TEXT column types; the smallest
   column is now BLOB - it is not possible to create TINYBLOB column.
+
+SQLObject 0.9.9
+===============
+
+* Backported from the trunk: under MySQL use the connection's dbEncoding
+  instead of ascii, when converting a unicode value from python to database
+  for a StringCol.
 
 SQLObject 0.9.8
 ===============
