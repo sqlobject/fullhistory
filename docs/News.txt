@@ -7,6 +7,18 @@ News
 
 .. _start:
 
+SQLObject 0.9.9
+===============
+
+Released 8 Dec 2008.
+
+* Backported from the trunk: under MySQL use the connection's dbEncoding
+  instead of ascii when converting a unicode value from python to database
+  for a StringCol.
+
+* Fixed createSQL constrains generation under MySQL when the table's name
+  includes the database's name (contains a dot).
+
 SQLObject 0.9.8
 ===============
 
@@ -693,7 +705,7 @@ Other Changes
 
 * When iterating over select results, a list is now immediately
   created with the full list of instances being selected.  Before
-  instances were created on demand, as select results were 
+  instances were created on demand, as select results were
   pulled out row-by-row.  The previous lazy behavior is available with
   the method ``lazyIter``, used like ``for obj in
   MyClass.select().lazyIter(): ...``.
