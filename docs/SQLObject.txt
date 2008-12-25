@@ -1746,8 +1746,8 @@ the restrictions on your indexing.
 
 .. _this page: http://www.volny.cz/iprenosil/interbase/ip_ib_indexcalculator.htm
 
-SybaseConnection
-----------------
+Sybase
+------
 
 `SybaseConnection` takes the arguments `host`, `db`, `user`, and
 `password`.  It also takes the extra boolean argument `locking` (default
