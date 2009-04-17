@@ -159,7 +159,7 @@ class PostgresConnection(DBAPI):
         return '%s %s PRIMARY KEY' % (soClass.sqlmeta.idName, key_type)
 
     def dropTable(self, tableName, cascade=False):
-        if self.server_version[:3] <= "7.2":
+        if self.server_version()[:3] <= "7.2":
             cascade=False
         self.query("DROP TABLE %s %s" % (tableName,
                                          cascade and 'CASCADE' or ''))
@@ -309,7 +309,6 @@ class PostgresConnection(DBAPI):
             server_version = self.queryOne("SELECT version()")[0]
             self._server_version = server_version.split()[1]
         return self._server_version
-    server_version = property(server_version)
 
     def createEmptyDatabase(self):
         # We have to connect to *some* database, so we'll connect to
