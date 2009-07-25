@@ -6,8 +6,8 @@ echo "Adding $parent to \$PYTHONPATH"
 export PYTHONPATH=$parent:$PYTHONPATH
 
 NORMAL="Authors DeveloperGuide FAQ Inheritance News
-        SQLBuilder SQLObject SQLObject.comments TODO Versioning
-        community download index links sqlobject-admin sqlobject-architecture"
+        SQLBuilder SQLObject TODO Versioning community download index
+        links sqlobject-admin sqlobject-architecture"
 
 for NAME in $NORMAL ; do
     if [ -e "$NAME.html" -a ! "$NAME.html" -ot "$NAME.txt" ] ; then
