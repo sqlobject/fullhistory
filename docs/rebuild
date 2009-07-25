@@ -5,10 +5,9 @@ parent=`dirname $here`
 echo "Adding $parent to \$PYTHONPATH"
 export PYTHONPATH=$parent:$PYTHONPATH
 
-NORMAL="Authors DeveloperGuide FAQ Inheritance News SQLBuilder
-        SQLObject TODO Versioning
-        web/index web/links web/repository web/community
-        index community sqlobject-architecture sqlobject-admin"
+NORMAL="Authors DeveloperGuide FAQ Inheritance News
+        SQLBuilder SQLObject SQLObject.comments TODO Versioning
+        community download index links sqlobject-admin sqlobject-architecture"
 
 for NAME in $NORMAL ; do
     if [ -e "$NAME.html" -a ! "$NAME.html" -ot "$NAME.txt" ] ; then
@@ -19,5 +18,3 @@ for NAME in $NORMAL ; do
     rst2html.py --no-toc-backlinks --stylesheet=default.css --link-stylesheet \
         -- "$NAME.txt" > "$NAME.html"
 done
-
-source-highlight -f html interface.py
