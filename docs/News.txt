@@ -7,6 +7,11 @@ News
 
 .. _start:
 
+SQLObject 0.10.7
+================
+
+* Fixed a bug: Sybase tables with identity column fire two identity_inserts.
+
 SQLObject 0.10.6
 ================
 
