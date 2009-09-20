@@ -883,7 +883,7 @@ class _LikeQuoted:
             values = []
             if self.prefix:
                 values.append("'%s'" % self.prefix)
-            s = _quote_percent(sqlrepr(s, db), db)
+            s = _quote_like_special(sqlrepr(s, db), db)
             values.append(s)
             if self.postfix:
                 values.append("'%s'" % self.postfix)
@@ -892,16 +892,17 @@ class _LikeQuoted:
             else:
                 return " || ".join(values)
         elif isinstance(s, basestring):
-            s = _quote_percent(sqlrepr(s, db)[1:-1], db)
+            s = _quote_like_special(sqlrepr(s, db)[1:-1], db)
             return "'%s%s%s'" % (self.prefix, s, self.postfix)
         else:
            raise TypeError, "expected str, unicode or SQLExpression, got %s" % type(s)
 
-def _quote_percent(s, db):
-    if db in ('postgres', 'mysql'):
-        s = s.replace('%', '\\%')
+def _quote_like_special(s, db):
+    if db == 'postgres':
+        escape = r'\\'
     else:
-        s = s.replace('%', '%%')
+        escape = '\\'
+    s = s.replace('\\', r'\\').replace('%', escape+'%').replace('_', escape+'_')
     return s
 
 ########################################
@@ -1140,7 +1141,7 @@ class LIKE(SQLExpression):
         if escape is None:
             return "(%s)" % like
         else:
-            return "(%s ESCAPE '%s')" % (like, escape)
+            return "(%s ESCAPE %s)" % (like, sqlrepr(escape, db))
     def components(self):
         return [self.expr, self.string]
     def execute(self, executor):
