@@ -10,6 +10,8 @@ News
 SQLObject 0.10.7
 ================
 
+Released 20 Sep 2009
+
 * Fixed a bug: Sybase tables with identity column fire two identity_inserts.
 
 * Fixed a bug: q.startswith(), q.contains() and q.endswith() escape (with a
