@@ -1152,15 +1152,16 @@ class LIKE(SQLExpression):
 class RLIKE(LIKE):
     op = "RLIKE"
 
+    op_db = {
+        'firebird': 'RLIKE',
+        'maxdb': 'RLIKE',
+        'mysql': 'RLIKE',
+        'postgres': '~',
+        'sqlite': 'REGEXP'
+    }
+
     def _get_op(self, db):
-        if db in ('mysql', 'maxdb', 'firebird'):
-            return "RLIKE"
-        elif db == 'sqlite':
-            return "REGEXP"
-        elif db == 'postgres':
-            return "~"
-        else:
-            return "LIKE"
+        return self.op_db.get(db, 'LIKE')
     def __sqlrepr__(self, db):
         return "(%s %s (%s))" % (
             sqlrepr(self.expr, db), self._get_op(db), sqlrepr(self.string, db)
