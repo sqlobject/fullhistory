@@ -835,13 +835,13 @@ def NOTIN(item, list):
         return NOT(_IN(item, list))
 
 def STARTSWITH(expr, pattern):
-    return SQLOp("LIKE", expr, _LikeQuoted(pattern) + '%')
+    return LIKE(expr, _LikeQuoted(pattern) + '%', escape='\\')
 
 def ENDSWITH(expr, pattern):
-    return SQLOp("LIKE", expr, '%' + _LikeQuoted(pattern))
+    return LIKE(expr, '%' + _LikeQuoted(pattern), escape='\\')
 
 def CONTAINSSTRING(expr, pattern):
-    return SQLOp("LIKE", expr, '%' + _LikeQuoted(pattern) + '%')
+    return LIKE(expr, '%' + _LikeQuoted(pattern) + '%', escape='\\')
 
 def ISNULL(expr):
     return SQLOp("IS", expr, None)
