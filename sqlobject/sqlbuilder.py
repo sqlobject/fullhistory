@@ -1130,11 +1130,17 @@ class Outer:
 class LIKE(SQLExpression):
     op = "LIKE"
 
-    def __init__(self, expr, string):
+    def __init__(self, expr, string, escape=None):
         self.expr = expr
         self.string = string
+        self.escape = escape
     def __sqlrepr__(self, db):
-        return "(%s %s (%s))" % (sqlrepr(self.expr, db), self.op, sqlrepr(self.string, db))
+        escape = self.escape
+        like = "%s %s (%s)" % (sqlrepr(self.expr, db), self.op, sqlrepr(self.string, db))
+        if escape is None:
+            return "(%s)" % like
+        else:
+            return "(%s ESCAPE '%s')" % (like, escape)
     def components(self):
         return [self.expr, self.string]
     def execute(self, executor):
