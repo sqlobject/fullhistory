@@ -28,26 +28,32 @@ def _closeConnection(ref):
         conn.close()
 
 class ConsoleWriter:
-    def __init__(self, loglevel):
+    def __init__(self, connection, loglevel):
         self.loglevel = loglevel
         self.logfile = getattr(sys, loglevel or "stdout")
+        self.dbEncoding = getattr(connection, "dbEncoding", "ascii")
     def write(self, text):
+        if isinstance(text, unicode):
+            try:
+                text = text.encode(self.dbEncoding)
+            except UnicodeEncodeError:
+                text = repr(text)[2:-1]
         self.logfile.write(text + '\n')
 
 class LogWriter:
-    def __init__(self, logger, loglevel):
+    def __init__(self, connection, logger, loglevel):
         self.logger = logger
         self.loglevel = loglevel
         self.logmethod = getattr(logger, loglevel)
     def write(self, text):
         self.logmethod(text)
 
-def makeDebugWriter(loggerName, loglevel):
+def makeDebugWriter(connection, loggerName, loglevel):
     if not loggerName:
-        return ConsoleWriter(loglevel)
+        return ConsoleWriter(connection, loglevel)
     import logging
     logger = logging.getLogger(loggerName)
-    return LogWriter(logger, loglevel)
+    return LogWriter(connection, logger, loglevel)
 
 class Boolean(object):
     """A bool class that also understands some special string keywords (yes/no, true/false, on/off, 1/0)"""
@@ -69,7 +75,7 @@ class DBConnection:
         self.debug = Boolean(debug)
         self.debugOutput = Boolean(debugOutput)
         self.debugThreading = Boolean(debugThreading)
-        self.debugWriter = makeDebugWriter(logger, loglevel)
+        self.debugWriter = makeDebugWriter(self, logger, loglevel)
         self.doCache = Boolean(cache)
         self.cache = CacheSet(cache=self.doCache)
         self.style = style
