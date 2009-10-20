@@ -10,6 +10,8 @@ News
 SQLObject 0.12.0
 ================
 
+Released 20 Oct 2009.
+
 Features & Interface
 --------------------
 
@@ -63,21 +65,21 @@ SQLObject 0.11.3
 SQLObject 0.11.2
 ================
 
-Released 30 Sep 2009
+Released 30 Sep 2009.
 
 * A number of changes ported from `SQLObject 0.10.8`_.
 
 SQLObject 0.11.1
 ================
 
-Released 20 Sep 2009
+Released 20 Sep 2009.
 
 * A number of changes ported from `SQLObject 0.10.7`_.
 
 SQLObject 0.11.0
 ================
 
-Released 12 Aug 2009
+Released 12 Aug 2009.
 
 Features & Interface
 --------------------
@@ -132,7 +134,7 @@ SQLObject 0.10.9
 SQLObject 0.10.8
 ================
 
-Released 30 Sep 2009
+Released 30 Sep 2009.
 
 * Fixed a bug in logging to console - convert unicode to str.
 
@@ -142,7 +144,7 @@ Released 30 Sep 2009
 SQLObject 0.10.7
 ================
 
-Released 20 Sep 2009
+Released 20 Sep 2009.
 
 * Fixed a bug: Sybase tables with identity column fire two identity_inserts.
 
@@ -153,7 +155,7 @@ Released 20 Sep 2009
 SQLObject 0.10.6
 ================
 
-Released 18 May 2009
+Released 18 May 2009.
 
 * Better support for Python 2.6: do not import the deprecated sets module.
 
@@ -162,7 +164,7 @@ Released 18 May 2009
 SQLObject 0.10.5
 ================
 
-Released 6 May 2009
+Released 6 May 2009.
 
 * A number of changes ported from `SQLObject 0.9.10`_.
 
@@ -272,7 +274,7 @@ Features & Interface
 SQLObject 0.9.11
 ================
 
-Released 18 May 2009
+Released 18 May 2009.
 
 * Two bugs in SQLiteConnection.columnsFromSchema() were fixed: use
   sqlmeta.idName instead of 'id'; convert default 'NULL' to None.
@@ -285,7 +287,7 @@ Released 18 May 2009
 SQLObject 0.9.10
 ================
 
-Released 6 May 2009
+Released 6 May 2009.
 
 * Another unicode-related patch for MySQL; required because different
   versions of MySQLdb require different handling::
