@@ -10,6 +10,8 @@ class FirebirdConnection(DBAPI):
     dbName = 'firebird'
     schemes = [dbName]
 
+    limit_re = re.compile('^\s*(select )(.*)', re.IGNORECASE)
+
     def __init__(self, host, db, user='sysdba',
                  password='masterkey', autoCommit=1,
                  dialect=None, role=None, charset=None, **kw):
@@ -17,8 +19,6 @@ class FirebirdConnection(DBAPI):
         if kinterbasdb is None:
             import kinterbasdb
         self.module = kinterbasdb
-
-        self.limit_re = re.compile('^\s*(select )(.*)', re.IGNORECASE)
 
         self.host = host
         self.db = db
