@@ -513,7 +513,7 @@ class StringValidator(validators.Validator):
             return None
         if isinstance(value, unicode):
             connection = state.soObject._connection
-            dbEncoding = getattr(connection, "dbEncoding") or "ascii"
+            dbEncoding = getattr(connection, "dbEncoding", None) or "ascii"
             return value.encode(dbEncoding)
         return value
 
@@ -524,7 +524,7 @@ class StringValidator(validators.Validator):
             return value
         if isinstance(value, unicode):
             connection = state.soObject._connection
-            dbEncoding = getattr(connection, "dbEncoding") or "ascii"
+            dbEncoding = getattr(connection, "dbEncoding", None) or "ascii"
             return value.encode(dbEncoding)
         return value
 
@@ -1482,7 +1482,7 @@ class PickleValidator(BinaryValidator):
             return None
         if isinstance(value, unicode):
             connection = state.soObject._connection
-            dbEncoding = getattr(connection, "dbEncoding") or "ascii"
+            dbEncoding = getattr(connection, "dbEncoding", None) or "ascii"
             value = value.encode(dbEncoding)
         if isinstance(value, str):
             return pickle.loads(value)
