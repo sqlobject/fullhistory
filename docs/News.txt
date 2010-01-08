@@ -10,6 +10,8 @@ News
 SQLObject 0.12.1
 ================
 
+Released 8 Jan 2010.
+
 * Fixed three bugs in PostgresConnection.
 
 * A number of changes ported from `SQLObject 0.11.3`_.
@@ -66,6 +68,8 @@ Small Features
 
 SQLObject 0.11.3
 ================
+
+Released 8 Jan 2010.
 
 * Fixed a bug in col.py and dbconnection.py - if dbEncoding is None suppose
   it's 'ascii'.
