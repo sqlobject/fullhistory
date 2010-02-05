@@ -1654,6 +1654,9 @@ class SQLObject(object):
     def tablesUsedImmediate(self):
         return [self.__class__.q]
 
+
+    # Comparison
+
     def __eq__(self, other):
         if self.__class__ is other.__class__:
             if self.id == other.id:
