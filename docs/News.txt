@@ -7,6 +7,11 @@ News
 
 .. _start:
 
+SQLObject 0.12.2
+================
+
+* A bugfix ported from `SQLObject 0.11.4`_.
+
 SQLObject 0.12.1
 ================
 
@@ -65,6 +70,13 @@ Small Features
 * Removed all deprecated attributes and functions.
 
 * Removed the last remained string exceptions.
+
+SQLObject 0.11.4
+================
+
+* Fixed a bug in inheritance - if creation of the row failed and if the
+  connection is not a transaction and is in autocommit mode - remove
+  parent row(s).
 
 SQLObject 0.11.3
 ================
