@@ -768,7 +768,7 @@ class SQLObject(object):
 
         # Do not check hasattr(cls, '_connection') here - it is possible
         # SQLObject parent class has a connection attribute that came
-        # from sqlhub, e.g.; # check __dict__ only.
+        # from sqlhub, e.g.; check __dict__ only.
         if connection and ('_connection' not in cls.__dict__):
             cls.setConnection(connection)
 
