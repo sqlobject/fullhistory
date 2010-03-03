@@ -922,7 +922,7 @@ class SQLObject(object):
         # If no connection was given, we'll inherit the class
         # instance variable which should have a _connection
         # attribute.
-        if (connection is not None) and (self._connection != connection):
+        if (connection is not None) and (self._connection is not connection):
             self._connection = connection
             # Sometimes we need to know if this instance is
             # global or tied to a particular connection.
@@ -1209,7 +1209,7 @@ class SQLObject(object):
             # Pass the connection object along if we were given one.
             if kw.has_key('connection'):
                 connection = kw.pop('connection')
-                if self._connection != connection:
+                if self._connection is not connection:
                     self._connection = connection
                     self.sqlmeta._perConnection = True
 
