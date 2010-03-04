@@ -21,7 +21,7 @@ if is_setuptools:
     """
 
 setup(name="SQLObject",
-      version="0.12",
+      version="0.12.2",
       description="Object-Relational Manager, aka database wrapper",
       long_description="""\
 SQLObject is a popular *Object Relational Manager* for providing an
@@ -49,7 +49,7 @@ For development see the `subversion repository
       author="Ian Bicking",
       author_email="ianb@colorstudy.com",
       url="http://sqlobject.org/",
-      download_url="http://cheeseshop.python.org/pypi/SQLObject/0.12",
+      download_url="http://cheeseshop.python.org/pypi/SQLObject/0.12.2",
       license="LGPL",
       packages=["sqlobject"] + ['sqlobject.%s' % package for package in subpackages],
       scripts=["scripts/sqlobject-admin"],
