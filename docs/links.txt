@@ -33,6 +33,9 @@ Articles and Documentation
 * `Using SQLObject with memcached
   <http://www.zachary.com/s/blog/2005/09/18/sqlobject_and_memcached,_part_1>`_.
 
+* `DB migration using sqlobject-admin how-to
+  <http://www.algorithm.co.il/blogs/index.php/programming/python/simple-sqlobject-db-migration-how-to/>`_.
+
 Open Source Projects
 --------------------
 
