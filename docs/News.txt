@@ -10,6 +10,8 @@ News
 SQLObject 0.11.4
 ================
 
+Released 4 Mar 2010.
+
 * Fixed a bug in inheritance - if creation of the row failed and if the
   connection is not a transaction and is in autocommit mode - remove
   parent row(s).
