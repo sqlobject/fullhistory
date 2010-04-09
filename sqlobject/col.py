@@ -545,7 +545,7 @@ class UnicodeStringValidator(validators.Validator):
         if isinstance(value, unicode):
             return value
         if isinstance(value, array): # MySQL
-            return unicode(value.tostring(), self.db_encoding)
+            value = value.tostring()
         return unicode(value, self.db_encoding)
 
     def from_python(self, value, state):
