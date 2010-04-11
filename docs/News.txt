@@ -10,6 +10,8 @@ News
 SQLObject 0.11.5
 ================
 
+Released 11 Apr 2010.
+
 * Fixed a bug in replacing _connection in a case when no previous
   _connection has been set.
 
