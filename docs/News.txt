@@ -10,6 +10,8 @@ News
 SQLObject 0.11.6
 ================
 
+Released 5 May 2010.
+
 * A bug was fixed in SQLiteConnection.columnsFromSchema(): pass None as
   size/precision to DecimalCol; DecimalCol doesn't allow default values (to
   force user to pass meaningful values); but columnsFromSchema() doesn't
