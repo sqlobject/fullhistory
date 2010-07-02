@@ -13,8 +13,7 @@ class PostgresConnection(DBAPI):
     schemes = [dbName, 'postgresql', 'psycopg']
 
     def __init__(self, dsn=None, host=None, port=None, db=None,
-                 user=None, password=None, usePygresql=False, unicodeCols=False,
-                 **kw):
+                 user=None, password=None, usePygresql=False, **kw):
         global psycopg, pgdb
         self.usePygresql = usePygresql
         if usePygresql:
@@ -84,7 +83,7 @@ class PostgresConnection(DBAPI):
                     dsn.append('port=%d' % port)
                 dsn = ' '.join(dsn)
         self.dsn = dsn
-        self.unicodeCols = unicodeCols
+        self.unicodeCols = kw.pop('unicodeCols', False)
         self.schema = kw.pop('schema', None)
         DBAPI.__init__(self, **kw)
 
