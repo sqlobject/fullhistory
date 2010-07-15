@@ -7,6 +7,12 @@ News
 
 .. _start:
 
+SQLObject 0.12.5
+================
+
+* 'backend' parameter was renamed to 'driver'. To preserve backward
+  compatibility 'backend' is recognized and will be recognized for some time.
+
 SQLObject 0.12.4
 ================
 
