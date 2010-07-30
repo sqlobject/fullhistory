@@ -1,6 +1,6 @@
 """
-SQLObject 0.13
---------------
+SQLObject 0.13.0b2
+------------------
 
 :author: Ian Bicking <ianb@colorstudy.com>
 
