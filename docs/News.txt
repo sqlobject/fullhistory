@@ -7,7 +7,7 @@ News
 
 .. _start:
 
-SQLObject (trunk)
+SQLObject 0.14.0
 =================
 
 Features & Interface
