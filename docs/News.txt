@@ -8,7 +8,9 @@ News
 .. _start:
 
 SQLObject 0.14.0
-=================
+================
+
+Released 10 Oct 2010.
 
 Features & Interface
 --------------------
