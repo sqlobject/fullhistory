@@ -10,6 +10,8 @@ News
 SQLObject 0.13.1
 ================
 
+Released 15 Oct 2010.
+
 * A bug was fixed in a subtle case when a per-instance connection is not
   passed to validators.
 
