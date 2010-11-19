@@ -35,7 +35,7 @@ applications.
 Supports MySQL, PostgreSQL, SQLite, Firebird, Sybase, MSSQL and MaxDB (SAPDB).
 
 For development see the `subversion repository
-<http://svn.colorstudy.com/SQLObject/trunk#egg=SQLObject-0.14dev>`_
+<http://svn.colorstudy.com/SQLObject/trunk#egg=SQLObject-0.16dev>`_
 """,
       classifiers=[
         "Development Status :: 5 - Production/Stable",
@@ -49,7 +49,7 @@ For development see the `subversion repository
       author="Ian Bicking",
       author_email="ianb@colorstudy.com",
       url="http://sqlobject.org/devel/",
-      download_url="http://cheeseshop.python.org/pypi/SQLObject/",
+      download_url="http://cheeseshop.python.org/pypi/SQLObject/0.15",
       license="LGPL",
       packages=["sqlobject"] + ['sqlobject.%s' % package for package in subpackages],
       scripts=["scripts/sqlobject-admin"],
