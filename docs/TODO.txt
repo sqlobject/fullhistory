@@ -5,7 +5,7 @@ TODO
 
 * Proper %-encoded URI.
 
-* __version__.py
+* __version__.py.
 
 * Release 1.0.
 
@@ -17,9 +17,9 @@ TODO
 * Allow to override ConsoleWriter/LogWriter classes and makeDebugWriter
   function.
 
-* delColumn('foreignKey'), delColumn('foreignKeyID')
+* delColumn('foreignKey'), delColumn('foreignKeyID').
 
-* RelatedJoin.hasOther(otherObject[.id])
+* RelatedJoin.hasOther(otherObject[.id]).
 
 * tableParamSQL::
 
@@ -39,13 +39,6 @@ TODO
 
 * List databases in the connection.
 
-* IntervalCol
-
-* TimedeltaCol
-
-* Invert tests isinstance(obj, (tuple, list)) to not isinstance(obj, basestr)
-  to allow any iterable.
-
 * SQLObject.fastInsert().
 
 * Always use .lazyIter().
@@ -53,6 +46,13 @@ TODO
 * Optimize Iteration.next() - use cursor.fetchmany().
 
 * Generators instead of loops (fetchall => fetchone).
+
+* Invert tests isinstance(obj, (tuple, list)) to not isinstance(obj, basestr)
+  to allow any iterable.
+
+* IntervalCol.
+
+* TimedeltaCol.
 
 * Cache columns in sqlmeta.getColumns(); reset the cache on add/Del Column/Join.
 
@@ -66,20 +66,9 @@ TODO
         function1 = ExpressionCol(func.my_function(MyClass.q.col1))
         function2 = ExpressionCol('sum(col2)')
 
-* Catch all DB API exceptions and convert them to sqlobject.dberrors.
-
-* Memcache.
-
-* Parametrized queries.
-
-* PREPARE/EXECUTE
+* PREPARE/EXECUTE.
 
 * Protect all .encode(), catch UnicodeEncode exceptions and reraise Invalid.
-
-* Better joins - automatic joins in .select()
-  based on ForeignKey/MultipleJoin/RelatedJoin.
-
-* Python 3.0+.
 
 * More drivers for PostgreSQL: `py-postgresql <http://python.projects.postgresql.org/>`__,
   `pg8000 <http://pybrary.net/pg8000/>`__,
@@ -91,13 +80,22 @@ TODO
 
 * More drivers for FireBird: `pyfirebirdsql <https://github.com/nakagami/pyfirebirdsql>`__.
 
+* Made SQLObject unicode-based instead of just unicode-aware. All internal
+  processing should be done with unicode strings, conversion to/from ascii
+  strings should happen for non-unicode DB API drivers.
+
+* Python 3.0+.
+
+* Profile of SQLObject performance, so that I can identify bottlenecks.
+
+* Refactor ``DBConnection`` to use parametrized queries instead of
+  generating query strings.
+
 * dict API: use getitem interface for column access instead of getattr; reserve
   getattr for internal attributes only; this helps to avoid collisions with
   internal attributes.
 
 * Or move column values access to a separate namespace, e.g. .c: row.c.name.
-
-* More documentation. Wiki. Trac. Mercurial.
 
 * Use DBUtils_, especially SolidConnection.
 
@@ -116,29 +114,26 @@ TODO
 
 * Optimistic locking and other techniques to handle concurrency.
 
-* Profile of SQLObject performance, so that I can identify bottlenecks.
-
 * Increase hooks with FormEncode validation and form generation package, so
   SQLObject classes (read: schemas) can be published for editing more
   directly and easily.  (First step: get Schema-generating method into
-  sqlmeta class)
+  sqlmeta class).
 
-* Automatic joins in select queries.
+* Better joins - automatic joins in .select() based on
+  ForeignKey/MultipleJoin/RelatedJoin.
 
 * More kinds of joins, and more powerful join results (closer to how
   `select` works).
 
-* Refactor ``DBConnection`` to use parameterized queries instead of
-  generating query strings.
-
 * A hierarchy of exceptions. SQLObject should translate exceptions from
-  low-level drivers to a consistent set of high-level exceptions.
+  low-level drivers to a consistent set of high-level exceptions in
+  sqlobject.dberrors.
 
 * Merge SQLObject.create*, .create*SQL methods with DBPI.create* methods.
 
-* Made SQLObject unicode-based instead of just unicode-aware. All internal
-  processing should be done with unicode strings, conversion to/from ascii
-  strings should happen for non-unicode DB API drivers.
+* Memcache.
+
+* More documentation. Wiki. Trac. Mercurial.
 
 .. image:: http://sflogo.sourceforge.net/sflogo.php?group_id=74338&type=10
    :target: http://sourceforge.net/projects/sqlobject
