@@ -81,13 +81,15 @@ TODO
 
 * Python 3.0+.
 
-* py-postgresql driver: http://python.projects.postgresql.org/
+* More drivers for PostgreSQL: `py-postgresql <http://python.projects.postgresql.org/>`__,
+  `pg8000 <http://pybrary.net/pg8000/>`__,
+  `ocpgdb <http://code.google.com/p/ocpgdb/>`__,
+  `bpgsql <http://barryp.org/software/bpgsql/>`__.
 
-* MySQL Connector/Python: https://launchpad.net/myconnpy
+* More drivers for MySQL: `MySQL Connector/Python <https://launchpad.net/myconnpy>`__,
+  `oursql MySQL bindings <https://launchpad.net/oursql>`__.
 
-* oursql MySQL bindings: https://launchpad.net/oursql
-
-* pyfirebirdsql: https://github.com/nakagami/pyfirebirdsql
+* More drivers for FireBird: `pyfirebirdsql <https://github.com/nakagami/pyfirebirdsql>`__.
 
 * dict API: use getitem interface for column access instead of getattr; reserve
   getattr for internal attributes only; this helps to avoid collisions with
