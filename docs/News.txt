@@ -7,6 +7,11 @@ News
 
 .. _start:
 
+SQLObject 0.14.2
+================
+
+* A minor bug was fixed in sqlbuilder.Union.
+
 SQLObject 0.14.1
 ================
 
