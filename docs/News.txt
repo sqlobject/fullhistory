@@ -10,7 +10,7 @@ News
 SQLObject 0.15.1
 ================
 
-* A bugfix was ported from `SQLObject 0.14.1`_.
+* A bugfix was ported from `SQLObject 0.14.2`_.
 
 SQLObject 0.15.0
 ================
