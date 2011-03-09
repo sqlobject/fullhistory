@@ -35,7 +35,7 @@ applications.
 Supports MySQL, PostgreSQL, SQLite, Firebird, Sybase, MSSQL and MaxDB (SAPDB).
 
 For development see the `subversion repository
-<http://svn.colorstudy.com/SQLObject/trunk#egg=SQLObject-1.0dev>`_
+<http://svn.colorstudy.com/SQLObject/branches/1.0/#egg=SQLObject-1.0dev>`_
 """,
       classifiers=[
         "Development Status :: 5 - Production/Stable",
