@@ -10,6 +10,8 @@ News
 SQLObject 0.15.1
 ================
 
+* A bug was fixed in MSSQLConnection.
+
 * A bugfix was ported from `SQLObject 0.14.2`_.
 
 SQLObject 0.15.0
