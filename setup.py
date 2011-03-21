@@ -9,6 +9,8 @@ except ImportError:
     from distutils.core import setup
     is_setuptools = False
 
+from sqlobject import version
+
 subpackages = ['firebird', 'include', 'include.pydispatch', 'inheritance',
                'manager', 'maxdb', 'mysql', 'mssql', 'postgres', 'rdbhost',
                'sqlite', 'sybase', 'util', 'versioning']
@@ -21,7 +23,7 @@ if is_setuptools:
     """
 
 setup(name="SQLObject",
-      version="1.0",
+      version=version,
       description="Object-Relational Manager, aka database wrapper",
       long_description="""\
 SQLObject is a popular *Object Relational Manager* for providing an
@@ -35,8 +37,8 @@ applications.
 Supports MySQL, PostgreSQL, SQLite, Firebird, Sybase, MSSQL and MaxDB (SAPDB).
 
 For development see the `subversion repository
-<http://svn.colorstudy.com/SQLObject/branches/1.0/#egg=SQLObject-1.0dev>`_
-""",
+<http://svn.colorstudy.com/SQLObject/branches/%s/>`_
+""" % version,
       classifiers=[
         "Development Status :: 5 - Production/Stable",
         "Intended Audience :: Developers",
@@ -49,7 +51,7 @@ For development see the `subversion repository
       author="Ian Bicking",
       author_email="ianb@colorstudy.com",
       url="http://sqlobject.org/",
-      download_url="http://cheeseshop.python.org/pypi/SQLObject/1.0",
+      download_url="http://cheeseshop.python.org/pypi/SQLObject/%s" % version,
       license="LGPL",
       packages=["sqlobject"] + ['sqlobject.%s' % package for package in subpackages],
       scripts=["scripts/sqlobject-admin", "scripts/sqlobject-convertOldURI"],
