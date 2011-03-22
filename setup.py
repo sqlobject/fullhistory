@@ -9,7 +9,7 @@ except ImportError:
     from distutils.core import setup
     is_setuptools = False
 
-from sqlobject import version
+from sqlobject import version, version_info
 
 subpackages = ['firebird', 'include', 'include.pydispatch', 'inheritance',
                'manager', 'maxdb', 'mysql', 'mssql', 'postgres', 'rdbhost',
@@ -38,7 +38,7 @@ Supports MySQL, PostgreSQL, SQLite, Firebird, Sybase, MSSQL and MaxDB (SAPDB).
 
 For development see the `subversion repository
 <http://svn.colorstudy.com/SQLObject/branches/%s/>`_
-""" % version,
+""" % '.'.join([str(v) for v in version_info[:2]]),
       classifiers=[
         "Development Status :: 5 - Production/Stable",
         "Intended Audience :: Developers",
