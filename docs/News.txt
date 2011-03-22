@@ -10,9 +10,11 @@ News
 SQLObject 0.15.1
 ================
 
+Released 22 Mar 2011.
+
 * A bug was fixed in MSSQLConnection.
 
-* A bugfix was ported from `SQLObject 0.14.2`_.
+* A minor bug was fixed in sqlbuilder.Union.
 
 SQLObject 0.15.0
 ================
