@@ -7,8 +7,11 @@ News
 
 .. _start:
 
-SQLObject (trunk)
-=================
+SQLObject 1.0.1
+===============
+
+* A syntax incompatibilities was fixed in SQLiteConnection that
+  prevented SQLObject to be used with Python 2.4.
 
 SQLObject 1.0.0
 ===============
