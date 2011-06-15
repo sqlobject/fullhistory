@@ -7,12 +7,6 @@ News
 
 .. _start:
 
-SQLObject (trunk)
-=================
-
-Features & Interface
---------------------
-
 SQLObject 1.1
 =============
 
