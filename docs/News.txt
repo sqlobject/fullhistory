@@ -10,6 +10,8 @@ News
 SQLObject 1.1
 =============
 
+Released 20 Jun 2011.
+
 Features & Interface
 --------------------
 
