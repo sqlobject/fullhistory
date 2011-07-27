@@ -7,6 +7,11 @@ News
 
 .. _start:
 
+SQLObject 1.1.2
+===============
+
+* A bugfix was ported from `SQLObject 1.0.2`_.
+
 SQLObject 1.1.1
 ===============
 
