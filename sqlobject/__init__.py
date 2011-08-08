@@ -1,5 +1,5 @@
 """
-SQLObject 1.0
+SQLObject 1.0.2
 """
 from __version__ import version, version_info
 
