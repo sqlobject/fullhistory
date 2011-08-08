@@ -9,7 +9,7 @@ except ImportError:
     from distutils.core import setup
     is_setuptools = False
 
-from sqlobject import version
+from sqlobject import version, version_info
 
 subpackages = ['firebird', 'include', 'include.pydispatch', 'inheritance',
                'manager', 'maxdb', 'mysql', 'mssql', 'postgres', 'rdbhost',
