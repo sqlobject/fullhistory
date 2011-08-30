@@ -10,10 +10,9 @@ News
 SQLObject 1.0.3
 ===============
 
-* Fixed a bug with Postgres - add quotes in "SET client_encoding" query.
+Released 30 Aug 2011.
 
-SQLObject 1.0.2
-===============
+* Fixed a bug with Postgres - add quotes in "SET client_encoding" query.
 
 SQLObject 1.0.2
 ===============
