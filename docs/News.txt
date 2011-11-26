@@ -7,6 +7,12 @@ News
 
 .. _start:
 
+SQLObject 1.1.4
+===============
+
+* A bug was fixed in handling ``modulo`` operator - SQLite implements
+  only ``%``, MySQL - only ``MOD()``, PostgreSQL implements both.
+
 SQLObject 1.1.3
 ===============
 

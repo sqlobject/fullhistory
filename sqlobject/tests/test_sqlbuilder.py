@@ -33,3 +33,10 @@ def test_empty_AND():
     assert sqlrepr(AND(1, 2, '3'), "sqlite") == \
         sqlrepr(SQLOp("AND", 1, SQLOp("AND", 2, '3')), "sqlite") == \
         "((1) AND ((2) AND ('3')))"
+
+def test_modulo():
+    setupClass(TestSQLBuilder)
+    assert sqlrepr(TestSQLBuilder.q.value % 2 == 0, 'mysql') == \
+        "((MOD(test_sql_builder.value, 2)) = (0))"
+    assert sqlrepr(TestSQLBuilder.q.value % 2 == 0, 'sqlite') == \
+        "(((test_sql_builder.value) % (2)) = (0))"
