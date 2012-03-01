@@ -10,6 +10,8 @@ News
 SQLObject 1.1.5
 ===============
 
+Released 1 Mar 2012.
+
 * A bug was fixed in SQLiteConnection - clear _threadPool on close().
 
 SQLObject 1.1.4
