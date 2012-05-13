@@ -7,6 +7,12 @@ News
 
 .. _start:
 
+SQLObject 1.2.3
+===============
+
+* Fixed a minor bug in PostgreSQL introspection: VIEWs don't have
+  PRIMARY KEYs - use sqlmeta.idName as the key if there is no one.
+
 SQLObject 1.2.2
 ===============
 
