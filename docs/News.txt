@@ -10,6 +10,8 @@ News
 SQLObject 1.2.3
 ===============
 
+Released 25 May 2012.
+
 * Fixed a minor bug in PostgreSQL introspection: VIEWs don't have
   PRIMARY KEYs - use sqlmeta.idName as the key.
 
