@@ -7,6 +7,12 @@ News
 
 .. _start:
 
+SQLObject 1.2.4
+===============
+
+* Fixed a bug in sqlbuilder.Select.filter - removed comparison with
+  SQLTrueClause.
+
 SQLObject 1.2.3
 ===============
 
