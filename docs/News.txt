@@ -13,6 +13,8 @@ SQLObject 1.2.4
 * Fixed a bug in sqlbuilder.Select.filter - removed comparison with
   SQLTrueClause.
 
+* Neil Muller fixed a number of tests.
+
 SQLObject 1.2.3
 ===============
 
