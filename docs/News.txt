@@ -10,6 +10,8 @@ News
 SQLObject 1.2.4
 ===============
 
+Released 20 Oct 2012.
+
 * Fixed a bug in sqlbuilder.Select.filter - removed comparison with
   SQLTrueClause.
 
