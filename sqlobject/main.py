@@ -1676,14 +1676,20 @@ class SQLObject(object):
         if self.sqlmeta._perConnection:
             from pickle import PicklingError
             raise PicklingError('Cannot pickle an SQLObject instance that has a per-instance connection')
+        if self.sqlmeta.lazyUpdate and self._SO_createValues:
+            self.syncUpdate()
         d = self.__dict__.copy()
         del d['sqlmeta']
+        del d['_SO_validatorState']
         del d['_SO_writeLock']
+        del d['_SO_createValues']
         return d
 
     def __setstate__(self, d):
         self.__init__(_SO_fetch_no_create=1)
+        self._SO_validatorState = sqlbuilder.SQLObjectState(self)
         self._SO_writeLock = threading.Lock()
+        self._SO_createValues = {}
         self.__dict__.update(d)
         cls = self.__class__
         cache = self._connection.cache
