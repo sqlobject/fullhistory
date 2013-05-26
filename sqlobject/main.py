@@ -1696,7 +1696,7 @@ class SQLObject(object):
         if cache.tryGet(self.id, cls) is not None:
             raise ValueError(
                 "Cannot unpickle %s row with id=%s - a different instance with the id already exists in the cache" % (cls.__name__, self.id))
-        cache.created(id, cls, self)
+        cache.created(self.id, cls, self)
 
 
 def setterName(name):
